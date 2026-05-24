@@ -3,6 +3,7 @@ import { Toaster } from "sonner";
 import "./globals.css";
 import { DM_Sans, Syne } from "next/font/google";
 import { cn } from "@/lib/utils";
+import { ThemeProvider } from "@/components/ui/theme-provider";
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
@@ -28,9 +29,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={cn("font-sans", dmSans.variable, syne.variable)}>
+    <html lang="en" className={cn("font-sans", dmSans.variable, syne.variable)} suppressHydrationWarning>
       <body>
-        {children}
+        <ThemeProvider>
+          {children}
+        </ThemeProvider>
         <Toaster
           position="top-right"
           toastOptions={{

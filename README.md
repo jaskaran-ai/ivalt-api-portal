@@ -5,8 +5,10 @@ A full-stack Next.js 15 developer portal for managing iVALT biometric API keys, 
 ## Features
 
 - **Biometric Login** — iVALT passwordless authentication via mobile number + biometric push notification
+- **Access Control** — Admin-approved access requests before API key management
 - **API Key Management** — Create, enable/disable, and delete AWS API Gateway keys (up to 4 per user)
 - **API Documentation** — Interactive in-app docs for the iVALT biometric auth API
+- **Admin Dashboard** — Usage statistics and access request management
 - **Design System** — Slack-inspired purple/white design with Montserrat + Open Sans typography
 
 ## Tech Stack
@@ -27,6 +29,12 @@ A full-stack Next.js 15 developer portal for managing iVALT biometric API keys, 
 src/
 ├── app/
 │   ├── login/                  # Biometric login page
+│   ├── access/
+│   │   ├── request/page.tsx    # Access request form (new users)
+│   │   └── status/page.tsx     # Pending access status page
+│   ├── admin/
+│   │   ├── dashboard/page.tsx  # Admin dashboard with usage stats
+│   │   └── login/page.tsx      # Admin login
 │   ├── dashboard/
 │   │   ├── page.tsx            # Dashboard overview
 │   │   ├── keys/page.tsx       # API key management
@@ -36,20 +44,30 @@ src/
 │       │   ├── request/        # POST - initiate biometric auth
 │       │   ├── verify/         # POST - poll result + create session
 │       │   └── logout/         # POST - destroy session
+│       ├── access/
+│       │   ├── request/route.ts   # POST - submit access request, GET - list requests (admin)
+│       │   ├── approve/route.ts   # POST - approve/reject, GET - list requests (admin)
+│       │   └── me/route.ts       # GET - current user's access status
+│       ├── admin/
+│       │   └── usage/route.ts    # GET - usage statistics for admin dashboard
 │       └── keys/
 │           ├── route.ts         # GET - list keys
 │           ├── create/          # POST - create key
 │           └── [id]/            # DELETE + PATCH - manage key
 ├── components/
-│   └── layout/
-│       └── DashboardShell.tsx  # Sidebar + header layout
+│   ├── layout/
+│   │   └── DashboardShell.tsx  # Sidebar + header layout
+│   └── ui/
+│       └── ...                 # Shadcn-compatible components
 ├── db/
 │   ├── index.ts                # Drizzle connection
-│   └── schema.ts               # Table definitions
+│   ├── schema.ts               # Table definitions
+│   └── migrations/             # Migration files
 └── lib/
     ├── session.ts              # iron-session config
     ├── ivalt.ts                # iVALT API client
-    └── aws-gateway.ts          # AWS API Gateway client
+    ├── aws-gateway.ts          # AWS API Gateway client
+    └── demo.ts                 # Demo mode fixtures
 ```
 
 ## Setup
@@ -64,7 +82,8 @@ src/
 ### 2. Install Dependencies
 
 ```bash
-npm install
+# Install dependencies
+bun install
 ```
 
 ### 3. Environment Variables
@@ -86,15 +105,17 @@ cp .env.local.example .env.local
 | `AWS_API_GATEWAY_REST_API_ID` | Your REST API ID in API Gateway |
 | `AWS_API_GATEWAY_USAGE_PLAN_ID` | Usage plan to attach keys to |
 | `SESSION_SECRET` | Random string ≥32 chars for session encryption |
+| `NEXT_PUBLIC_DEMO_MODE` | Set to `true` for demo mode (optional) |
 
 ### 4. Database Setup
 
 ```bash
 # Push schema to database
-npm run db:push
+bun run db:push
 
-# Or run the migration SQL directly
+# Or run migrations directly
 psql $DATABASE_URL < drizzle/0001_initial.sql
+psql $DATABASE_URL < drizzle/0002_access_control.sql
 ```
 
 ### 5. AWS IAM Permissions
@@ -134,12 +155,30 @@ Open [http://localhost:3000](http://localhost:3000)
 
 ## Authentication Flow
 
+```
+Login → Biometric Auth → Access Request Form → Admin Review → Approved → Dashboard
+```
+
 1. User enters mobile number on login page
 2. App calls `POST /api/auth/request` → calls iVALT `BiometricAuthRequest`
 3. iVALT sends push notification to user's phone
 4. Client polls `POST /api/auth/verify` every 2 seconds
 5. Server polls iVALT `BiometricResultRequest`
-6. On status 200 (authenticated), session is created and user is redirected to dashboard
+6. On status 200 (authenticated), session is created with `accessStatus: "pending"`
+7. User is redirected to `/access/request` to submit use case
+8. Admin reviews request and approves/denies via admin dashboard
+9. On approval, user status changes to `"approved"` and can access dashboard
+
+## New User Access Flow
+
+Users must describe their use case before getting API access. The admin team receives notification
+and can approve/deny requests. Approved users get full dashboard access.
+
+## Documentation
+
+- [User Journey](docs/user-journey.md) — Complete user flow through the portal
+- [Admin Guide](docs/admin-guide.md) — How to approve/reject access requests
+- [API Usage Tracking](docs/api-usage-tracking.md) — API key usage metrics
 
 ## API Key Limits
 
@@ -160,18 +199,18 @@ The portal uses the Slack-inspired design system defined in `DESIGN__3_.md`:
 ## Deployment
 
 ```bash
-npm run build
-npm run start
+bun run build
+bun run start
 ```
 
 For EC2 + nginx + PM2 deployment (matching your existing iVALT stack), use:
 
 ```bash
 # Build
-npm run build
+bun run build
 
 # Start with PM2
-pm2 start npm --name "ivalt-portal" -- start
+pm2 start bun --name "ivalt-portal" -- start
 pm2 save
 ```
 
