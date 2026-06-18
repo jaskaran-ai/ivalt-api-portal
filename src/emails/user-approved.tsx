@@ -6,10 +6,11 @@ import {
   Section,
   Text,
   Heading,
-  Hr,
   Img,
   Font,
   Tailwind,
+  Link,
+  Hr,
 } from "@react-email/components";
 
 interface UserApprovedProps {
@@ -23,53 +24,402 @@ export function UserApproved({ userName }: UserApprovedProps) {
         <Font
           fontFamily="Inter"
           fallbackFontFamily="sans-serif"
-          webFont={{ url: "https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiJ-Ek-_EeA.woff2", format: "woff2" }}
+          webFont={{
+            url: "https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiJ-Ek-_EeA.woff2",
+            format: "woff2",
+          }}
         />
+        <style>{`
+          @media only screen and (max-width: 600px) {
+            .email-body { padding: 16px 12px !important; }
+            .email-container { max-width: 100% !important; }
+            .email-header { padding: 28px 20px !important; }
+            .email-header-logo { width: 110px !important; height: auto !important; }
+            .email-card-body { padding: 24px 20px !important; }
+            .email-heading { font-size: 18px !important; }
+            .email-text { font-size: 13px !important; }
+            .email-footer-text { font-size: 11px !important; }
+            .email-cta { padding: 11px 24px !important; font-size: 13px !important; }
+            .email-step-num { width: 22px !important; height: 22px !important; line-height: 22px !important; font-size: 11px !important; }
+            .email-step-title { font-size: 13px !important; }
+            .email-step-desc { font-size: 11px !important; }
+          }
+        `}</style>
       </Head>
       <Tailwind>
-        <Body className="bg-[#f4f2f5] py-10">
-          <Container className="mx-auto max-w-[520px]">
-            <Section className="text-center mb-6">
-              <Img src="https://ivalt-api-portal.vercel.app/logo.webp" alt="iVALT" width="32" height="32" style={{ margin: "0 auto" }} />
+        <Body
+          className="bg-[#f4f2f7] m-0"
+          style={{ padding: "32px 16px" }}
+        >
+          <Container
+            className="mx-auto"
+            style={{ maxWidth: "520px", width: "100%" }}
+          >
+            <Section className="mb-5">
+              <Section
+                className="rounded-xl overflow-hidden email-header"
+                style={{
+                  background: "linear-gradient(135deg, #611f69 0%, #4a1552 100%)",
+                  padding: "32px 28px",
+                  textAlign: "center" as const,
+                }}
+              >
+                <Img
+                  src="https://ivalt-api-portal.vercel.app/logo.webp"
+                  alt="iVALT"
+                  width="140"
+                  height="50"
+                  style={{ display: "inline-block" }}
+                />
+              </Section>
             </Section>
 
-            <Section className="bg-white rounded-2xl shadow-sm p-8">
-              <div style={{ width: "48px", height: "3px", background: "#611f69", borderRadius: "2px", margin: "0 auto 20px" }} />
+            <Section
+              className="rounded-xl overflow-hidden"
+              style={{
+                background: "#ffffff",
+                border: "1px solid #e8e6ee",
+              }}
+            >
+              <div
+                className="email-card-body"
+                style={{ padding: "32px 28px" }}
+              >
+                <Section className="mb-5">
+                  <table cellPadding="0" cellSpacing="0">
+                    <tr>
+                      <td
+                        style={{
+                          width: "48px",
+                          height: "48px",
+                          borderRadius: "12px",
+                          background: "linear-gradient(135deg, #f0fdf4, #dcfce7)",
+                          textAlign: "center" as const,
+                          verticalAlign: "middle" as const,
+                        }}
+                      >
+                        <Img
+                          src="https://api.iconify.design/lucide/badge-check.svg?color=%2316a34a&width=22&height=22"
+                          alt=""
+                          width="22"
+                          height="22"
+                          style={{ display: "block", margin: "13px auto" }}
+                        />
+                      </td>
+                    </tr>
+                  </table>
+                </Section>
 
-              <Section className="text-center mb-6">
-                <Heading className="text-lg font-semibold text-gray-900 m-0 tracking-[-0.02em]">
-                  Access Approved
-                </Heading>
-                <Text className="text-sm text-gray-500 mt-1.5 m-0">
-                  Hello {userName}, your request has been approved
-                </Text>
-              </Section>
-
-              <Section className="mb-6">
-                <div style={{ background: "#f1faf1", borderRadius: "10px", padding: "16px", textAlign: "center" }}>
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="check" style={{ margin: "0 auto 8px" }}>
-                    <rect x="3" y="3" width="18" height="18" rx="9" fill="#1b7a1b" />
-                    <path d="M8 12.5L11 15.5L16 9.5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                  <Text className="text-sm text-[#1b7a1b] m-0 leading-relaxed">
-                    You can now log in to the iVALT Portal to manage your API keys
-                    and access the full range of features available to you.
+                <Section className="mb-6">
+                  <Text
+                    className="m-0"
+                    style={{
+                      fontSize: "11px",
+                      fontWeight: 600,
+                      color: "#16a34a",
+                      textTransform: "uppercase" as const,
+                      letterSpacing: "0.08em",
+                      marginBottom: "8px",
+                    }}
+                  >
+                    Access Approved
                   </Text>
-                </div>
-              </Section>
+                  <Heading
+                    className="m-0 email-heading"
+                    style={{
+                      fontSize: "20px",
+                      fontWeight: 700,
+                      color: "#1a1a2e",
+                      letterSpacing: "-0.02em",
+                      lineHeight: "1.3",
+                      marginBottom: "8px",
+                    }}
+                  >
+                    Welcome to iVALT, {userName}
+                  </Heading>
+                  <Text
+                    className="m-0 email-text"
+                    style={{
+                      fontSize: "14px",
+                      color: "#6b7280",
+                      lineHeight: "1.5",
+                    }}
+                  >
+                    Your access request has been approved. You can now sign in to manage API keys, explore integration documentation, and start building with biometric authentication.
+                  </Text>
+                </Section>
 
-              <Hr className="border-gray-100 m-0 mb-5" />
+                <Section
+                  style={{
+                    background: "#f0fdf4",
+                    borderRadius: "8px",
+                    border: "1px solid #dcfce7",
+                    padding: "16px 18px",
+                    marginBottom: "24px",
+                  }}
+                >
+                  <Text
+                    className="m-0 email-text"
+                    style={{
+                      fontSize: "13px",
+                      color: "#166534",
+                      lineHeight: "1.6",
+                      fontWeight: 500,
+                    }}
+                  >
+                    Getting started is straightforward. Generate your first API key from the dashboard, review the API contract, and you will be authenticating users in no time.
+                  </Text>
+                </Section>
 
-              <Section className="text-center">
-                <Text className="text-xs text-gray-400 m-0">
-                  If you have any questions, contact the iVALT support team.
-                </Text>
-              </Section>
+                <Section className="mb-6">
+                  <Text
+                    className="m-0"
+                    style={{
+                      fontSize: "11px",
+                      fontWeight: 600,
+                      color: "#9ca3af",
+                      textTransform: "uppercase" as const,
+                      letterSpacing: "0.06em",
+                      marginBottom: "12px",
+                    }}
+                  >
+                    Quick Start Guide
+                  </Text>
+
+                  <table width="100%" cellPadding="0" cellSpacing="0">
+                    <tr>
+                      <td
+                        style={{
+                          padding: "10px 0",
+                          borderBottom: "1px solid #f0f0f5",
+                          verticalAlign: "top" as const,
+                          width: "28px",
+                        }}
+                      >
+                        <span
+                          className="email-step-num"
+                          style={{
+                            display: "inline-block",
+                            width: "24px",
+                            height: "24px",
+                            lineHeight: "24px",
+                            borderRadius: "6px",
+                            background: "linear-gradient(135deg, #611f69, #7a2d82)",
+                            color: "#ffffff",
+                            fontSize: "11px",
+                            fontWeight: 700,
+                            textAlign: "center" as const,
+                          }}
+                        >
+                          1
+                        </span>
+                      </td>
+                      <td
+                        style={{
+                          padding: "10px 0 10px 10px",
+                          borderBottom: "1px solid #f0f0f5",
+                        }}
+                      >
+                        <Text
+                          className="m-0 email-step-title"
+                          style={{
+                            fontSize: "14px",
+                            color: "#1a1a2e",
+                            fontWeight: 600,
+                          }}
+                        >
+                          Generate your API key
+                        </Text>
+                        <Text
+                          className="m-0 email-step-desc"
+                          style={{
+                            fontSize: "12px",
+                            color: "#9ca3af",
+                            marginTop: "2px",
+                          }}
+                        >
+                          Create a key from the API Keys dashboard to get started
+                        </Text>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td
+                        style={{
+                          padding: "10px 0",
+                          borderBottom: "1px solid #f0f0f5",
+                          verticalAlign: "top" as const,
+                        }}
+                      >
+                        <span
+                          className="email-step-num"
+                          style={{
+                            display: "inline-block",
+                            width: "24px",
+                            height: "24px",
+                            lineHeight: "24px",
+                            borderRadius: "6px",
+                            background: "linear-gradient(135deg, #611f69, #7a2d82)",
+                            color: "#ffffff",
+                            fontSize: "11px",
+                            fontWeight: 700,
+                            textAlign: "center" as const,
+                          }}
+                        >
+                          2
+                        </span>
+                      </td>
+                      <td
+                        style={{
+                          padding: "10px 0 10px 10px",
+                          borderBottom: "1px solid #f0f0f5",
+                        }}
+                      >
+                        <Text
+                          className="m-0 email-step-title"
+                          style={{
+                            fontSize: "14px",
+                            color: "#1a1a2e",
+                            fontWeight: 600,
+                          }}
+                        >
+                          Review the API documentation
+                        </Text>
+                        <Text
+                          className="m-0 email-step-desc"
+                          style={{
+                            fontSize: "12px",
+                            color: "#9ca3af",
+                            marginTop: "2px",
+                          }}
+                        >
+                          Explore the biometric auth request and polling contract
+                        </Text>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td
+                        style={{
+                          padding: "10px 0",
+                          verticalAlign: "top" as const,
+                        }}
+                      >
+                        <span
+                          className="email-step-num"
+                          style={{
+                            display: "inline-block",
+                            width: "24px",
+                            height: "24px",
+                            lineHeight: "24px",
+                            borderRadius: "6px",
+                            background: "linear-gradient(135deg, #611f69, #7a2d82)",
+                            color: "#ffffff",
+                            fontSize: "11px",
+                            fontWeight: 700,
+                            textAlign: "center" as const,
+                          }}
+                        >
+                          3
+                        </span>
+                      </td>
+                      <td
+                        style={{
+                          padding: "10px 0 10px 10px",
+                        }}
+                      >
+                        <Text
+                          className="m-0 email-step-title"
+                          style={{
+                            fontSize: "14px",
+                            color: "#1a1a2e",
+                            fontWeight: 600,
+                          }}
+                        >
+                          Integrate and go live
+                        </Text>
+                        <Text
+                          className="m-0 email-step-desc"
+                          style={{
+                            fontSize: "12px",
+                            color: "#9ca3af",
+                            marginTop: "2px",
+                          }}
+                        >
+                          Start authenticating users with biometrics in production
+                        </Text>
+                      </td>
+                    </tr>
+                  </table>
+                </Section>
+
+                <Hr
+                  style={{
+                    border: "none",
+                    borderTop: "1px solid #eeeef2",
+                    margin: "0 0 24px 0",
+                  }}
+                />
+
+                <Section>
+                  <table width="100%" cellPadding="0" cellSpacing="0">
+                    <tr>
+                      <td align="center">
+                        <Link
+                          href="https://ivalt-api-portal.vercel.app/dashboard"
+                          className="email-cta"
+                          style={{
+                            display: "inline-block",
+                            background: "#611f69",
+                            color: "#ffffff",
+                            fontSize: "14px",
+                            fontWeight: 600,
+                            padding: "12px 28px",
+                            borderRadius: "8px",
+                            textDecoration: "none",
+                          }}
+                        >
+                          Open Developer Portal
+                        </Link>
+                      </td>
+                    </tr>
+                  </table>
+                </Section>
+              </div>
             </Section>
 
-            <Section className="text-center mt-6">
-              <Text className="text-xs text-gray-400 m-0">
-                iVALT Developer Portal
+            <Section
+              className="mt-5"
+              style={{ textAlign: "center" as const, padding: "0 12px" }}
+            >
+              <Text
+                className="m-0 email-footer-text"
+                style={{
+                  fontSize: "12px",
+                  color: "#9ca3af",
+                  lineHeight: "1.6",
+                }}
+              >
+                Questions? Contact{" "}
+                <Link
+                  href="mailto:support@ivalt.com"
+                  style={{
+                    fontSize: "12px",
+                    color: "#611f69",
+                    fontWeight: 600,
+                    textDecoration: "none",
+                  }}
+                >
+                  support@ivalt.com
+                </Link>
+              </Text>
+              <Text
+                className="m-0 email-footer-text"
+                style={{
+                  fontSize: "11px",
+                  color: "#c4c4cc",
+                  marginTop: "2px",
+                }}
+              >
+                iVALT API Portal — Biometric Authentication Platform
               </Text>
             </Section>
           </Container>

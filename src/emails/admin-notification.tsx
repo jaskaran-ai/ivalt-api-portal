@@ -6,10 +6,11 @@ import {
   Section,
   Text,
   Heading,
-  Hr,
   Img,
   Font,
   Tailwind,
+  Link,
+  Hr,
 } from "@react-email/components";
 
 interface AdminNotificationProps {
@@ -22,8 +23,8 @@ interface AdminNotificationProps {
 export function AdminNotification({
   userName,
   userPhone,
-  useCase,
   requestedAt,
+  useCase,
 }: AdminNotificationProps) {
   return (
     <Html>
@@ -31,76 +32,356 @@ export function AdminNotification({
         <Font
           fontFamily="Inter"
           fallbackFontFamily="sans-serif"
-          webFont={{ url: "https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiJ-Ek-_EeA.woff2", format: "woff2" }}
+          webFont={{
+            url: "https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiJ-Ek-_EeA.woff2",
+            format: "woff2",
+          }}
         />
+        <style>{`
+          @media only screen and (max-width: 600px) {
+            .email-body { padding: 16px 12px !important; }
+            .email-container { max-width: 100% !important; }
+            .email-header { padding: 28px 20px !important; }
+            .email-header-logo { width: 110px !important; height: auto !important; }
+            .email-card-body { padding: 24px 20px !important; }
+            .email-detail-label { width: 80px !important; }
+            .email-detail-label-text { font-size: 10px !important; }
+            .email-detail-value { font-size: 13px !important; }
+            .email-heading { font-size: 18px !important; }
+            .email-text { font-size: 13px !important; }
+            .email-footer-text { font-size: 11px !important; }
+            .email-cta { padding: 11px 24px !important; font-size: 13px !important; }
+            .email-use-case-text { font-size: 13px !important; }
+          }
+        `}</style>
       </Head>
       <Tailwind>
-        <Body className="bg-[#f4f2f5] py-10">
-          <Container className="mx-auto max-w-[520px]">
-            <Section className="text-center mb-6">
-              <Img src="https://ivalt-api-portal.vercel.app/logo.webp" alt="iVALT" width="32" height="32" style={{ margin: "0 auto" }} />
-            </Section>
-
-            <Section className="bg-white rounded-2xl shadow-sm p-8">
-              <div style={{ width: "48px", height: "3px", background: "#611f69", borderRadius: "2px", margin: "0 auto 20px" }} />
-
-              <Section className="text-center mb-6">
-                <Heading className="text-lg font-semibold text-gray-900 m-0 tracking-[-0.02em]">
-                  New Access Request
-                </Heading>
-                <Text className="text-sm text-gray-500 mt-1.5 m-0">
-                  A user is requesting access to the iVALT Portal
-                </Text>
-              </Section>
-
-              <Section className="mb-6">
-                <table style={{ width: "100%", borderCollapse: "collapse" }}>
-                  <tr>
-                    <td style={{ padding: "10px 0", borderBottom: "1px solid #eee" }}>
-                      <Text className="text-xs text-gray-400 m-0">Name</Text>
-                    </td>
-                    <td style={{ padding: "10px 0", borderBottom: "1px solid #eee", textAlign: "right" }}>
-                      <Text className="text-sm font-medium text-gray-900 m-0">{userName}</Text>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style={{ padding: "10px 0", borderBottom: "1px solid #eee" }}>
-                      <Text className="text-xs text-gray-400 m-0">Phone</Text>
-                    </td>
-                    <td style={{ padding: "10px 0", borderBottom: "1px solid #eee", textAlign: "right" }}>
-                      <Text className="text-sm font-medium text-gray-900 m-0">{userPhone}</Text>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style={{ padding: "10px 0" }}>
-                      <Text className="text-xs text-gray-400 m-0">Requested</Text>
-                    </td>
-                    <td style={{ padding: "10px 0", textAlign: "right" }}>
-                      <Text className="text-sm font-medium text-gray-900 m-0">{requestedAt}</Text>
-                    </td>
-                  </tr>
-                </table>
-              </Section>
-
-              <Section className="mb-6">
-                <Text className="text-xs text-gray-400 m-0 mb-2">USE CASE</Text>
-                <div style={{ background: "#f8f7f9", borderRadius: "10px", padding: "14px 16px" }}>
-                  <Text className="text-sm text-gray-700 m-0 leading-relaxed">{useCase}</Text>
-                </div>
-              </Section>
-
-              <Hr className="border-gray-100 m-0 mb-5" />
-
-              <Section className="text-center">
-                <Text className="text-xs text-gray-400 m-0">
-                  Review this request in your admin dashboard to approve or reject.
-                </Text>
+        <Body
+          className="bg-[#f4f2f7] m-0"
+          style={{ padding: "32px 16px" }}
+        >
+          <Container
+            className="mx-auto"
+            style={{ maxWidth: "520px", width: "100%" }}
+          >
+            <Section className="mb-5">
+              <Section
+                className="rounded-xl overflow-hidden email-header"
+                style={{
+                  background: "linear-gradient(135deg, #611f69 0%, #4a1552 100%)",
+                  padding: "32px 28px",
+                  textAlign: "center" as const,
+                }}
+              >
+                <Img
+                  src="https://ivalt-api-portal.vercel.app/logo.webp"
+                  alt="iVALT"
+                  width="140"
+                  height="50"
+                  style={{ display: "inline-block" }}
+                />
               </Section>
             </Section>
 
-            <Section className="text-center mt-6">
-              <Text className="text-xs text-gray-400 m-0">
-                iVALT Developer Portal
+            <Section
+              className="rounded-xl overflow-hidden"
+              style={{
+                background: "#ffffff",
+                border: "1px solid #e8e6ee",
+              }}
+            >
+              <div
+                className="email-card-body"
+                style={{ padding: "32px 28px" }}
+              >
+                <Section className="mb-5">
+                  <table cellPadding="0" cellSpacing="0">
+                    <tr>
+                      <td
+                        style={{
+                          width: "48px",
+                          height: "48px",
+                          borderRadius: "12px",
+                          background: "linear-gradient(135deg, #f3e8ff, #ede9fe)",
+                          textAlign: "center" as const,
+                          verticalAlign: "middle" as const,
+                        }}
+                      >
+                        <Img
+                          src="https://api.iconify.design/lucide/shield.svg?color=%23611f69&width=22&height=22"
+                          alt=""
+                          width="22"
+                          height="22"
+                          style={{ display: "block", margin: "13px auto" }}
+                        />
+                      </td>
+                    </tr>
+                  </table>
+                </Section>
+
+                <Section className="mb-6">
+                  <Text
+                    className="m-0"
+                    style={{
+                      fontSize: "11px",
+                      fontWeight: 600,
+                      color: "#611f69",
+                      textTransform: "uppercase" as const,
+                      letterSpacing: "0.08em",
+                      marginBottom: "8px",
+                    }}
+                  >
+                    Admin Notification
+                  </Text>
+                  <Heading
+                    className="m-0 email-heading"
+                    style={{
+                      fontSize: "20px",
+                      fontWeight: 700,
+                      color: "#1a1a2e",
+                      letterSpacing: "-0.02em",
+                      lineHeight: "1.3",
+                      marginBottom: "8px",
+                    }}
+                  >
+                    New access request received
+                  </Heading>
+                  <Text
+                    className="m-0 email-text"
+                    style={{
+                      fontSize: "14px",
+                      color: "#6b7280",
+                      lineHeight: "1.5",
+                    }}
+                  >
+                    {userName} is requesting access to the iVALT API Portal. Review the details below and take action in the admin dashboard.
+                  </Text>
+                </Section>
+
+                <Section
+                  style={{
+                    borderRadius: "10px",
+                    border: "1px solid #eeeef2",
+                    overflow: "hidden",
+                    marginBottom: "24px",
+                  }}
+                >
+                  <table width="100%" cellPadding="0" cellSpacing="0">
+                    <tr>
+                      <td
+                        className="email-detail-label"
+                        style={{
+                          padding: "10px 14px",
+                          background: "#faf9fd",
+                          borderBottom: "1px solid #eeeef2",
+                          width: "90px",
+                        }}
+                      >
+                        <Text
+                          className="m-0 email-detail-label-text"
+                          style={{
+                            fontSize: "11px",
+                            fontWeight: 600,
+                            color: "#9ca3af",
+                            textTransform: "uppercase" as const,
+                            letterSpacing: "0.06em",
+                          }}
+                        >
+                          Name
+                        </Text>
+                      </td>
+                      <td
+                        style={{
+                          padding: "10px 14px",
+                          borderBottom: "1px solid #eeeef2",
+                        }}
+                      >
+                        <Text
+                          className="m-0 email-detail-value"
+                          style={{
+                            fontSize: "14px",
+                            fontWeight: 600,
+                            color: "#1a1a2e",
+                          }}
+                        >
+                          {userName}
+                        </Text>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td
+                        className="email-detail-label"
+                        style={{
+                          padding: "10px 14px",
+                          background: "#faf9fd",
+                          borderBottom: "1px solid #eeeef2",
+                        }}
+                      >
+                        <Text
+                          className="m-0 email-detail-label-text"
+                          style={{
+                            fontSize: "11px",
+                            fontWeight: 600,
+                            color: "#9ca3af",
+                            textTransform: "uppercase" as const,
+                            letterSpacing: "0.06em",
+                          }}
+                        >
+                          Phone
+                        </Text>
+                      </td>
+                      <td
+                        style={{
+                          padding: "10px 14px",
+                          borderBottom: "1px solid #eeeef2",
+                        }}
+                      >
+                        <Text
+                          className="m-0 email-detail-value"
+                          style={{
+                            fontSize: "14px",
+                            fontWeight: 600,
+                            color: "#1a1a2e",
+                          }}
+                        >
+                          {userPhone}
+                        </Text>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td
+                        className="email-detail-label"
+                        style={{
+                          padding: "10px 14px",
+                          background: "#faf9fd",
+                        }}
+                      >
+                        <Text
+                          className="m-0 email-detail-label-text"
+                          style={{
+                            fontSize: "11px",
+                            fontWeight: 600,
+                            color: "#9ca3af",
+                            textTransform: "uppercase" as const,
+                            letterSpacing: "0.06em",
+                          }}
+                        >
+                          Requested
+                        </Text>
+                      </td>
+                      <td
+                        style={{
+                          padding: "10px 14px",
+                        }}
+                      >
+                        <Text
+                          className="m-0 email-detail-value"
+                          style={{
+                            fontSize: "14px",
+                            fontWeight: 600,
+                            color: "#1a1a2e",
+                          }}
+                        >
+                          {requestedAt}
+                        </Text>
+                      </td>
+                    </tr>
+                  </table>
+                </Section>
+
+                <Section className="mb-6">
+                  <Text
+                    className="m-0"
+                    style={{
+                      fontSize: "11px",
+                      fontWeight: 600,
+                      color: "#9ca3af",
+                      textTransform: "uppercase" as const,
+                      letterSpacing: "0.06em",
+                      marginBottom: "8px",
+                    }}
+                  >
+                    Use Case
+                  </Text>
+                  <div
+                    style={{
+                      background: "#f8f7fb",
+                      borderRadius: "8px",
+                      padding: "14px 16px",
+                      borderLeft: "3px solid #611f69",
+                    }}
+                  >
+                    <Text
+                      className="m-0 email-text"
+                      style={{
+                        fontSize: "14px",
+                        color: "#4b5563",
+                        lineHeight: "1.65",
+                      }}
+                    >
+                      {useCase}
+                    </Text>
+                  </div>
+                </Section>
+
+                <Hr
+                  style={{
+                    border: "none",
+                    borderTop: "1px solid #eeeef2",
+                    margin: "0 0 24px 0",
+                  }}
+                />
+
+                <Section>
+                  <table width="100%" cellPadding="0" cellSpacing="0">
+                    <tr>
+                      <td align="center">
+                        <Link
+                          href="https://ivalt-api-portal.vercel.app/admin"
+                          className="email-cta"
+                          style={{
+                            display: "inline-block",
+                            background: "#611f69",
+                            color: "#ffffff",
+                            fontSize: "14px",
+                            fontWeight: 600,
+                            padding: "12px 28px",
+                            borderRadius: "8px",
+                            textDecoration: "none",
+                          }}
+                        >
+                          Review in Admin Dashboard
+                        </Link>
+                      </td>
+                    </tr>
+                  </table>
+                </Section>
+              </div>
+            </Section>
+
+            <Section
+              className="mt-5"
+              style={{ textAlign: "center" as const, padding: "0 12px" }}
+            >
+              <Text
+                className="m-0 email-footer-text"
+                style={{
+                  fontSize: "12px",
+                  color: "#9ca3af",
+                  lineHeight: "1.6",
+                }}
+              >
+                iVALT API Portal — Biometric Authentication Platform
+              </Text>
+              <Text
+                className="m-0 email-footer-text"
+                style={{
+                  fontSize: "11px",
+                  color: "#c4c4cc",
+                  marginTop: "2px",
+                }}
+              >
+                This is an automated notification. Do not reply to this email.
               </Text>
             </Section>
           </Container>
