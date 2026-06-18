@@ -232,8 +232,9 @@ export default function DebugPage() {
 
           <form onSubmit={handleSendTestEmail} className="flex flex-col gap-4">
             <div>
-              <label className="block text-sm font-medium mb-1.5">Recipient Email</label>
+              <label htmlFor="emailTo" className="block text-sm font-medium mb-1.5">Recipient Email</label>
               <input
+                id="emailTo"
                 type="email"
                 value={emailTo}
                 onChange={(e) => setEmailTo(e.target.value)}
@@ -244,8 +245,9 @@ export default function DebugPage() {
 
             {template.fields.includes("userName") && (
               <div>
-                <label className="block text-sm font-medium mb-1.5">User Name</label>
+                <label htmlFor="userName" className="block text-sm font-medium mb-1.5">User Name</label>
                 <input
+                  id="userName"
                   type="text"
                   value={userName}
                   onChange={(e) => setUserName(e.target.value)}
@@ -257,8 +259,9 @@ export default function DebugPage() {
 
             {hasField("userPhone") && (
               <div>
-                <label className="block text-sm font-medium mb-1.5">User Phone</label>
+                <label htmlFor="userPhone" className="block text-sm font-medium mb-1.5">User Phone</label>
                 <input
+                  id="userPhone"
                   type="text"
                   value={userPhone}
                   onChange={(e) => setUserPhone(e.target.value)}
@@ -270,8 +273,9 @@ export default function DebugPage() {
 
             {hasField("useCase") && (
               <div>
-                <label className="block text-sm font-medium mb-1.5">Use Case</label>
+                <label htmlFor="useCase" className="block text-sm font-medium mb-1.5">Use Case</label>
                 <textarea
+                  id="useCase"
                   value={useCase}
                   onChange={(e) => setUseCase(e.target.value)}
                   placeholder="Describe the use case..."

@@ -165,6 +165,8 @@ export function getDemoAdminUsage() {
   return {
     usage: keys,
     summary: {
+      totalUsers: 3,
+      usersThisWeek: 0,
       totalKeys: keys.length,
       activeKeys: keys.filter((k) => k.isActive).length,
       inactiveKeys: keys.filter((k) => !k.isActive).length,

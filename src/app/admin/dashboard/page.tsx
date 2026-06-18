@@ -11,6 +11,8 @@ import { Separator } from "@/components/ui/separator";
 
 interface UsageStats {
   summary?: {
+    totalUsers: number;
+    usersThisWeek: number;
     totalKeys: number;
     activeKeys: number;
     inactiveKeys: number;
@@ -73,8 +75,8 @@ export default function AdminDashboardPage() {
               <CardTitle className="text-sm font-medium">Total Users</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">156</div>
-              <p className="text-xs text-muted-foreground">+12 this week</p>
+              <div className="text-2xl font-bold">{stats?.summary?.totalUsers ?? 0}</div>
+              <p className="text-xs text-muted-foreground">+{stats?.summary?.usersThisWeek ?? 0} this week</p>
             </CardContent>
           </Card>
 

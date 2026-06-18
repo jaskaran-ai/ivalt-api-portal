@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import {
   ArrowRight,
   CheckCircle2,
-  ChevronDown,
   FlaskConical,
   Loader2,
   Lock,
@@ -19,6 +18,7 @@ import {
 } from "lucide-react";
 import { useTheme } from "@/components/ui/theme-provider";
 import { toast } from "sonner";
+import PhoneInput, { type CountryCode, COUNTRY_CODES } from "@/components/ui/phone-input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -49,24 +49,6 @@ const DEMO_PROFILES = [
   },
 ];
 
-const COUNTRY_CODES = [
-  { code: "+1", country: "US", flag: "🇺🇸", name: "United States" },
-  { code: "+1", country: "CA", flag: "🇨🇦", name: "Canada" },
-  { code: "+91", country: "IN", flag: "🇮🇳", name: "India" },
-  { code: "+44", country: "GB", flag: "🇬🇧", name: "United Kingdom" },
-  { code: "+49", country: "DE", flag: "🇩🇪", name: "Germany" },
-  { code: "+33", country: "FR", flag: "🇫🇷", name: "France" },
-  { code: "+61", country: "AU", flag: "🇦🇺", name: "Australia" },
-  { code: "+81", country: "JP", flag: "🇯🇵", name: "Japan" },
-  { code: "+82", country: "KR", flag: "🇰🇷", name: "South Korea" },
-  { code: "+86", country: "CN", flag: "🇨🇳", name: "China" },
-  { code: "+55", country: "BR", flag: "🇧🇷", name: "Brazil" },
-  { code: "+52", country: "MX", flag: "🇲🇽", name: "Mexico" },
-  { code: "+971", country: "AE", flag: "🇦🇪", name: "UAE" },
-  { code: "+65", country: "SG", flag: "🇸🇬", name: "Singapore" },
-  { code: "+92", country: "PK", flag: "🇵🇰", name: "Pakistan" },
-];
-
 type Step = "phone" | "waiting" | "success";
 
 const themeIcons = { light: Sun, dark: Moon, system: Monitor };
@@ -77,9 +59,8 @@ export default function LoginPage() {
   const router = useRouter();
   const { theme, setTheme } = useTheme();
   const [step, setStep] = useState<Step>("phone");
-  const [selectedCountry, setSelectedCountry] = useState(COUNTRY_CODES[2]);
+  const [selectedCountry, setSelectedCountry] = useState<CountryCode>(COUNTRY_CODES[0]);
   const [phoneNumber, setPhoneNumber] = useState(DEMO_MODE ? "9876543210" : "");
-  const [showDropdown, setShowDropdown] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [pollCount, setPollCount] = useState(0);
 
@@ -303,59 +284,15 @@ export default function LoginPage() {
                     <Label htmlFor="phone" className="text-sm font-medium">
                       Phone number
                     </Label>
-                    <div className="relative flex overflow-visible rounded-xl border border-input bg-background focus-within:ring-2 focus-within:ring-ring/30">
-                      <button
-                        type="button"
-                        onClick={() =>
-                          !DEMO_MODE && setShowDropdown(!showDropdown)
-                        }
-                        className="flex items-center gap-2 rounded-l-xl border-r border-input px-3 py-2.5 text-sm transition-colors hover:bg-muted disabled:cursor-default disabled:opacity-60"
-                        disabled={DEMO_MODE}
-                      >
-                        <span>{selectedCountry.flag}</span>
-                        <span className="font-medium">
-                          {selectedCountry.code}
-                        </span>
-                        {!DEMO_MODE && (
-                          <ChevronDown className="size-3.5 text-muted-foreground" />
-                        )}
-                      </button>
-
-                      {showDropdown && !DEMO_MODE && (
-                        <div className="absolute left-0 top-full mt-2 max-h-64 w-64 overflow-auto rounded-xl border border-border bg-popover p-1 shadow-lg">
-                          {COUNTRY_CODES.map((c, i) => (
-                            <button
-                              key={`${c.country}-${i}`}
-                              type="button"
-                              onClick={() => {
-                                setSelectedCountry(c);
-                                setShowDropdown(false);
-                              }}
-                              className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm transition-colors hover:bg-muted"
-                            >
-                              <span>{c.flag}</span>
-                              <span className="flex-1">{c.name}</span>
-                              <span className="text-xs text-muted-foreground">
-                                {c.code}
-                              </span>
-                            </button>
-                          ))}
-                        </div>
-                      )}
-
-                      <input
-                        id="phone"
-                        type="tel"
-                        value={phoneNumber}
-                        onChange={(e) =>
-                          !DEMO_MODE && setPhoneNumber(e.target.value)
-                        }
-                        placeholder={DEMO_MODE ? "9876543210" : "98765 43210"}
-                        readOnly={DEMO_MODE}
-                        className="min-w-0 flex-1 rounded-r-xl bg-transparent px-3 py-2.5 text-sm outline-none placeholder:text-muted-foreground/65"
-                        onKeyDown={(e) => e.key === "Enter" && handleSendAuth()}
-                      />
-                    </div>
+                    <PhoneInput
+                      value={phoneNumber}
+                      onChange={setPhoneNumber}
+                      countryCode={selectedCountry}
+                      onCountryChange={setSelectedCountry}
+                      disabled={DEMO_MODE}
+                      placeholder={DEMO_MODE ? "9876543210" : "98765 43210"}
+                      onEnterKey={handleSendAuth}
+                    />
                   </div>
 
                   <Button

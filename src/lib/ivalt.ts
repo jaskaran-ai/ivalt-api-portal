@@ -22,7 +22,7 @@ export async function sendBiometricAuthRequest(mobileNumber: string): Promise<Bi
     const response = await fetch(`${IVALT_BASE_URL}/biometric-auth-request`, {
       method: "POST",
       headers: { "Content-Type": "application/json", "x-api-key": SECURITY_TOKEN },
-      body: JSON.stringify({ mobile: mobileNumber }),
+      body: JSON.stringify({ mobile: mobileNumber, requestFrom: "iVALT Api Portal" }),
     });
 
     if (response.status === 404) {
@@ -42,7 +42,7 @@ export async function getBiometricResult(mobileNumber: string): Promise<Biometri
     const response = await fetch(`${IVALT_BASE_URL}/biometric-auth-result`, {
       method: "POST",
       headers: { "Content-Type": "application/json", "x-api-key": SECURITY_TOKEN },
-      body: JSON.stringify({ mobile: mobileNumber }),
+      body: JSON.stringify({ mobile: mobileNumber, requestFrom: "iVALT Api Portal" }),
     });
 
     switch (response.status) {
