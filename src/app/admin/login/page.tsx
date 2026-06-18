@@ -8,7 +8,6 @@ import { toast } from "sonner";
 import PhoneInput, { type CountryCode, COUNTRY_CODES } from "@/components/ui/phone-input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 
 const themeIcons = { light: Sun, dark: Moon, system: Monitor };
@@ -99,7 +98,10 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-background px-4 py-8">
+    <div className="relative min-h-screen overflow-hidden bg-background">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_12%,rgba(97,31,105,0.13),transparent_32%),radial-gradient(circle_at_86%_18%,rgba(53,91,146,0.12),transparent_30%),linear-gradient(135deg,rgba(97,31,105,0.06),transparent_42%)]" />
+      <div className="absolute inset-x-0 bottom-0 h-1/2 bg-[linear-gradient(to_top,rgba(97,31,105,0.05),transparent)]" />
+
       <div className="absolute right-4 top-4 z-10 flex items-center gap-1">
         <button
           type="button"
@@ -115,10 +117,9 @@ export default function AdminLoginPage() {
         </button>
       </div>
 
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_12%,rgba(97,31,105,0.13),transparent_32%),radial-gradient(circle_at_86%_18%,rgba(53,91,146,0.12),transparent_30%)]" />
-
-      <main className="relative mx-auto grid min-h-[calc(100vh-4rem)] w-full max-w-6xl items-center gap-10 lg:grid-cols-[1.08fr_0.82fr]">
-        <section className="hidden flex-col gap-8 lg:flex">
+      <main className="relative mx-auto flex min-h-screen max-w-6xl flex-col lg:flex-row">
+        {/* Left — Branding */}
+        <section className="flex flex-col justify-center gap-8 px-6 py-12 lg:flex-1 lg:px-12 lg:py-0">
           <div className="flex items-center gap-3">
             <div className="flex size-12 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-sm shadow-primary/20">
               <ShieldCheck className="size-6" />
@@ -130,47 +131,51 @@ export default function AdminLoginPage() {
             <Badge variant="destructive" className="ml-2">Admin</Badge>
           </div>
 
-          <div className="max-w-2xl">
+          <div className="max-w-xl">
             <Badge variant="outline" className="mb-5 w-fit border-red-200 bg-red-50 text-red-700">
               <Lock className="mr-1 size-3" />
               Restricted Access
             </Badge>
-            <h1 className="text-3xl font-semibold tracking-[-0.04em] text-foreground xl:text-5xl">
+            <h1 className="text-3xl font-semibold tracking-[-0.04em] text-foreground xl:text-4xl">
               Admin authentication required
             </h1>
-            <p className="mt-6 max-w-xl text-lg leading-8 text-muted-foreground">
+            <p className="mt-4 text-base leading-7 text-muted-foreground">
               This portal is restricted to authorized administrators only. Use your registered mobile number to access.
             </p>
           </div>
         </section>
 
-        <section className="mx-auto flex w-full max-w-md flex-col gap-6">
-          <Card className="border-red-200 bg-card/95 shadow-xl shadow-foreground/10 backdrop-blur">
-            <CardHeader className="p-6 pb-0">
-              <div className="mb-5 flex size-12 items-center justify-center rounded-3xl bg-red-500/10 text-red-700">
-                <Smartphone className="size-6" />
-              </div>
-              <CardTitle className="text-2xl tracking-[-0.025em]">
-                {step === "waiting"
-                  ? "Approve on your phone"
-                  : step === "success"
-                    ? "Authenticated"
-                    : "Admin Login"}
-              </CardTitle>
-              <CardDescription>
-                {step === "waiting"
-                    ? `Request sent to ${fullNumber}`
-                  : step === "success"
-                    ? "Redirecting to admin dashboard"
-                    : "Enter your registered mobile number for biometric authentication"}
-              </CardDescription>
-            </CardHeader>
+        {/* Right — Form (no card, no shadow) */}
+        <section className="flex flex-col justify-center px-6 pb-16 pt-8 lg:flex-1 lg:px-16 lg:py-0">
+          <div className="flex items-center justify-center gap-3 lg:hidden">
+            <div className="flex size-9 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm shadow-primary/20">
+              <ShieldCheck className="size-5" />
+            </div>
+            <span className="text-lg font-semibold tracking-[-0.03em]">iVALT</span>
+            <Badge variant="destructive">Admin</Badge>
+          </div>
 
-            <CardContent className="p-6">
+          <div className="mx-auto w-full max-w-sm">
+            <h2 className="text-2xl font-semibold tracking-[-0.025em]">
+              {step === "waiting"
+                ? "Approve on your phone"
+                : step === "success"
+                  ? "Authenticated"
+                  : "Admin Login"}
+            </h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {step === "waiting"
+                ? `Request sent to ${fullNumber}`
+                : step === "success"
+                  ? "Redirecting to admin dashboard"
+                  : "Enter your registered mobile number for biometric authentication"}
+            </p>
+
+            <div className="mt-8">
               {step === "phone" && (
                 <form onSubmit={handleLogin} className="flex flex-col gap-5">
                   <div className="flex flex-col gap-2">
-                    <Label htmlFor="phone">Mobile Number *</Label>
+                    <Label htmlFor="phone">Mobile Number</Label>
                     <PhoneInput
                       value={phoneNumber}
                       onChange={setPhoneNumber}
@@ -178,12 +183,9 @@ export default function AdminLoginPage() {
                       onCountryChange={setSelectedCountry}
                       placeholder="98765 43210"
                     />
-                    <p className="text-xs text-muted-foreground">
-                      Use your registered admin mobile number
-                    </p>
                   </div>
 
-                  <Button type="submit" disabled={isLoading} size="lg" className="w-full shadow-sm shadow-red-200">
+                  <Button type="submit" disabled={isLoading} size="lg" className="w-full">
                     {isLoading ? (
                       <Loader2 className="animate-spin" />
                     ) : null}
@@ -199,7 +201,7 @@ export default function AdminLoginPage() {
               )}
 
               {step === "waiting" && (
-                <div className="flex flex-col gap-5 py-2 text-center">
+                <div className="flex flex-col gap-5 py-4 text-center">
                   <div className="mx-auto flex size-20 items-center justify-center rounded-[2rem] bg-primary/10 text-primary">
                     <Smartphone className="size-10" />
                   </div>
@@ -222,7 +224,7 @@ export default function AdminLoginPage() {
               )}
 
               {step === "success" && (
-                <div className="flex flex-col items-center gap-5 py-4 text-center">
+                <div className="flex flex-col items-center gap-5 py-8 text-center">
                   <div className="flex size-20 items-center justify-center rounded-[2rem] bg-emerald-500/10 text-emerald-700">
                     <CheckCircle2 className="size-10" />
                   </div>
@@ -237,8 +239,8 @@ export default function AdminLoginPage() {
                   </div>
                 </div>
               )}
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </section>
       </main>
     </div>
