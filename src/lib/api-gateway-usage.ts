@@ -7,9 +7,15 @@ import {
   GetUsageCommand,
   type UsagePlanKey 
 } from "@aws-sdk/client-api-gateway";
+import { NodeHttpHandler } from "@smithy/node-http-handler";
 
 const REGION = process.env.AWS_REGION || "us-east-1";
 const USAGE_PLAN_ID = process.env.AWS_API_GATEWAY_USAGE_PLAN_ID;
+
+const requestHandler = new NodeHttpHandler({
+  requestTimeout: 5000,
+  connectionTimeout: 3000,
+});
 
 // Lazy client initialization
 let client: APIGatewayClient | null = null;
@@ -18,7 +24,8 @@ function getClient(): APIGatewayClient {
   if (!client) {
     client = new APIGatewayClient({ 
       region: REGION,
-      // Credentials from environment variables
+      requestHandler,
+      maxAttempts: 1,
     });
   }
   return client;
