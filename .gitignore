@@ -99,3 +99,7 @@ jspm_packages/
 # Temporary files
 tmp/
 temp/
+.vercel
+
+# Vercel local env pull
+.env.vercel
