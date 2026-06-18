@@ -5,7 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 ```bash
-bun dev          # Start dev server on http://localhost:3000
+bun dev          # Start dev server (always on port 3000)
 bun run build    # Production build
 bun start        # Serve production build (or: bun run start)
 

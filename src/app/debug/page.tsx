@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ShieldCheck, Activity, AlertCircle, CheckCircle2, XCircle, RefreshCw, Mail, Loader2, Send } from "lucide-react";
+import { ShieldCheck, Activity, AlertCircle, CheckCircle2, XCircle, RefreshCw, Mail, Loader2, Send, Bell, UserCheck, UserX } from "lucide-react";
 
 interface HealthCheck {
   status: string;
@@ -34,6 +34,35 @@ const checkLabels: Record<string, string> = {
   aws: "AWS API Gateway",
 };
 
+const emailTemplates = [
+  {
+    id: "admin-notification",
+    label: "Admin Notification",
+    icon: Bell,
+    desc: "Alert admin about new access request",
+    fields: ["userName", "userPhone", "useCase"],
+    subject: "New Access Request - iVALT Portal (TEST)",
+  },
+  {
+    id: "user-approved",
+    label: "User Approved",
+    icon: UserCheck,
+    desc: "Notify user their access was approved",
+    fields: ["userName"],
+    subject: "Access Approved - iVALT Portal (TEST)",
+  },
+  {
+    id: "user-rejected",
+    label: "User Rejected",
+    icon: UserX,
+    desc: "Notify user their access was rejected",
+    fields: ["userName"],
+    subject: "Access Update - iVALT Portal (TEST)",
+  },
+] as const;
+
+type EmailTemplateId = (typeof emailTemplates)[number]["id"];
+
 export default function DebugPage() {
   const [health, setHealth] = useState<HealthResponse | null>(null);
   const [loading, setLoading] = useState(true);
@@ -41,6 +70,10 @@ export default function DebugPage() {
 
   // Test email state
   const [emailTo, setEmailTo] = useState("");
+  const [selectedTemplate, setSelectedTemplate] = useState<EmailTemplateId>("admin-notification");
+  const [userName, setUserName] = useState("");
+  const [userPhone, setUserPhone] = useState("");
+  const [useCase, setUseCase] = useState("");
   const [sending, setSending] = useState(false);
   const [emailResult, setEmailResult] = useState<{ ok: boolean; message: string } | null>(null);
 
@@ -63,6 +96,9 @@ export default function DebugPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const template = emailTemplates.find((t) => t.id === selectedTemplate)!;
+  const hasField = (field: string) => (template.fields as readonly string[]).includes(field);
+
   const handleSendTestEmail = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!emailTo.trim()) return;
@@ -72,11 +108,17 @@ export default function DebugPage() {
       const res = await fetch("/api/health/send-test-email", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ to: emailTo.trim() }),
+        body: JSON.stringify({
+          to: emailTo.trim(),
+          template: selectedTemplate,
+          userName: userName || undefined,
+          userPhone: userPhone || undefined,
+          useCase: useCase || undefined,
+        }),
       });
       const data = await res.json();
       if (res.ok) {
-        setEmailResult({ ok: true, message: `Sent! Message ID: ${data.messageId}` });
+        setEmailResult({ ok: true, message: `Sent! ID: ${data.messageId} · ${data.subject}` });
       } else {
         setEmailResult({ ok: false, message: data.error || "Failed to send" });
       }
@@ -164,13 +206,34 @@ export default function DebugPage() {
             <Mail className="size-5 text-primary" />
             <h2 className="text-lg font-semibold tracking-[-0.01em]">Send Test Email</h2>
           </div>
+
+          {/* Template selector */}
+          <div className="flex gap-2 mb-5">
+            {emailTemplates.map((t) => {
+              const Icon = t.icon;
+              const isActive = selectedTemplate === t.id;
+              return (
+                <button
+                  key={t.id}
+                  type="button"
+                  onClick={() => setSelectedTemplate(t.id)}
+                  className={`flex flex-1 flex-col items-center gap-1.5 rounded-xl border px-3 py-2.5 text-xs transition-colors ${
+                    isActive
+                      ? "border-primary bg-primary/5 text-primary font-medium"
+                      : "border-border/60 bg-background text-muted-foreground hover:bg-muted"
+                  }`}
+                >
+                  <Icon className="size-4" />
+                  {t.label}
+                </button>
+              );
+            })}
+          </div>
+
           <form onSubmit={handleSendTestEmail} className="flex flex-col gap-4">
             <div>
-              <label htmlFor="test-email-to" className="block text-sm font-medium mb-1.5">
-                Recipient Email
-              </label>
+              <label className="block text-sm font-medium mb-1.5">Recipient Email</label>
               <input
-                id="test-email-to"
                 type="email"
                 value={emailTo}
                 onChange={(e) => setEmailTo(e.target.value)}
@@ -178,6 +241,46 @@ export default function DebugPage() {
                 className="w-full rounded-xl border border-input bg-background px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-ring/30 placeholder:text-muted-foreground/65"
               />
             </div>
+
+            {template.fields.includes("userName") && (
+              <div>
+                <label className="block text-sm font-medium mb-1.5">User Name</label>
+                <input
+                  type="text"
+                  value={userName}
+                  onChange={(e) => setUserName(e.target.value)}
+                  placeholder="John Doe"
+                  className="w-full rounded-xl border border-input bg-background px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-ring/30 placeholder:text-muted-foreground/65"
+                />
+              </div>
+            )}
+
+            {hasField("userPhone") && (
+              <div>
+                <label className="block text-sm font-medium mb-1.5">User Phone</label>
+                <input
+                  type="text"
+                  value={userPhone}
+                  onChange={(e) => setUserPhone(e.target.value)}
+                  placeholder="+919876543210"
+                  className="w-full rounded-xl border border-input bg-background px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-ring/30 placeholder:text-muted-foreground/65"
+                />
+              </div>
+            )}
+
+            {hasField("useCase") && (
+              <div>
+                <label className="block text-sm font-medium mb-1.5">Use Case</label>
+                <textarea
+                  value={useCase}
+                  onChange={(e) => setUseCase(e.target.value)}
+                  placeholder="Describe the use case..."
+                  rows={3}
+                  className="w-full rounded-xl border border-input bg-background px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-ring/30 placeholder:text-muted-foreground/65 resize-none"
+                />
+              </div>
+            )}
+
             <button
               type="submit"
               disabled={sending || !emailTo.trim()}
@@ -188,9 +291,10 @@ export default function DebugPage() {
               ) : (
                 <Send className="size-4" />
               )}
-              {sending ? "Sending..." : "Send Test Email"}
+              {sending ? "Sending..." : `Send ${template.label}`}
             </button>
           </form>
+
           {emailResult && (
             <div className={`mt-4 flex items-start gap-2 rounded-xl px-4 py-3 text-sm ${
               emailResult.ok
