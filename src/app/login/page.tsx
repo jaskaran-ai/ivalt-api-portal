@@ -13,7 +13,11 @@ import {
   Smartphone,
   XCircle,
   Clock,
+  Sun,
+  Moon,
+  Monitor,
 } from "lucide-react";
+import { useTheme } from "@/components/ui/theme-provider";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -65,8 +69,13 @@ const COUNTRY_CODES = [
 
 type Step = "phone" | "waiting" | "success";
 
+const themeIcons = { light: Sun, dark: Moon, system: Monitor };
+const themeLabels = { light: "Light", dark: "Dark", system: "System" };
+const nextTheme = { light: "dark" as const, dark: "system" as const, system: "light" as const };
+
 export default function LoginPage() {
   const router = useRouter();
+  const { theme, setTheme } = useTheme();
   const [step, setStep] = useState<Step>("phone");
   const [selectedCountry, setSelectedCountry] = useState(COUNTRY_CODES[2]);
   const [phoneNumber, setPhoneNumber] = useState(DEMO_MODE ? "9876543210" : "");
@@ -181,6 +190,21 @@ export default function LoginPage() {
     <div className="relative min-h-screen overflow-hidden bg-background">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_12%,rgba(97,31,105,0.13),transparent_32%),radial-gradient(circle_at_86%_18%,rgba(53,91,146,0.12),transparent_30%),linear-gradient(135deg,rgba(97,31,105,0.06),transparent_42%)]" />
       <div className="absolute inset-x-0 bottom-0 h-1/2 bg-[linear-gradient(to_top,rgba(97,31,105,0.05),transparent)]" />
+
+      <div className="absolute right-4 top-4 z-10 flex items-center gap-1">
+        <button
+          type="button"
+          onClick={() => setTheme(nextTheme[theme])}
+          className="flex items-center gap-1.5 rounded-xl border border-border/60 bg-background/70 px-3 py-1.5 text-xs font-medium text-muted-foreground backdrop-blur transition-colors hover:bg-muted"
+          aria-label={`Switch theme (current: ${themeLabels[theme]})`}
+        >
+          {(() => {
+            const Icon = themeIcons[theme];
+            return <Icon className="size-3.5" />;
+          })()}
+          {themeLabels[theme]}
+        </button>
+      </div>
 
       <main className="relative mx-auto flex min-h-screen max-w-6xl flex-col lg:flex-row">
         {/* Left — Branding */}
