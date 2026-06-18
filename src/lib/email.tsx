@@ -13,8 +13,10 @@ const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
 
 function getTransporter() {
   if (!SMTP_USER || !SMTP_PASS) {
+    console.error("[EMAIL] Missing SMTP_USER or SMTP_PASS in env");
     throw new Error("SMTP credentials not configured. Set SMTP_USER and SMTP_PASS in .env");
   }
+  console.log("[EMAIL] Creating transporter:", { host: SMTP_HOST, port: SMTP_PORT, user: SMTP_USER });
   return nodemailer.createTransport({
     host: SMTP_HOST,
     port: SMTP_PORT,
@@ -28,7 +30,13 @@ async function sendRawEmail({ to, subject, html }: { to: string; subject: string
     console.log(`[EMAIL DEMO] To: ${to} | Subject: ${subject}`);
     return;
   }
-  await getTransporter().sendMail({ from: SMTP_USER, to, subject, html });
+  console.log(`[EMAIL] Sending to: ${to} | Subject: ${subject}`);
+  try {
+    const info = await getTransporter().sendMail({ from: SMTP_USER, to, subject, html });
+    console.log(`[EMAIL] Sent successfully:`, info.messageId);
+  } catch (err) {
+    console.error(`[EMAIL] Failed to send to ${to}:`, err);
+  }
 }
 
 function getAdminEmails(): string[] {
