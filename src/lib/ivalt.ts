@@ -19,10 +19,10 @@ export interface BiometricResultResponse {
 
 export async function sendBiometricAuthRequest(mobileNumber: string): Promise<BiometricAuthRequestResponse> {
   try {
-    const response = await fetch(`${IVALT_BASE_URL}/BiometricAuthRequest`, {
+    const response = await fetch(`${IVALT_BASE_URL}/biometric-auth-request`, {
       method: "POST",
       headers: { "Content-Type": "application/json", token: SECURITY_TOKEN },
-      body: JSON.stringify({ mobile_number: mobileNumber }),
+      body: JSON.stringify({ mobile: mobileNumber }),
     });
 
     if (response.status === 404) {
@@ -39,10 +39,10 @@ export async function sendBiometricAuthRequest(mobileNumber: string): Promise<Bi
 
 export async function getBiometricResult(mobileNumber: string): Promise<BiometricResultResponse> {
   try {
-    const response = await fetch(`${IVALT_BASE_URL}/BiometricResultRequest`, {
+    const response = await fetch(`${IVALT_BASE_URL}/biometric-auth-result`, {
       method: "POST",
       headers: { "Content-Type": "application/json", token: SECURITY_TOKEN },
-      body: JSON.stringify({ mobile_number: mobileNumber }),
+      body: JSON.stringify({ mobile: mobileNumber }),
     });
 
     switch (response.status) {
