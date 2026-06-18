@@ -5,13 +5,11 @@ import { useRouter } from "next/navigation";
 import { ArrowRight, CheckCircle2, Loader2, ShieldCheck, Smartphone, Lock, Sun, Moon, Monitor } from "lucide-react";
 import { useTheme } from "@/components/ui/theme-provider";
 import { toast } from "sonner";
+import PhoneInput, { type CountryCode, COUNTRY_CODES } from "@/components/ui/phone-input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-
-const ADMIN_PHONE = "+919530654704";
 
 const themeIcons = { light: Sun, dark: Moon, system: Monitor };
 const themeLabels = { light: "Light", dark: "Dark", system: "System" };
@@ -23,42 +21,48 @@ export default function AdminLoginPage() {
   const router = useRouter();
   const { theme, setTheme } = useTheme();
   const [step, setStep] = useState<Step>("phone");
+  const [selectedCountry, setSelectedCountry] = useState<CountryCode>(COUNTRY_CODES[0]);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [pollCount, setPollCount] = useState(0);
 
-  const startPolling = useCallback(() => {
-    let attempts = 0;
-    const maxAttempts = 150;
-    const interval = setInterval(async () => {
-      attempts++;
-      setPollCount(attempts);
-      try {
-        const res = await fetch("/api/admin/auth/verify", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ phoneNumber: ADMIN_PHONE }),
-        });
-        const data = await res.json();
+  const startPolling = useCallback(
+    (phoneNumber: string) => {
+      let attempts = 0;
+      const maxAttempts = 150;
+      const interval = setInterval(async () => {
+        attempts++;
+        setPollCount(attempts);
+        try {
+          const res = await fetch("/api/admin/auth/verify", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ phoneNumber }),
+          });
+          const data = await res.json();
 
-        if (data.status === "authenticated") {
-          clearInterval(interval);
-          setStep("success");
-          setTimeout(() => router.push("/admin/dashboard"), 1500);
-        } else if (data.status === "failed" || data.status === "not_found") {
-          clearInterval(interval);
-          toast.error("Authentication failed. Please try again.");
-          setStep("phone");
-        } else if (attempts >= maxAttempts) {
-          clearInterval(interval);
-          toast.error("Authentication timed out. Please try again.");
-          setStep("phone");
+          if (data.status === "authenticated") {
+            clearInterval(interval);
+            setStep("success");
+            setTimeout(() => router.push("/admin/dashboard"), 1500);
+          } else if (data.status === "failed" || data.status === "not_found") {
+            clearInterval(interval);
+            toast.error("Authentication failed. Please try again.");
+            setStep("phone");
+          } else if (attempts >= maxAttempts) {
+            clearInterval(interval);
+            toast.error("Authentication timed out. Please try again.");
+            setStep("phone");
+          }
+        } catch {
+          // Keep polling on transient errors.
         }
-      } catch {
-        // Keep polling on transient errors.
-      }
-    }, 2000);
-  }, [router]);
+      }, 2000);
+    },
+    [router],
+  );
+
+  const fullNumber = `${selectedCountry.code}${phoneNumber.replace(/\D/g, "")}`;
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -74,7 +78,7 @@ export default function AdminLoginPage() {
       const res = await fetch("/api/admin/auth", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phoneNumber }),
+        body: JSON.stringify({ phoneNumber: fullNumber }),
       });
 
       const data = await res.json();
@@ -87,7 +91,7 @@ export default function AdminLoginPage() {
 
       setIsLoading(false);
       setStep("waiting");
-      startPolling();
+      startPolling(fullNumber);
     } catch {
       toast.error("Network error");
       setIsLoading(false);
@@ -155,7 +159,7 @@ export default function AdminLoginPage() {
               </CardTitle>
               <CardDescription>
                 {step === "waiting"
-                  ? `Request sent to ${ADMIN_PHONE}`
+                    ? `Request sent to ${fullNumber}`
                   : step === "success"
                     ? "Redirecting to admin dashboard"
                     : "Enter your registered mobile number for biometric authentication"}
@@ -167,13 +171,12 @@ export default function AdminLoginPage() {
                 <form onSubmit={handleLogin} className="flex flex-col gap-5">
                   <div className="flex flex-col gap-2">
                     <Label htmlFor="phone">Mobile Number *</Label>
-                    <Input
-                      id="phone"
-                      type="tel"
+                    <PhoneInput
                       value={phoneNumber}
-                      onChange={(e) => setPhoneNumber(e.target.value)}
-                      placeholder="+91 95306 54704"
-                      className="text-lg"
+                      onChange={setPhoneNumber}
+                      countryCode={selectedCountry}
+                      onCountryChange={setSelectedCountry}
+                      placeholder="95306 54704"
                     />
                     <p className="text-xs text-muted-foreground">
                       Use your registered admin mobile number
