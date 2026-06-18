@@ -1,28 +1,27 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/db";
-import { apiKeys, apiKeyUsage, users } from "@/db/schema";
+import { apiKeys, users } from "@/db/schema";
 import { fetchApiKeyUsage } from "@/lib/api-gateway-usage";
-import { eq, gte, sql } from "drizzle-orm";
+import { gte } from "drizzle-orm";
 import { DEMO_MODE, getDemoAdminUsage } from "@/lib/demo";
 
-export async function GET(req: NextRequest) {
+export async function GET(_req: NextRequest) {
   try {
-    // ── DEMO MODE ─────────────────────────────────────────────────────────────
     if (DEMO_MODE) {
       return NextResponse.json(getDemoAdminUsage());
     }
-    // ──────────────────────────────────────────────────────────────────────────
 
-    const usageData = await fetchApiKeyUsage();
+    let usageData: Array<{ awsKeyId: string; usageCount: number }> = [];
+    try {
+      usageData = await fetchApiKeyUsage();
+    } catch (err) {
+      console.error("AWS usage fetch failed (non-fatal):", err);
+    }
 
-    // Get all API keys with user info
     const allKeys = await db.query.apiKeys.findMany({
-      with: {
-        user: true,
-      },
+      with: { user: true },
     });
 
-    // Build usage statistics
     const keysWithUsage = allKeys.map((key) => {
       const usage = usageData.find((u) => u.awsKeyId === key.awsKeyId);
       return {
@@ -44,7 +43,6 @@ export async function GET(req: NextRequest) {
       };
     });
 
-    // Calculate totals
     const totalKeys = keysWithUsage.length;
     const activeKeys = keysWithUsage.filter((k) => k.isActive).length;
     const totalRequests = keysWithUsage.reduce((sum, k) => sum + k.usageCount, 0);
@@ -57,10 +55,7 @@ export async function GET(req: NextRequest) {
 
     const totalUsers = await db.$count(users);
     const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-    const usersThisWeek = await db.$count(
-      users,
-      gte(users.createdAt, oneWeekAgo)
-    );
+    const usersThisWeek = await db.$count(users, gte(users.createdAt, oneWeekAgo));
 
     return NextResponse.json({
       usage: keysWithUsage,
