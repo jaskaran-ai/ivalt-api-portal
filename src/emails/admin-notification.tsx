@@ -7,6 +7,7 @@ import {
   Text,
   Heading,
   Hr,
+  Img,
   Font,
   Tailwind,
 } from "@react-email/components";
@@ -37,11 +38,7 @@ export function AdminNotification({
         <Body className="bg-[#f4f2f5] py-10">
           <Container className="mx-auto max-w-[520px]">
             <Section className="text-center mb-6">
-              <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="iVALT" style={{ margin: "0 auto" }}>
-                <rect width="36" height="36" rx="10" fill="#611f69" />
-                <path d="M18 8L26 13V18.5C26 24 22.5 29 18 30.5C13.5 29 10 24 10 18.5V13L18 8Z" fill="white" />
-                <path d="M15 18.5L17 20.5L21 16" stroke="#611f69" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
+              <Img src="https://ivalt-api-portal.vercel.app/logo.webp" alt="iVALT" width="32" height="32" style={{ margin: "0 auto" }} />
             </Section>
 
             <Section className="bg-white rounded-2xl shadow-sm p-8">
