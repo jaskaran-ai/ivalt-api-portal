@@ -176,7 +176,7 @@ export default function AdminLoginPage() {
                       onChange={setPhoneNumber}
                       countryCode={selectedCountry}
                       onCountryChange={setSelectedCountry}
-                      placeholder="95306 54704"
+                      placeholder="98765 43210"
                     />
                     <p className="text-xs text-muted-foreground">
                       Use your registered admin mobile number
