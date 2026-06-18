@@ -176,7 +176,7 @@ export default function AdminLoginPage() {
                       className="text-lg"
                     />
                     <p className="text-xs text-muted-foreground">
-                      Admin number: <strong>{ADMIN_PHONE}</strong>
+                      Use your registered admin mobile number
                     </p>
                   </div>
 
