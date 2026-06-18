@@ -17,6 +17,7 @@ import {
   Monitor,
 } from "lucide-react";
 import { useTheme } from "@/components/ui/theme-provider";
+import { Logo } from "@/components/ui/logo";
 import { toast } from "sonner";
 import PhoneInput, { type CountryCode, COUNTRY_CODES } from "@/components/ui/phone-input";
 import { Badge } from "@/components/ui/badge";
@@ -191,7 +192,7 @@ export default function LoginPage() {
         {/* Left — Branding */}
         <section className="flex flex-col justify-center gap-8 px-6 py-12 lg:flex-1 lg:px-12 lg:py-0">
           <div className="flex items-center gap-3">
-            <img src="/logo.webp" alt="iVALT" className="h-8 w-auto" />
+            <Logo className="h-8 w-auto" />
             <div>
               <p className="text-sm font-semibold tracking-[-0.03em]">
                 APIs Access
@@ -239,7 +240,7 @@ export default function LoginPage() {
         {/* Right — Form (no card, no shadow) */}
         <section className="flex flex-col justify-center px-6 pb-16 pt-8 lg:flex-1 lg:px-16 lg:py-0">
           <div className="flex items-center justify-center gap-3 lg:hidden">
-            <img src="/logo.webp" alt="iVALT" className="h-7 w-auto" />
+            <Logo className="h-7 w-auto" />
             <span className="text-lg font-semibold tracking-[-0.03em]">
               iVALT
             </span>
@@ -390,7 +391,7 @@ export default function LoginPage() {
                   </div>
                   <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
                     <Loader2 className="size-4 animate-spin" />
-                    Waiting\u2026 {Math.ceil((150 - pollCount) * 2)}s remaining
+                    Waiting\u2026 {(() => { const s = Math.ceil((150 - pollCount) * 2); const m = Math.floor(s / 60); return `${m}m ${s % 60}s`; })()} remaining
                   </div>
                   <Button
                     variant="ghost"
