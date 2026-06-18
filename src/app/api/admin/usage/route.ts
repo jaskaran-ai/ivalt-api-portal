@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/db";
-import { apiKeys, apiKeyUsage } from "@/db/schema";
+import { apiKeys, apiKeyUsage, users } from "@/db/schema";
 import { fetchApiKeyUsage } from "@/lib/api-gateway-usage";
-import { eq } from "drizzle-orm";
+import { eq, gte, sql } from "drizzle-orm";
 import { DEMO_MODE, getDemoAdminUsage } from "@/lib/demo";
 
 export async function GET(req: NextRequest) {
@@ -55,9 +55,18 @@ export async function GET(req: NextRequest) {
       (k) => !k.lastUsedAt || new Date(k.lastUsedAt) < new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
     ).length;
 
+    const totalUsers = await db.$count(users);
+    const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+    const usersThisWeek = await db.$count(
+      users,
+      gte(users.createdAt, oneWeekAgo)
+    );
+
     return NextResponse.json({
       usage: keysWithUsage,
       summary: {
+        totalUsers,
+        usersThisWeek,
         totalKeys,
         activeKeys,
         inactiveKeys: inactive,
@@ -70,6 +79,8 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({
       usage: [],
       summary: {
+        totalUsers: 0,
+        usersThisWeek: 0,
         totalKeys: 0,
         activeKeys: 0,
         inactiveKeys: 0,
