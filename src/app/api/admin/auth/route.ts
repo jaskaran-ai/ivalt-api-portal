@@ -1,10 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSession } from "@/lib/session";
-import { db } from "@/db";
-import { users } from "@/db/schema";
-import { eq } from "drizzle-orm";
-import { DEMO_MODE, DEMO_USERS } from "@/lib/demo";
-const DEMO_USER = DEMO_USERS[0];
+import { DEMO_MODE } from "@/lib/demo";
+import { sendBiometricAuthRequest } from "@/lib/ivalt";
+
+const ADMIN_PHONE = "+919530654704";
 
 export async function POST(req: NextRequest) {
   try {
@@ -16,49 +14,27 @@ export async function POST(req: NextRequest) {
 
     const cleanPhone = phoneNumber.replace(/\s/g, "");
 
-    // In demo mode, auto-authenticate as admin
+    if (cleanPhone !== ADMIN_PHONE) {
+      return NextResponse.json({ error: "Unauthorized admin phone number" }, { status: 403 });
+    }
+
     if (DEMO_MODE) {
-      const session = await getSession();
-      session.userId = DEMO_USER.id;
-      session.phoneNumber = DEMO_USER.phoneNumber;
-      session.isLoggedIn = true;
-      session.accessStatus = "approved";
-      session.role = "admin";
-      await session.save!();
-      
-      return NextResponse.json({ success: true, redirect: "/admin/dashboard" });
+      return NextResponse.json({ success: true, message: "Admin auth request sent (demo)" });
     }
 
-    // Check if user exists and has admin role
-    let user = await db.query.users.findFirst({
-      where: eq(users.phoneNumber, cleanPhone),
-    });
+    const result = await sendBiometricAuthRequest(cleanPhone);
 
-    if (!user) {
-      // Create user with admin role
-      const [newUser] = await db
-        .insert(users)
-        .values({ phoneNumber: cleanPhone, role: "admin" })
-        .returning();
-      user = newUser;
-    } else if (user.role !== "admin") {
-      // Update existing user to admin
-      await db
-        .update(users)
-        .set({ role: "admin" })
-        .where(eq(users.id, user.id));
+    if (!result.success) {
+      if (result.statusCode === 404) {
+        return NextResponse.json(
+          { error: "Admin phone not registered with iVALT app" },
+          { status: 404 }
+        );
+      }
+      return NextResponse.json({ error: result.message || "Admin auth request failed" }, { status: 400 });
     }
 
-    // Create session
-    const session = await getSession();
-    session.userId = user.id;
-    session.phoneNumber = cleanPhone;
-    session.isLoggedIn = true;
-    session.accessStatus = (user.status as "pending" | "approved" | "rejected") || "approved";
-    session.role = "admin";
-    await session.save!();
-
-    return NextResponse.json({ success: true, redirect: "/admin/dashboard" });
+    return NextResponse.json({ success: true, message: "Authentication request sent to admin iVALT app" });
   } catch (error) {
     console.error("Admin auth error:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
