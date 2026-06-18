@@ -13,6 +13,8 @@ bun run db:push      # Sync schema to DB (no migration file generated)
 bun run db:generate  # Generate a migration file from schema changes
 bun run db:migrate   # Run pending migrations
 bun run db:studio    # Open Drizzle Studio GUI
+
+vercel deploy --prod --yes  # Deploy to Vercel production
 ```
 
 No test suite is configured. TypeScript is the primary correctness check — `bun run build` will catch type errors.
@@ -24,7 +26,7 @@ No test suite is configured. TypeScript is the primary correctness check — `bu
 ### Auth flow
 
 1. `POST /api/auth/request` — sends a push notification to the user's phone via the iVALT API (`src/lib/ivalt.ts`).
-2. Client polls `POST /api/auth/verify` every 2 s — server polls iVALT `BiometricResultRequest`.
+2. Client polls `POST /api/auth/verify` every 2 s — server polls iVALT `/biometric-auth-result`.
 3. On HTTP 200 from iVALT, an **iron-session** cookie (`ivalt_portal_session`) is created and the user is redirected to `/dashboard`.
 4. Session is read in every protected route via `getSession()` in `src/lib/session.ts`.
 
@@ -36,7 +38,7 @@ Set `NEXT_PUBLIC_DEMO_MODE=true` to bypass all real external calls (DB, AWS, iVA
 
 - **DB** (`src/db/`): Drizzle ORM + `postgres` driver. Two tables: `users` (keyed by UUID, unique on `phone_number`) and `api_keys` (FK → users, cascade delete). `keyValue` is stored once at creation then masked in the DB record — the raw value is never re-fetched from AWS.
 - **AWS API Gateway** (`src/lib/aws-gateway.ts`): Creates/deletes/toggles keys in AWS and attaches them to a single usage plan. The client is constructed lazily and throws if credentials are missing in non-demo mode.
-- **iVALT API** (`src/lib/ivalt.ts`): Two calls only — `BiometricAuthRequest` (POST, initiates push) and `BiometricResultRequest` (POST, polls result). Auth status is mapped from HTTP codes: 200 = authenticated, 422 = pending, 403 = rejected, 404 = user not found.
+- **iVALT API** (`src/lib/ivalt.ts`): Two calls only — `POST /biometric-auth-request` (initiates push with `{ mobile }`) and `POST /biometric-auth-result` (polls result with `{ mobile }`). Auth header: `x-api-key: <IVALT_SECURITY_TOKEN>`. Status codes: 200 = authenticated, 422 = pending, 403 = rejected, 404 = user not found.
 
 ### API routes
 
@@ -76,3 +78,6 @@ Copy `.env.local.example` → `.env` and fill in values. Required in production:
 | `AWS_API_GATEWAY_USAGE_PLAN_ID` | Usage plan to attach keys to |
 | `SESSION_SECRET` | ≥32-char random string for iron-session |
 | `NEXT_PUBLIC_DEMO_MODE` | Set `true` to skip all external calls |
+| `SMTP_HOST` / `SMTP_PORT` | SMTP server (e.g., `smtp.gmail.com` / `587`) |
+| `SMTP_USER` / `SMTP_PASS` | SMTP credentials |
+| `ADMIN_EMAIL` | Comma-separated admin emails |
