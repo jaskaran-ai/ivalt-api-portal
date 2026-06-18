@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { DEMO_MODE, getDemoAccessRequests } from "@/lib/demo";
+import { sendUserApprovedEmail, sendUserRejectedEmail } from "@/lib/email";
 import { db } from "@/db";
 import { users, accessRequests } from "@/db/schema";
 import { eq, and, or, isNull, isNotNull } from "drizzle-orm";
@@ -46,10 +47,22 @@ export async function POST(req: NextRequest) {
       })
       .where(eq(users.id, request.userId));
 
-    // In production, send email to user with approval link
-    if (approved) {
-      console.log(`[USER NOTIFICATION] Access approved for user ${request.userId}`);
-      // await sendUserApprovalEmail(request.userId, request.approvalToken);
+    const user = await db.query.users.findFirst({
+      where: eq(users.id, request.userId),
+    });
+
+    if (user) {
+      if (approved) {
+        await sendUserApprovedEmail({
+          to: user.phoneNumber,
+          userName: user.name || "User",
+        });
+      } else {
+        await sendUserRejectedEmail({
+          to: user.phoneNumber,
+          userName: user.name || "User",
+        });
+      }
     }
 
     return NextResponse.json({ success: true, message: `Access request ${approved ? "approved" : "rejected"}` });

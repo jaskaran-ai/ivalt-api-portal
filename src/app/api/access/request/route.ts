@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { DEMO_MODE } from "@/lib/demo";
 import { getSession } from "@/lib/session";
+import { sendAdminNotification } from "@/lib/email";
 import { db } from "@/db";
 import { users, accessRequests } from "@/db/schema";
 import { eq, isNull, isNotNull } from "drizzle-orm";
@@ -51,8 +52,16 @@ export async function POST(req: NextRequest) {
       .set({ status: "pending" })
       .where(eq(users.id, userId));
 
-    // Send email notification to admin
-    await sendAdminNotification(userId, useCase);
+    const user = await db.query.users.findFirst({
+      where: eq(users.id, userId),
+    });
+    if (user) {
+      await sendAdminNotification({
+        userName: user.name || "User",
+        userPhone: user.phoneNumber,
+        useCase,
+      });
+    }
 
     return NextResponse.json({ success: true, message: "Access request submitted successfully" });
   } catch (error) {
@@ -107,16 +116,3 @@ export async function GET(req: NextRequest) {
   }
 }
 
-async function sendAdminNotification(userId: string, useCase: string) {
-  // In production, this would send an email via SMTP or a service like SendGrid
-  // For now, we'll log it and the admin can check the database
-  console.log(`[ADMIN NOTIFICATION] New access request from user ${userId}: ${useCase}`);
-  
-  // TODO: Implement actual email sending
-  // const adminEmail = process.env.ADMIN_EMAIL;
-  // await sendEmail({
-  //   to: adminEmail,
-  //   subject: `New Access Request - ${userId}`,
-  //   html: generateApprovalEmail(userId, useCase),
-  // });
-}
