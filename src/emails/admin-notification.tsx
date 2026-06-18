@@ -68,13 +68,13 @@ export function AdminNotification({
               <Section
                 className="rounded-xl overflow-hidden email-header"
                 style={{
-                  background: "linear-gradient(135deg, #611f69 0%, #4a1552 100%)",
+                  background: "#ffffff",
                   padding: "32px 28px",
                   textAlign: "center" as const,
                 }}
               >
                 <Img
-                  src="https://ivalt-api-portal.vercel.app/logo.webp"
+                  src="https://ivalt-api-portal.vercel.app/logo-dark.png"
                   alt="iVALT"
                   width="140"
                   height="50"
