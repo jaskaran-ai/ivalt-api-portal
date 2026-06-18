@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ShieldCheck, Activity, AlertCircle, CheckCircle2, XCircle, RefreshCw } from "lucide-react";
+import { ShieldCheck, Activity, AlertCircle, CheckCircle2, XCircle, RefreshCw, Mail, Loader2, Send } from "lucide-react";
 
 interface HealthCheck {
   status: string;
@@ -39,6 +39,11 @@ export default function DebugPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Test email state
+  const [emailTo, setEmailTo] = useState("");
+  const [sending, setSending] = useState(false);
+  const [emailResult, setEmailResult] = useState<{ ok: boolean; message: string } | null>(null);
+
   const fetchHealth = async () => {
     setLoading(true);
     setError(null);
@@ -57,6 +62,30 @@ export default function DebugPage() {
     fetchHealth();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const handleSendTestEmail = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!emailTo.trim()) return;
+    setSending(true);
+    setEmailResult(null);
+    try {
+      const res = await fetch("/api/health/send-test-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ to: emailTo.trim() }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setEmailResult({ ok: true, message: `Sent! Message ID: ${data.messageId}` });
+      } else {
+        setEmailResult({ ok: false, message: data.error || "Failed to send" });
+      }
+    } catch (err) {
+      setEmailResult({ ok: false, message: String(err) });
+    } finally {
+      setSending(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background p-8">
@@ -96,7 +125,7 @@ export default function DebugPage() {
         )}
 
         {health && (
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 mb-8">
             <div className="flex items-center gap-2 rounded-xl border border-border/80 bg-card px-4 py-3 text-sm">
               <Activity className="size-4 text-primary" />
               <span className="font-medium">Overall Status:</span>
@@ -128,6 +157,51 @@ export default function DebugPage() {
             ))}
           </div>
         )}
+
+        {/* Test Email Section */}
+        <div className="rounded-xl border border-border/80 bg-card p-6">
+          <div className="flex items-center gap-2 mb-4">
+            <Mail className="size-5 text-primary" />
+            <h2 className="text-lg font-semibold tracking-[-0.01em]">Send Test Email</h2>
+          </div>
+          <form onSubmit={handleSendTestEmail} className="flex flex-col gap-4">
+            <div>
+              <label htmlFor="test-email-to" className="block text-sm font-medium mb-1.5">
+                Recipient Email
+              </label>
+              <input
+                id="test-email-to"
+                type="email"
+                value={emailTo}
+                onChange={(e) => setEmailTo(e.target.value)}
+                placeholder="admin@example.com"
+                className="w-full rounded-xl border border-input bg-background px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-ring/30 placeholder:text-muted-foreground/65"
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={sending || !emailTo.trim()}
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-50"
+            >
+              {sending ? (
+                <Loader2 className="size-4 animate-spin" />
+              ) : (
+                <Send className="size-4" />
+              )}
+              {sending ? "Sending..." : "Send Test Email"}
+            </button>
+          </form>
+          {emailResult && (
+            <div className={`mt-4 flex items-start gap-2 rounded-xl px-4 py-3 text-sm ${
+              emailResult.ok
+                ? "border border-emerald-200 bg-emerald-50 text-emerald-700"
+                : "border border-red-200 bg-red-50 text-red-700"
+            }`}>
+              {emailResult.ok ? <CheckCircle2 className="size-4 shrink-0 mt-0.5" /> : <XCircle className="size-4 shrink-0 mt-0.5" />}
+              <span className="font-mono text-xs break-all">{emailResult.message}</span>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
