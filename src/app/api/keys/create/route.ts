@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { DEMO_MODE, getDemoKeys, addDemoKey } from "@/lib/demo";
+import { DEMO_MODE, getDemoKeys, addDemoKey, DEMO_USERS } from "@/lib/demo";
 import { getSession } from "@/lib/session";
 import { db } from "@/db";
-import { apiKeys } from "@/db/schema";
+import { apiKeys, users } from "@/db/schema";
 import { eq, count } from "drizzle-orm";
 import { createAwsApiKey } from "@/lib/aws-gateway";
 
@@ -33,6 +33,9 @@ export async function POST(req: NextRequest) {
           { status: 403 },
         );
       }
+
+      const demoUser = DEMO_USERS.find((u) => u.id === session.userId);
+      const userName = demoUser?.name || "Unknown";
 
       await new Promise((r) => setTimeout(r, 600));
 
@@ -71,8 +74,26 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const sanitizedName = `ivalt-portal-${session.userId.slice(0, 8)}-${keyName.trim().replace(/[^a-zA-Z0-9-_]/g, "-")}`;
-    const awsKey = await createAwsApiKey(sanitizedName, `Portal key for user ${session.userId}`);
+    const user = await db.query.users.findFirst({
+      where: eq(users.id, session.userId),
+    });
+
+    const userName = user?.name || "Unknown";
+    const phone = user?.phoneNumber || session.phoneNumber || "unknown";
+
+    const sanitizedUserName = userName.replace(/[^a-zA-Z0-9]/g, "_");
+    const sanitizedKeyName = keyName.trim().replace(/[^a-zA-Z0-9-_]/g, "-");
+    const awsKeyName = `ivalt-${sanitizedUserName}-${sanitizedKeyName}`;
+
+    const description = JSON.stringify({
+      userId: session.userId,
+      name: userName,
+      phoneNumber: phone,
+      keyName: keyName.trim(),
+      createdAt: new Date().toISOString(),
+    });
+
+    const awsKey = await createAwsApiKey(awsKeyName, description);
 
     const [newKey] = await db
       .insert(apiKeys)

@@ -22,6 +22,9 @@ mock.module("@/lib/aws-gateway", () => ({
 
 mock.module("@/db", () => ({
   db: {
+    query: {
+      users: { findFirst: mockUserFindFirst },
+    },
     select: () => ({
       from: () => ({
         where: () => [{ value: mockKeyCount }],
@@ -37,6 +40,7 @@ mock.module("@/db", () => ({
 
 mock.module("@/db/schema", () => ({
   apiKeys: { userId: "apiKeys.userId" },
+  users: { id: "users.id" },
 }));
 
 mock.module("drizzle-orm", () => ({
@@ -52,6 +56,10 @@ describe("POST /api/keys/create (production mode)", () => {
       isLoggedIn: true,
     });
     mockKeyCount = 0;
+    mockUserFindFirst.mockReturnValue({
+      name: "Test User",
+      phoneNumber: "+919876543210",
+    });
     mockCreateAwsApiKey.mockReturnValue({
       id: "aws-key-123",
       name: "ivalt-portal-prod-user-key",
