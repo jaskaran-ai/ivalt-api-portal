@@ -5,7 +5,14 @@ import { User, Key } from "lucide-react";
 import AdminShell from "@/components/layout/AdminShell";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { toast } from "sonner";
 
 interface User {
@@ -43,17 +50,24 @@ export default function AdminUsersPage() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "approved":
-        return <Badge variant="secondary" className="bg-emerald-500/10 text-emerald-700">Approved</Badge>;
+        return (
+          <Badge variant="secondary" className="bg-emerald-500/10 text-emerald-700">
+            Approved
+          </Badge>
+        );
       case "rejected":
-        return <Badge variant="secondary" className="bg-red-500/10 text-red-700">Rejected</Badge>;
+        return (
+          <Badge variant="secondary" className="bg-red-500/10 text-red-700">
+            Rejected
+          </Badge>
+        );
       default:
         return <Badge variant="outline">Pending</Badge>;
     }
   };
 
-  const filteredUsers = statusFilter === "all" 
-    ? users 
-    : users.filter(u => u.status === statusFilter);
+  const filteredUsers =
+    statusFilter === "all" ? users : users.filter((u) => u.status === statusFilter);
 
   return (
     <AdminShell>
@@ -68,32 +82,32 @@ export default function AdminUsersPage() {
           <div className="flex gap-2">
             <button
               onClick={() => setStatusFilter("all")}
-              className={`px-3 py-1 text-sm rounded-md ${statusFilter === "all" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}
+              className={`rounded-md px-3 py-1 text-sm ${statusFilter === "all" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}
             >
               All
             </button>
             <button
               onClick={() => setStatusFilter("approved")}
-              className={`px-3 py-1 text-sm rounded-md ${statusFilter === "approved" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}
+              className={`rounded-md px-3 py-1 text-sm ${statusFilter === "approved" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}
             >
               Approved
             </button>
             <button
               onClick={() => setStatusFilter("pending")}
-              className={`px-3 py-1 text-sm rounded-md ${statusFilter === "pending" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}
+              className={`rounded-md px-3 py-1 text-sm ${statusFilter === "pending" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}
             >
               Pending
             </button>
             <button
               onClick={() => setStatusFilter("rejected")}
-              className={`px-3 py-1 text-sm rounded-md ${statusFilter === "rejected" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}
+              className={`rounded-md px-3 py-1 text-sm ${statusFilter === "rejected" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}
             >
               Rejected
             </button>
           </div>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-4 mb-6">
+        <div className="mb-6 grid gap-4 md:grid-cols-4">
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium">Total Users</CardTitle>
@@ -108,7 +122,7 @@ export default function AdminUsersPage() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-emerald-600">
-                {users.filter(u => u.status === "approved").length}
+                {users.filter((u) => u.status === "approved").length}
               </div>
             </CardContent>
           </Card>
@@ -118,7 +132,7 @@ export default function AdminUsersPage() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-amber-600">
-                {users.filter(u => u.status === "pending").length}
+                {users.filter((u) => u.status === "pending").length}
               </div>
             </CardContent>
           </Card>
@@ -138,13 +152,13 @@ export default function AdminUsersPage() {
           <CardContent className="p-0">
             {loading ? (
               <div className="flex items-center justify-center p-12">
-                <div className="animate-spin size-6 border-2 border-primary border-t-transparent rounded-full" />
+                <div className="size-6 animate-spin rounded-full border-2 border-primary border-t-transparent" />
               </div>
             ) : filteredUsers.length === 0 ? (
               <div className="flex flex-col items-center justify-center p-12 text-center">
-                <User className="size-12 text-muted-foreground mb-4" />
+                <User className="mb-4 size-12 text-muted-foreground" />
                 <h3 className="font-semibold">No users found</h3>
-                <p className="text-sm text-muted-foreground mt-1">
+                <p className="mt-1 text-sm text-muted-foreground">
                   No users match the current filter.
                 </p>
               </div>
@@ -163,22 +177,16 @@ export default function AdminUsersPage() {
                     <TableRow key={user.id}>
                       <TableCell>
                         <div className="flex items-center gap-3">
-                          <div className="size-8 rounded-full bg-primary/10 flex items-center justify-center">
+                          <div className="flex size-8 items-center justify-center rounded-full bg-primary/10">
                             <User className="size-4 text-primary" />
                           </div>
                           <div>
-                            <p className="font-medium">
-                              {user.name || "Unknown"}
-                            </p>
-                            <p className="text-xs text-muted-foreground">
-                              {user.phoneNumber}
-                            </p>
+                            <p className="font-medium">{user.name || "Unknown"}</p>
+                            <p className="text-xs text-muted-foreground">{user.phoneNumber}</p>
                           </div>
                         </div>
                       </TableCell>
-                      <TableCell>
-                        {getStatusBadge(user.status)}
-                      </TableCell>
+                      <TableCell>{getStatusBadge(user.status)}</TableCell>
                       <TableCell>
                         <div className="flex items-center gap-2">
                           <Key className="size-4 text-muted-foreground" />

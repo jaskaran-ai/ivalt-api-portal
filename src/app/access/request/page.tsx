@@ -18,14 +18,14 @@ export default function AccessRequestPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!useCase.trim() || useCase.trim().length < 10) {
       toast.error("Please describe your use case in at least 10 characters");
       return;
     }
 
     setIsLoading(true);
-    
+
     try {
       const res = await fetch("/api/access/request", {
         method: "POST",
@@ -65,7 +65,10 @@ export default function AccessRequestPage() {
               </div>
             </div>
             <div className="max-w-2xl">
-              <Badge variant="outline" className="mb-5 w-fit border-primary/15 bg-primary/5 text-primary">
+              <Badge
+                variant="outline"
+                className="mb-5 w-fit border-primary/15 bg-primary/5 text-primary"
+              >
                 <Lock className="mr-1 size-3" />
                 Secure access request
               </Badge>
@@ -73,7 +76,8 @@ export default function AccessRequestPage() {
                 Your request is under review
               </h1>
               <p className="mt-6 max-w-xl text-lg leading-8 text-muted-foreground">
-                An admin will review your request and approve access. You'll receive an email notification when access is granted.
+                An admin will review your request and approve access. You'll receive an email
+                notification when access is granted.
               </p>
             </div>
           </section>
@@ -86,7 +90,8 @@ export default function AccessRequestPage() {
                 </div>
                 <CardTitle className="text-2xl tracking-[-0.025em]">Request submitted</CardTitle>
                 <CardDescription>
-                  Your access request has been sent to the admin team. Please check your email for approval.
+                  Your access request has been sent to the admin team. Please check your email for
+                  approval.
                 </CardDescription>
               </CardHeader>
               <CardContent className="p-6">
@@ -119,7 +124,10 @@ export default function AccessRequestPage() {
           </div>
 
           <div className="max-w-2xl">
-            <Badge variant="outline" className="mb-5 w-fit border-primary/15 bg-primary/5 text-primary">
+            <Badge
+              variant="outline"
+              className="mb-5 w-fit border-primary/15 bg-primary/5 text-primary"
+            >
               <FileText className="mr-1 size-3" />
               Access request required
             </Badge>
@@ -127,7 +135,8 @@ export default function AccessRequestPage() {
               Tell us about your integration
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-8 text-muted-foreground">
-              Help us understand your use case. Our team reviews each request to ensure responsible API usage.
+              Help us understand your use case. Our team reviews each request to ensure responsible
+              API usage.
             </p>
           </div>
 
@@ -137,7 +146,10 @@ export default function AccessRequestPage() {
               { label: "Secure access", text: "Only approved users get API keys" },
               { label: "Email notification", text: "You'll be notified when approved" },
             ].map((item) => (
-              <div key={item.label} className="rounded-2xl border border-border/80 bg-card/70 p-4 shadow-sm shadow-foreground/5 backdrop-blur">
+              <div
+                key={item.label}
+                className="rounded-2xl border border-border/80 bg-card/70 p-4 shadow-sm shadow-foreground/5 backdrop-blur"
+              >
                 <p className="text-sm font-semibold tracking-[-0.01em]">{item.label}</p>
                 <p className="mt-2 text-xs leading-5 text-muted-foreground">{item.text}</p>
               </div>
@@ -152,9 +164,7 @@ export default function AccessRequestPage() {
                 <FileText className="size-6" />
               </div>
               <CardTitle className="text-2xl tracking-[-0.025em]">Access Request</CardTitle>
-              <CardDescription>
-                Describe your use case to get API access
-              </CardDescription>
+              <CardDescription>Describe your use case to get API access</CardDescription>
             </CardHeader>
             <CardContent className="p-6">
               <form onSubmit={handleSubmit} className="flex flex-col gap-5">
@@ -173,10 +183,15 @@ export default function AccessRequestPage() {
                   </p>
                 </div>
 
-                <Button type="submit" disabled={isLoading || !useCase.trim()} size="lg" className="w-full shadow-sm shadow-primary/20">
+                <Button
+                  type="submit"
+                  disabled={isLoading || !useCase.trim()}
+                  size="lg"
+                  className="w-full shadow-sm shadow-primary/20"
+                >
                   {isLoading ? (
                     <>
-                      <Loader2 className="animate-spin mr-2" />
+                      <Loader2 className="mr-2 animate-spin" />
                       Submitting...
                     </>
                   ) : (
@@ -188,7 +203,7 @@ export default function AccessRequestPage() {
                 </Button>
 
                 <p className="text-center text-xs leading-5 text-muted-foreground">
-                  <Lock className="size-3 mr-1 inline" />
+                  <Lock className="mr-1 inline size-3" />
                   Your request is securely reviewed by our admin team
                 </p>
               </form>

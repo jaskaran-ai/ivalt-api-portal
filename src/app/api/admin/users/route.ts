@@ -26,12 +26,15 @@ export async function GET(req: NextRequest) {
     // Count API keys for each user
     const usersWithKeyCounts = await Promise.all(
       allUsers.map(async (user) => {
-        const keyCount = await db.select({ count: count(apiKeys) }).from(apiKeys).where(eq(apiKeys.userId, user.id));
+        const keyCount = await db
+          .select({ count: count(apiKeys) })
+          .from(apiKeys)
+          .where(eq(apiKeys.userId, user.id));
         return {
           ...user,
           apiKeyCount: keyCount[0]?.count || 0,
         };
-      })
+      }),
     );
 
     return NextResponse.json({ users: usersWithKeyCounts });

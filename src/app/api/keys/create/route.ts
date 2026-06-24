@@ -18,7 +18,10 @@ export async function POST(req: NextRequest) {
     const { keyName } = await req.json();
 
     if (!keyName || typeof keyName !== "string" || keyName.trim().length < 3) {
-      return NextResponse.json({ error: "Key name must be at least 3 characters" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Key name must be at least 3 characters" },
+        { status: 400 },
+      );
     }
 
     // ── DEMO MODE ─────────────────────────────────────────────────────────────
@@ -27,13 +30,13 @@ export async function POST(req: NextRequest) {
       if (currentKeys.length >= MAX_KEYS_PER_USER) {
         return NextResponse.json(
           { error: `You can have a maximum of ${MAX_KEYS_PER_USER} API keys` },
-          { status: 403 }
+          { status: 403 },
         );
       }
 
       await new Promise((r) => setTimeout(r, 600));
 
-      const fakeKeyValue = `ivalt_demo_${ Math.random().toString(36).slice(2, 18) }`;
+      const fakeKeyValue = `ivalt_demo_${Math.random().toString(36).slice(2, 18)}`;
       const newKey = {
         id: `demo-key-${Date.now()}`,
         userId: session.userId,
@@ -64,7 +67,7 @@ export async function POST(req: NextRequest) {
     if (Number(keyCount) >= MAX_KEYS_PER_USER) {
       return NextResponse.json(
         { error: `You can have a maximum of ${MAX_KEYS_PER_USER} API keys` },
-        { status: 403 }
+        { status: 403 },
       );
     }
 

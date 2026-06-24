@@ -1,7 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import { AlertCircle, ArrowRight, Check, Copy, FileCode2, KeyRound, RadioTower, ShieldCheck, Timer, Waypoints } from "lucide-react";
+import {
+  AlertCircle,
+  ArrowRight,
+  Check,
+  Copy,
+  FileCode2,
+  KeyRound,
+  RadioTower,
+  ShieldCheck,
+  Timer,
+  Waypoints,
+} from "lucide-react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -24,7 +35,9 @@ function CodeBlock({ code, language = "bash" }: { code: string; language?: strin
             <div className="size-2.5 rounded-full bg-[#d8b24c]" />
             <div className="size-2.5 rounded-full bg-[#70b98f]" />
           </div>
-          <span className="text-xs font-medium tracking-[0.12em] text-white/45 uppercase">{language}</span>
+          <span className="text-xs font-medium tracking-[0.12em] text-white/45 uppercase">
+            {language}
+          </span>
         </div>
         <button
           onClick={() => copyToClipboard(code)}
@@ -34,12 +47,22 @@ function CodeBlock({ code, language = "bash" }: { code: string; language?: strin
           Copy
         </button>
       </div>
-      <pre className="overflow-x-auto p-4 text-sm leading-7"><code>{code}</code></pre>
+      <pre className="overflow-x-auto p-4 text-sm leading-7">
+        <code>{code}</code>
+      </pre>
     </div>
   );
 }
 
-function StatusBadge({ code, label, type }: { code: string; label: string; type: "success" | "error" | "warning" | "info" }) {
+function StatusBadge({
+  code,
+  label,
+  type,
+}: {
+  code: string;
+  label: string;
+  type: "success" | "error" | "warning" | "info";
+}) {
   const colors = {
     success: "border-emerald-500/20 bg-emerald-500/10 text-emerald-700",
     error: "border-destructive/20 bg-destructive/10 text-destructive",
@@ -60,7 +83,8 @@ const endpoints = [
     method: "POST",
     path: "/biometric-auth-request",
     name: "Initiate authentication",
-    description: "Send a biometric approval request to the user's iVALT mobile app. This starts every sign-in flow.",
+    description:
+      "Send a biometric approval request to the user's iVALT mobile app. This starts every sign-in flow.",
     code: `curl -X POST https://api.ivalt.com/biometric-auth-request \\
   -H "Content-Type: application/json" \\
   -H "token: YOUR_IVALT_SECURITY_TOKEN" \\
@@ -81,7 +105,8 @@ const endpoints = [
     method: "POST",
     path: "/biometric-auth-result",
     name: "Poll authentication result",
-    description: "Poll every 2 seconds until the user approves, rejects, times out, or cannot be found.",
+    description:
+      "Poll every 2 seconds until the user approves, rejects, times out, or cannot be found.",
     code: `curl -X POST https://api.ivalt.com/biometric-auth-result \\
   -H "Content-Type: application/json" \\
   -H "token: YOUR_IVALT_SECURITY_TOKEN" \\
@@ -105,7 +130,8 @@ const endpoints = [
     method: "POST",
     path: "/biometric-auth-result",
     name: "Geo-fence authentication",
-    description: "Verify biometric approval together with a latitude, longitude, and allowed radius.",
+    description:
+      "Verify biometric approval together with a latitude, longitude, and allowed radius.",
     code: `curl -X POST https://api.ivalt.com/biometric-auth-result \\
   -H "Content-Type: application/json" \\
   -H "token: YOUR_IVALT_SECURITY_TOKEN" \\
@@ -134,10 +160,34 @@ const endpoints = [
 ];
 
 const responseStates = [
-  { code: "200", title: "Authenticated", text: "Stop polling. The biometric match succeeded and your app can create a session.", icon: Check, tone: "bg-emerald-500/10 text-emerald-700" },
-  { code: "422", title: "Pending", text: "Keep polling every 2 seconds while the user reviews the request in the iVALT app.", icon: Timer, tone: "bg-amber-500/10 text-amber-700" },
-  { code: "403", title: "Failed / timeout", text: "Authentication failed, the token is missing, or the approval window has expired.", icon: AlertCircle, tone: "bg-destructive/10 text-destructive" },
-  { code: "404", title: "Not found", text: "The mobile number is not registered in iVALT, so no biometric challenge can start.", icon: AlertCircle, tone: "bg-destructive/10 text-destructive" },
+  {
+    code: "200",
+    title: "Authenticated",
+    text: "Stop polling. The biometric match succeeded and your app can create a session.",
+    icon: Check,
+    tone: "bg-emerald-500/10 text-emerald-700",
+  },
+  {
+    code: "422",
+    title: "Pending",
+    text: "Keep polling every 2 seconds while the user reviews the request in the iVALT app.",
+    icon: Timer,
+    tone: "bg-amber-500/10 text-amber-700",
+  },
+  {
+    code: "403",
+    title: "Failed / timeout",
+    text: "Authentication failed, the token is missing, or the approval window has expired.",
+    icon: AlertCircle,
+    tone: "bg-destructive/10 text-destructive",
+  },
+  {
+    code: "404",
+    title: "Not found",
+    text: "The mobile number is not registered in iVALT, so no biometric challenge can start.",
+    icon: AlertCircle,
+    tone: "bg-destructive/10 text-destructive",
+  },
 ];
 
 export default function DocsPage() {
@@ -153,14 +203,17 @@ export default function DocsPage() {
                   <FileCode2 className="mr-1 size-3" />
                   API reference v1.0
                 </Badge>
-                <span className="text-xs font-medium tracking-[0.08em] text-muted-foreground uppercase">Biometric auth contract</span>
+                <span className="text-xs font-medium tracking-[0.08em] text-muted-foreground uppercase">
+                  Biometric auth contract
+                </span>
               </div>
               <div className="max-w-3xl">
                 <h2 className="text-2xl font-semibold tracking-[-0.03em] text-foreground sm:text-3xl lg:text-4xl">
                   Integrate the iVALT flow without guessing states.
                 </h2>
                 <p className="mt-5 max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg">
-                  Start with a biometric push, poll the result endpoint, and handle each terminal response with explicit application behavior.
+                  Start with a biometric push, poll the result endpoint, and handle each terminal
+                  response with explicit application behavior.
                 </p>
               </div>
             </div>
@@ -186,7 +239,9 @@ export default function DocsPage() {
             <div className="flex items-start justify-between gap-4">
               <div>
                 <CardTitle className="text-xl tracking-[-0.02em]">Base URL</CardTitle>
-                <CardDescription>Use the same production host for all biometric endpoints.</CardDescription>
+                <CardDescription>
+                  Use the same production host for all biometric endpoints.
+                </CardDescription>
               </div>
               <div className="flex size-11 items-center justify-center rounded-2xl bg-primary/10 text-primary">
                 <RadioTower className="size-5" />
@@ -195,20 +250,28 @@ export default function DocsPage() {
           </CardHeader>
           <CardContent className="flex flex-col gap-5 p-6">
             <div className="rounded-2xl border border-border/80 bg-background/70 p-4">
-              <p className="mb-2 text-xs font-medium tracking-[0.08em] text-muted-foreground uppercase">Endpoint root</p>
+              <p className="mb-2 text-xs font-medium tracking-[0.08em] text-muted-foreground uppercase">
+                Endpoint root
+              </p>
               <div className="flex items-center gap-3">
-                <code className="min-w-0 flex-1 break-all text-lg font-semibold tracking-[-0.02em] text-primary">https://api.ivalt.com</code>
-                <Button variant="ghost" size="icon" onClick={() => copyToClipboard("https://api.ivalt.com")}>
+                <code className="min-w-0 flex-1 text-lg font-semibold tracking-[-0.02em] break-all text-primary">
+                  https://api.ivalt.com
+                </code>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => copyToClipboard("https://api.ivalt.com")}
+                >
                   <Copy />
                 </Button>
               </div>
             </div>
             <div className="grid gap-3 sm:grid-cols-3 xl:grid-cols-1">
-              {[
-                "REST API",
-                "JSON responses"
-              ].map((item) => (
-                <div key={item} className="flex items-center gap-2 rounded-2xl border border-border/80 bg-background/70 px-3 py-2 text-sm font-medium">
+              {["REST API", "JSON responses"].map((item) => (
+                <div
+                  key={item}
+                  className="flex items-center gap-2 rounded-2xl border border-border/80 bg-background/70 px-3 py-2 text-sm font-medium"
+                >
                   <Check className="size-4 text-emerald-700" />
                   {item}
                 </div>
@@ -237,13 +300,20 @@ export default function DocsPage() {
             { step: "02", title: "Security token", value: "token: YOUR_IVALT_SECURITY_TOKEN" },
             { step: "03", title: "Content type", value: "Content-Type: application/json" },
           ].map((item) => (
-            <div key={item.step} className="rounded-2xl border border-border/80 bg-background/70 p-5">
+            <div
+              key={item.step}
+              className="rounded-2xl border border-border/80 bg-background/70 p-5"
+            >
               <div className="mb-5 flex items-center justify-between gap-4">
-                <div className="flex size-9 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">{item.step}</div>
+                <div className="flex size-9 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
+                  {item.step}
+                </div>
                 <KeyRound className="size-5 text-muted-foreground" />
               </div>
               <p className="font-semibold tracking-[-0.01em]">{item.title}</p>
-              <code className="mt-2 block break-all text-sm text-muted-foreground">{item.value}</code>
+              <code className="mt-2 block text-sm break-all text-muted-foreground">
+                {item.value}
+              </code>
             </div>
           ))}
         </CardContent>
@@ -253,23 +323,35 @@ export default function DocsPage() {
         <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <h2 className="text-2xl font-semibold tracking-[-0.025em]">Endpoints</h2>
-            <p className="text-sm text-muted-foreground">The production flow is short: request, poll, then trust the terminal status.</p>
+            <p className="text-sm text-muted-foreground">
+              The production flow is short: request, poll, then trust the terminal status.
+            </p>
           </div>
-          <Badge variant="secondary" className="w-fit">3 documented calls</Badge>
+          <Badge variant="secondary" className="w-fit">
+            3 documented calls
+          </Badge>
         </div>
 
         {endpoints.map((endpoint, index) => (
-          <Card key={index} className="overflow-hidden border-primary/10 bg-card shadow-sm shadow-foreground/5" id={endpoint.path.replace("/", "") + "-" + index}>
+          <Card
+            key={index}
+            className="overflow-hidden border-primary/10 bg-card shadow-sm shadow-foreground/5"
+            id={endpoint.path.replace("/", "") + "-" + index}
+          >
             <div className="border-b border-border/80 bg-muted/35 p-6">
               <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                 <div className="flex flex-col gap-3">
                   <div className="flex flex-wrap items-center gap-3">
                     <Badge className="bg-primary text-primary-foreground">{endpoint.method}</Badge>
-                    <code className="rounded-full border border-border/80 bg-background px-3 py-1 font-mono text-sm">{endpoint.path}</code>
+                    <code className="rounded-full border border-border/80 bg-background px-3 py-1 font-mono text-sm">
+                      {endpoint.path}
+                    </code>
                   </div>
                   <div>
                     <h3 className="text-xl font-semibold tracking-[-0.02em]">{endpoint.name}</h3>
-                    <p className="mt-1 max-w-3xl text-sm leading-6 text-muted-foreground">{endpoint.description}</p>
+                    <p className="mt-1 max-w-3xl text-sm leading-6 text-muted-foreground">
+                      {endpoint.description}
+                    </p>
                   </div>
                 </div>
                 <div className="flex size-11 items-center justify-center rounded-2xl bg-primary/10 text-primary">
@@ -280,17 +362,23 @@ export default function DocsPage() {
             <CardContent className="flex flex-col gap-6 p-6">
               <div className="grid gap-6 xl:grid-cols-2">
                 <div className="flex flex-col gap-3">
-                  <h4 className="text-xs font-semibold tracking-[0.12em] text-muted-foreground uppercase">Request</h4>
+                  <h4 className="text-xs font-semibold tracking-[0.12em] text-muted-foreground uppercase">
+                    Request
+                  </h4>
                   <CodeBlock code={endpoint.code} language="bash" />
                 </div>
                 <div className="flex flex-col gap-3">
-                  <h4 className="text-xs font-semibold tracking-[0.12em] text-muted-foreground uppercase">Response</h4>
+                  <h4 className="text-xs font-semibold tracking-[0.12em] text-muted-foreground uppercase">
+                    Response
+                  </h4>
                   <CodeBlock code={endpoint.response} language="json" />
                 </div>
               </div>
               <Separator />
               <div className="flex flex-col gap-3">
-                <h4 className="text-xs font-semibold tracking-[0.12em] text-muted-foreground uppercase">Status codes</h4>
+                <h4 className="text-xs font-semibold tracking-[0.12em] text-muted-foreground uppercase">
+                  Status codes
+                </h4>
                 <div className="flex flex-wrap gap-2">
                   {endpoint.statusCodes.map((sc) => (
                     <StatusBadge key={sc.code} code={sc.code} label={sc.label} type={sc.type} />
@@ -318,14 +406,24 @@ export default function DocsPage() {
           {responseStates.map((state) => {
             const Icon = state.icon;
             return (
-              <div key={state.code} className="rounded-2xl border border-border/80 bg-background/70 p-4">
+              <div
+                key={state.code}
+                className="rounded-2xl border border-border/80 bg-background/70 p-4"
+              >
                 <div className="flex items-start gap-4">
-                  <div className={cn("flex size-10 shrink-0 items-center justify-center rounded-2xl", state.tone)}>
+                  <div
+                    className={cn(
+                      "flex size-10 shrink-0 items-center justify-center rounded-2xl",
+                      state.tone,
+                    )}
+                  >
                     <Icon className="size-5" />
                   </div>
                   <div className="min-w-0">
                     <div className="flex flex-wrap items-center gap-2">
-                      <Badge variant="outline" className="bg-card font-mono">{state.code}</Badge>
+                      <Badge variant="outline" className="bg-card font-mono">
+                        {state.code}
+                      </Badge>
                       <span className="font-semibold">{state.title}</span>
                     </div>
                     <p className="mt-2 text-sm leading-6 text-muted-foreground">{state.text}</p>

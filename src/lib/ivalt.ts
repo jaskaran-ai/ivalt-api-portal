@@ -17,7 +17,9 @@ export interface BiometricResultResponse {
   data?: Record<string, unknown>;
 }
 
-export async function sendBiometricAuthRequest(mobileNumber: string): Promise<BiometricAuthRequestResponse> {
+export async function sendBiometricAuthRequest(
+  mobileNumber: string,
+): Promise<BiometricAuthRequestResponse> {
   try {
     const response = await fetch(`${IVALT_BASE_URL}/biometric-auth-request`, {
       method: "POST",
@@ -29,7 +31,11 @@ export async function sendBiometricAuthRequest(mobileNumber: string): Promise<Bi
       return { success: false, message: "User not found in iVALT system", statusCode: 404 };
     }
     if (!response.ok) {
-      return { success: false, message: "Failed to send auth request", statusCode: response.status };
+      return {
+        success: false,
+        message: "Failed to send auth request",
+        statusCode: response.status,
+      };
     }
     return { success: true, statusCode: response.status };
   } catch {
@@ -46,11 +52,20 @@ export async function getBiometricResult(mobileNumber: string): Promise<Biometri
     });
 
     switch (response.status) {
-      case 200: return { status: "authenticated", statusCode: 200, data: await response.json().catch(() => ({})) };
-      case 422: return { status: "pending", statusCode: 422 };
-      case 403: return { status: "failed", statusCode: 403 };
-      case 404: return { status: "not_found", statusCode: 404 };
-      default:  return { status: "failed", statusCode: response.status };
+      case 200:
+        return {
+          status: "authenticated",
+          statusCode: 200,
+          data: await response.json().catch(() => ({})),
+        };
+      case 422:
+        return { status: "pending", statusCode: 422 };
+      case 403:
+        return { status: "failed", statusCode: 403 };
+      case 404:
+        return { status: "not_found", statusCode: 404 };
+      default:
+        return { status: "failed", statusCode: response.status };
     }
   } catch {
     return { status: "failed", statusCode: 0 };

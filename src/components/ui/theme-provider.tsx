@@ -22,9 +22,7 @@ export function useTheme() {
 
 function getSystemTheme(): "dark" | "light" {
   if (typeof window === "undefined") return "light";
-  return window.matchMedia("(prefers-color-scheme: dark)").matches
-    ? "dark"
-    : "light";
+  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 }
 
 function applyTheme(resolved: "dark" | "light") {

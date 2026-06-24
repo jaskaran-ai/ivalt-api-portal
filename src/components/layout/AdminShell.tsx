@@ -43,7 +43,7 @@ function AdminSidebarLayout({ children }: AdminShellProps) {
   const pathname = usePathname();
 
   const activeItem = adminNavItems.find(
-    (n) => n.href === pathname || (n.href !== "/admin/dashboard" && pathname.startsWith(n.href))
+    (n) => n.href === pathname || (n.href !== "/admin/dashboard" && pathname.startsWith(n.href)),
   );
 
   return (
@@ -51,11 +51,11 @@ function AdminSidebarLayout({ children }: AdminShellProps) {
       <Sidebar className="border-r border-sidebar-border/80 bg-sidebar" collapsible="icon">
         <SidebarHeader className="border-b border-sidebar-border/80">
           <div className="flex items-center gap-3 px-3 py-3">
-            <div className="size-9 rounded-2xl bg-primary flex items-center justify-center shrink-0 shadow-sm shadow-primary/20">
-              <ShieldCheck className="w-5 h-5 text-white" />
+            <div className="flex size-9 shrink-0 items-center justify-center rounded-2xl bg-primary shadow-sm shadow-primary/20">
+              <ShieldCheck className="h-5 w-5 text-white" />
             </div>
             <div className="min-w-0 flex-1 group-data-[state=collapsed]:hidden">
-              <p className="font-semibold text-sm">iVALT Admin</p>
+              <p className="text-sm font-semibold">iVALT Admin</p>
               <p className="text-xs text-sidebar-foreground/60">Access Control Panel</p>
             </div>
           </div>
@@ -63,23 +63,21 @@ function AdminSidebarLayout({ children }: AdminShellProps) {
 
         <SidebarContent className="px-2 py-2">
           <SidebarGroup>
-            <SidebarGroupLabel className="group-data-[state=collapsed]:hidden px-2 py-1 text-xs">
+            <SidebarGroupLabel className="px-2 py-1 text-xs group-data-[state=collapsed]:hidden">
               Admin Panel
             </SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 {adminNavItems.map((item) => {
-                  const isActive = pathname === item.href || (item.href !== "/admin/dashboard" && pathname.startsWith(item.href));
+                  const isActive =
+                    pathname === item.href ||
+                    (item.href !== "/admin/dashboard" && pathname.startsWith(item.href));
                   const Icon = item.icon;
                   return (
                     <SidebarMenuItem key={item.href}>
-                      <SidebarMenuButton 
-                        asChild 
-                        isActive={isActive}
-                        tooltip={item.label}
-                      >
+                      <SidebarMenuButton asChild isActive={isActive} tooltip={item.label}>
                         <Link href={item.href}>
-                          <Icon className="w-5 h-5" />
+                          <Icon className="h-5 w-5" />
                           <span className="group-data-[state=collapsed]:hidden">{item.label}</span>
                           {isActive && (
                             <div className="ml-auto size-1.5 rounded-full bg-primary group-data-[state=collapsed]:hidden" />
@@ -99,7 +97,7 @@ function AdminSidebarLayout({ children }: AdminShellProps) {
             <SidebarMenuItem>
               <SidebarMenuButton asChild>
                 <Link href="/admin/login">
-                  <LogOut className="w-5 h-5" />
+                  <LogOut className="h-5 w-5" />
                   <span className="group-data-[state=collapsed]:hidden">Admin Login</span>
                 </Link>
               </SidebarMenuButton>
@@ -109,11 +107,11 @@ function AdminSidebarLayout({ children }: AdminShellProps) {
       </Sidebar>
 
       <SidebarInset>
-        <header className="flex items-center gap-4 border-b border-border/80 bg-card/90 px-6 py-4 shadow-sm shadow-foreground/5 backdrop-blur shrink-0">
+        <header className="flex shrink-0 items-center gap-4 border-b border-border/80 bg-card/90 px-6 py-4 shadow-sm shadow-foreground/5 backdrop-blur">
           <div className="flex items-center gap-2">
             <SidebarTrigger />
           </div>
-          <div className="flex-1 min-w-0">
+          <div className="min-w-0 flex-1">
             <h1 className="truncate text-lg font-semibold tracking-[-0.01em] text-foreground">
               {activeItem?.label || "Admin"}
             </h1>
@@ -121,9 +119,7 @@ function AdminSidebarLayout({ children }: AdminShellProps) {
           <ThemeToggle />
         </header>
 
-        <main className="flex-1 overflow-y-auto bg-background p-6 lg:p-8">
-          {children}
-        </main>
+        <main className="flex-1 overflow-y-auto bg-background p-6 lg:p-8">{children}</main>
       </SidebarInset>
     </>
   );

@@ -28,13 +28,19 @@ export async function POST(req: NextRequest) {
       if (result.statusCode === 404) {
         return NextResponse.json(
           { error: "Admin phone not registered with iVALT app" },
-          { status: 404 }
+          { status: 404 },
         );
       }
-      return NextResponse.json({ error: result.message || "Admin auth request failed" }, { status: 400 });
+      return NextResponse.json(
+        { error: result.message || "Admin auth request failed" },
+        { status: 400 },
+      );
     }
 
-    return NextResponse.json({ success: true, message: "Authentication request sent to admin iVALT app" });
+    return NextResponse.json({
+      success: true,
+      message: "Authentication request sent to admin iVALT app",
+    });
   } catch (error) {
     console.error("Admin auth error:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });

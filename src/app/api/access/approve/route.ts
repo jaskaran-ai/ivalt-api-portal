@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
     const newStatus = approved ? "approved" : "rejected";
     await db
       .update(users)
-      .set({ 
+      .set({
         status: newStatus,
         approvedAt: approved ? new Date() : null,
       })
@@ -65,7 +65,10 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    return NextResponse.json({ success: true, message: `Access request ${approved ? "approved" : "rejected"}` });
+    return NextResponse.json({
+      success: true,
+      message: `Access request ${approved ? "approved" : "rejected"}`,
+    });
   } catch (error) {
     console.error("Admin approval error:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
@@ -94,7 +97,7 @@ export async function GET(req: NextRequest) {
 
     // Get all access requests with user info
     let requests;
-    
+
     if (status === "all") {
       requests = await db.query.accessRequests.findMany({});
     } else if (status === "pending") {
@@ -117,7 +120,7 @@ export async function GET(req: NextRequest) {
           ...req,
           user: user ? { id: user.id, phoneNumber: user.phoneNumber, name: user.name } : null,
         };
-      })
+      }),
     );
 
     return NextResponse.json({ requests: requestsWithUsers });

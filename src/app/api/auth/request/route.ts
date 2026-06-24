@@ -31,11 +31,17 @@ export async function POST(req: NextRequest) {
     if (!result.success) {
       if (result.statusCode === 404) {
         return NextResponse.json(
-          { error: "This phone number is not registered with iVALT. Please install and register the iVALT app first." },
-          { status: 404 }
+          {
+            error:
+              "This phone number is not registered with iVALT. Please install and register the iVALT app first.",
+          },
+          { status: 404 },
         );
       }
-      return NextResponse.json({ error: result.message || "Authentication request failed" }, { status: 400 });
+      return NextResponse.json(
+        { error: result.message || "Authentication request failed" },
+        { status: 400 },
+      );
     }
 
     // Check if user exists and is already approved
@@ -45,7 +51,10 @@ export async function POST(req: NextRequest) {
 
     // If user exists and is approved, no need to create access request again
     if (existingUser && existingUser.status === "approved") {
-      return NextResponse.json({ success: true, message: "Authentication request sent to your iVALT app" });
+      return NextResponse.json({
+        success: true,
+        message: "Authentication request sent to your iVALT app",
+      });
     }
 
     await db
@@ -56,7 +65,10 @@ export async function POST(req: NextRequest) {
         set: { updatedAt: new Date(), status: "pending" },
       });
 
-    return NextResponse.json({ success: true, message: "Authentication request sent to your iVALT app" });
+    return NextResponse.json({
+      success: true,
+      message: "Authentication request sent to your iVALT app",
+    });
   } catch (error) {
     console.error("Auth request error:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });

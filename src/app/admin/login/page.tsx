@@ -2,7 +2,16 @@
 
 import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowRight, CheckCircle2, Loader2, Smartphone, Lock, Sun, Moon, Monitor } from "lucide-react";
+import {
+  ArrowRight,
+  CheckCircle2,
+  Loader2,
+  Smartphone,
+  Lock,
+  Sun,
+  Moon,
+  Monitor,
+} from "lucide-react";
 import { useTheme } from "@/components/ui/theme-provider";
 import { Logo } from "@/components/ui/logo";
 import { toast } from "sonner";
@@ -103,7 +112,7 @@ export default function AdminLoginPage() {
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_12%,rgba(97,31,105,0.13),transparent_32%),radial-gradient(circle_at_86%_18%,rgba(53,91,146,0.12),transparent_30%),linear-gradient(135deg,rgba(97,31,105,0.06),transparent_42%)]" />
       <div className="absolute inset-x-0 bottom-0 h-1/2 bg-[linear-gradient(to_top,rgba(97,31,105,0.05),transparent)]" />
 
-      <div className="absolute right-4 top-4 z-10 flex items-center gap-1">
+      <div className="absolute top-4 right-4 z-10 flex items-center gap-1">
         <button
           type="button"
           onClick={() => setTheme(nextTheme[theme])}
@@ -123,7 +132,9 @@ export default function AdminLoginPage() {
         <section className="flex flex-col justify-center gap-8 px-6 py-12 lg:flex-1 lg:px-12 lg:py-0">
           <div className="flex items-center gap-3">
             <Logo className="h-8 w-auto" />
-            <Badge variant="destructive" className="ml-2">Admin</Badge>
+            <Badge variant="destructive" className="ml-2">
+              Admin
+            </Badge>
           </div>
 
           <div className="max-w-xl">
@@ -135,13 +146,14 @@ export default function AdminLoginPage() {
               Admin authentication required
             </h1>
             <p className="mt-4 text-base leading-7 text-muted-foreground">
-              This portal is restricted to authorized administrators only. Use your registered mobile number to access.
+              This portal is restricted to authorized administrators only. Use your registered
+              mobile number to access.
             </p>
           </div>
         </section>
 
         {/* Right — Form (no card, no shadow) */}
-        <section className="flex flex-col justify-center px-6 pb-16 pt-8 lg:flex-1 lg:px-16 lg:py-0">
+        <section className="flex flex-col justify-center px-6 pt-8 pb-16 lg:flex-1 lg:px-16 lg:py-0">
           <div className="flex items-center justify-center gap-3 lg:hidden">
             <Logo className="h-7 w-auto" />
             <Badge variant="destructive">Admin</Badge>
@@ -178,15 +190,13 @@ export default function AdminLoginPage() {
                   </div>
 
                   <Button type="submit" disabled={isLoading} size="lg" className="w-full">
-                    {isLoading ? (
-                      <Loader2 className="animate-spin" />
-                    ) : null}
+                    {isLoading ? <Loader2 className="animate-spin" /> : null}
                     {isLoading ? "Sending request..." : "Continue"}
                     {!isLoading && <ArrowRight className="ml-2 size-4" />}
                   </Button>
 
                   <p className="text-center text-xs leading-5 text-muted-foreground">
-                    <Lock className="size-3 mr-1 inline" />
+                    <Lock className="mr-1 inline size-3" />
                     Secured by iVALT biometric authentication
                   </p>
                 </form>
@@ -207,7 +217,13 @@ export default function AdminLoginPage() {
                   </div>
                   <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
                     <Loader2 className="size-4 animate-spin" />
-                    Waiting&hellip; {(() => { const s = Math.ceil((150 - pollCount) * 2); const m = Math.floor(s / 60); return `${m}m ${s % 60}s`; })()} remaining
+                    Waiting&hellip;{" "}
+                    {(() => {
+                      const s = Math.ceil((150 - pollCount) * 2);
+                      const m = Math.floor(s / 60);
+                      return `${m}m ${s % 60}s`;
+                    })()}{" "}
+                    remaining
                   </div>
                   <Button variant="ghost" size="sm" onClick={() => setStep("phone")}>
                     Use different number
@@ -224,7 +240,7 @@ export default function AdminLoginPage() {
                     {[0, 1, 2].map((i) => (
                       <div
                         key={i}
-                        className="size-2 rounded-full bg-primary animate-bounce"
+                        className="size-2 animate-bounce rounded-full bg-primary"
                         style={{ animationDelay: `${i * 150}ms` }}
                       />
                     ))}

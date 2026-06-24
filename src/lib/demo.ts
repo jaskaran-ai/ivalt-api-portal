@@ -99,7 +99,8 @@ export const DEMO_ACCESS_REQUESTS = [
   {
     id: "demo-req-001",
     userId: DEMO_USERS[1].id,
-    useCase: "Building a mobile authentication SDK for Android and iOS that integrates iVALT biometric verification for enterprise customers.",
+    useCase:
+      "Building a mobile authentication SDK for Android and iOS that integrates iVALT biometric verification for enterprise customers.",
     requestedAt: new Date("2025-04-15T10:30:00Z"),
     approvedAt: null,
     adminNotes: null,
@@ -112,7 +113,8 @@ export const DEMO_ACCESS_REQUESTS = [
   {
     id: "demo-req-002",
     userId: DEMO_USERS[2].id,
-    useCase: "Implementing biometric login for a healthcare platform requiring HIPAA compliance and multi-factor authentication.",
+    useCase:
+      "Implementing biometric login for a healthcare platform requiring HIPAA compliance and multi-factor authentication.",
     requestedAt: new Date("2025-03-20T14:00:00Z"),
     approvedAt: new Date("2025-03-22T09:00:00Z"),
     adminNotes: "Approved after identity verification",

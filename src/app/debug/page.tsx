@@ -1,7 +1,20 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ShieldCheck, Activity, AlertCircle, CheckCircle2, XCircle, RefreshCw, Mail, Loader2, Send, Bell, UserCheck, UserX } from "lucide-react";
+import {
+  ShieldCheck,
+  Activity,
+  AlertCircle,
+  CheckCircle2,
+  XCircle,
+  RefreshCw,
+  Mail,
+  Loader2,
+  Send,
+  Bell,
+  UserCheck,
+  UserX,
+} from "lucide-react";
 
 interface HealthCheck {
   status: string;
@@ -167,11 +180,17 @@ export default function DebugPage() {
         )}
 
         {health && (
-          <div className="flex flex-col gap-4 mb-8">
+          <div className="mb-8 flex flex-col gap-4">
             <div className="flex items-center gap-2 rounded-xl border border-border/80 bg-card px-4 py-3 text-sm">
               <Activity className="size-4 text-primary" />
               <span className="font-medium">Overall Status:</span>
-              <span className={health.status === "healthy" ? "text-emerald-600 font-medium" : "text-amber-600 font-medium"}>
+              <span
+                className={
+                  health.status === "healthy"
+                    ? "font-medium text-emerald-600"
+                    : "font-medium text-amber-600"
+                }
+              >
                 {health.status === "healthy" ? "Healthy" : "Degraded"}
               </span>
               <span className="ml-auto text-xs text-muted-foreground">
@@ -182,15 +201,17 @@ export default function DebugPage() {
             {Object.entries(health.checks).map(([key, check]) => (
               <div key={key} className="rounded-xl border border-border/80 bg-card p-4">
                 <div className="flex items-center gap-2">
-                  {checkIcons[check.status] || <AlertCircle className="size-4 text-muted-foreground" />}
+                  {checkIcons[check.status] || (
+                    <AlertCircle className="size-4 text-muted-foreground" />
+                  )}
                   <span className="text-sm font-medium">{checkLabels[key] || key}</span>
                   <span className="ml-auto text-xs text-muted-foreground">{check.status}</span>
                 </div>
                 {check.error && (
-                  <p className="mt-2 text-xs text-red-600 font-mono break-all">{check.error}</p>
+                  <p className="mt-2 font-mono text-xs break-all text-red-600">{check.error}</p>
                 )}
                 {check.warning && (
-                  <p className="mt-2 text-xs text-amber-600 font-mono break-all">{check.warning}</p>
+                  <p className="mt-2 font-mono text-xs break-all text-amber-600">{check.warning}</p>
                 )}
                 {check.statusCode && (
                   <p className="mt-1 text-xs text-muted-foreground">Status: {check.statusCode}</p>
@@ -202,13 +223,13 @@ export default function DebugPage() {
 
         {/* Test Email Section */}
         <div className="rounded-xl border border-border/80 bg-card p-6">
-          <div className="flex items-center gap-2 mb-4">
+          <div className="mb-4 flex items-center gap-2">
             <Mail className="size-5 text-primary" />
             <h2 className="text-lg font-semibold tracking-[-0.01em]">Send Test Email</h2>
           </div>
 
           {/* Template selector */}
-          <div className="flex gap-2 mb-5">
+          <div className="mb-5 flex gap-2">
             {emailTemplates.map((t) => {
               const Icon = t.icon;
               const isActive = selectedTemplate === t.id;
@@ -219,7 +240,7 @@ export default function DebugPage() {
                   onClick={() => setSelectedTemplate(t.id)}
                   className={`flex flex-1 flex-col items-center gap-1.5 rounded-xl border px-3 py-2.5 text-xs transition-colors ${
                     isActive
-                      ? "border-primary bg-primary/5 text-primary font-medium"
+                      ? "border-primary bg-primary/5 font-medium text-primary"
                       : "border-border/60 bg-background text-muted-foreground hover:bg-muted"
                   }`}
                 >
@@ -232,55 +253,63 @@ export default function DebugPage() {
 
           <form onSubmit={handleSendTestEmail} className="flex flex-col gap-4">
             <div>
-              <label htmlFor="emailTo" className="block text-sm font-medium mb-1.5">Recipient Email</label>
+              <label htmlFor="emailTo" className="mb-1.5 block text-sm font-medium">
+                Recipient Email
+              </label>
               <input
                 id="emailTo"
                 type="email"
                 value={emailTo}
                 onChange={(e) => setEmailTo(e.target.value)}
                 placeholder="admin@example.com"
-                className="w-full rounded-xl border border-input bg-background px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-ring/30 placeholder:text-muted-foreground/65"
+                className="w-full rounded-xl border border-input bg-background px-3 py-2.5 text-sm outline-none placeholder:text-muted-foreground/65 focus:ring-2 focus:ring-ring/30"
               />
             </div>
 
             {template.fields.includes("userName") && (
               <div>
-                <label htmlFor="userName" className="block text-sm font-medium mb-1.5">User Name</label>
+                <label htmlFor="userName" className="mb-1.5 block text-sm font-medium">
+                  User Name
+                </label>
                 <input
                   id="userName"
                   type="text"
                   value={userName}
                   onChange={(e) => setUserName(e.target.value)}
                   placeholder="John Doe"
-                  className="w-full rounded-xl border border-input bg-background px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-ring/30 placeholder:text-muted-foreground/65"
+                  className="w-full rounded-xl border border-input bg-background px-3 py-2.5 text-sm outline-none placeholder:text-muted-foreground/65 focus:ring-2 focus:ring-ring/30"
                 />
               </div>
             )}
 
             {hasField("userPhone") && (
               <div>
-                <label htmlFor="userPhone" className="block text-sm font-medium mb-1.5">User Phone</label>
+                <label htmlFor="userPhone" className="mb-1.5 block text-sm font-medium">
+                  User Phone
+                </label>
                 <input
                   id="userPhone"
                   type="text"
                   value={userPhone}
                   onChange={(e) => setUserPhone(e.target.value)}
                   placeholder="+919876543210"
-                  className="w-full rounded-xl border border-input bg-background px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-ring/30 placeholder:text-muted-foreground/65"
+                  className="w-full rounded-xl border border-input bg-background px-3 py-2.5 text-sm outline-none placeholder:text-muted-foreground/65 focus:ring-2 focus:ring-ring/30"
                 />
               </div>
             )}
 
             {hasField("useCase") && (
               <div>
-                <label htmlFor="useCase" className="block text-sm font-medium mb-1.5">Use Case</label>
+                <label htmlFor="useCase" className="mb-1.5 block text-sm font-medium">
+                  Use Case
+                </label>
                 <textarea
                   id="useCase"
                   value={useCase}
                   onChange={(e) => setUseCase(e.target.value)}
                   placeholder="Describe the use case..."
                   rows={3}
-                  className="w-full rounded-xl border border-input bg-background px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-ring/30 placeholder:text-muted-foreground/65 resize-none"
+                  className="w-full resize-none rounded-xl border border-input bg-background px-3 py-2.5 text-sm outline-none placeholder:text-muted-foreground/65 focus:ring-2 focus:ring-ring/30"
                 />
               </div>
             )}
@@ -290,22 +319,24 @@ export default function DebugPage() {
               disabled={sending || !emailTo.trim()}
               className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-50"
             >
-              {sending ? (
-                <Loader2 className="size-4 animate-spin" />
-              ) : (
-                <Send className="size-4" />
-              )}
+              {sending ? <Loader2 className="size-4 animate-spin" /> : <Send className="size-4" />}
               {sending ? "Sending..." : `Send ${template.label}`}
             </button>
           </form>
 
           {emailResult && (
-            <div className={`mt-4 flex items-start gap-2 rounded-xl px-4 py-3 text-sm ${
-              emailResult.ok
-                ? "border border-emerald-200 bg-emerald-50 text-emerald-700"
-                : "border border-red-200 bg-red-50 text-red-700"
-            }`}>
-              {emailResult.ok ? <CheckCircle2 className="size-4 shrink-0 mt-0.5" /> : <XCircle className="size-4 shrink-0 mt-0.5" />}
+            <div
+              className={`mt-4 flex items-start gap-2 rounded-xl px-4 py-3 text-sm ${
+                emailResult.ok
+                  ? "border border-emerald-200 bg-emerald-50 text-emerald-700"
+                  : "border border-red-200 bg-red-50 text-red-700"
+              }`}
+            >
+              {emailResult.ok ? (
+                <CheckCircle2 className="mt-0.5 size-4 shrink-0" />
+              ) : (
+                <XCircle className="mt-0.5 size-4 shrink-0" />
+              )}
               <span className="font-mono text-xs break-all">{emailResult.message}</span>
             </div>
           )}

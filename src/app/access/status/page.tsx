@@ -54,7 +54,7 @@ export default function AccessStatusPage() {
             <Card className="border-primary/10 bg-card/95 shadow-xl shadow-foreground/10 backdrop-blur">
               <CardContent className="p-6 pt-8">
                 <div className="flex items-center justify-center">
-                  <Loader2 className="animate-spin size-6 text-primary" />
+                  <Loader2 className="size-6 animate-spin text-primary" />
                 </div>
               </CardContent>
             </Card>
@@ -86,20 +86,26 @@ export default function AccessStatusPage() {
           </div>
 
           <div className="max-w-2xl">
-            <Badge variant="outline" className="mb-5 w-fit border-primary/15 bg-primary/5 text-primary">
+            <Badge
+              variant="outline"
+              className="mb-5 w-fit border-primary/15 bg-primary/5 text-primary"
+            >
               <Lock className="mr-1 size-3" />
               Access status
             </Badge>
             <h1 className="text-3xl font-semibold tracking-[-0.04em] text-foreground xl:text-5xl">
-              {isApproved ? "Access granted!" : isRejected ? "Access denied" : "Waiting for approval"}
+              {isApproved
+                ? "Access granted!"
+                : isRejected
+                  ? "Access denied"
+                  : "Waiting for approval"}
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-8 text-muted-foreground">
-              {isApproved 
+              {isApproved
                 ? "You have been granted API access. You can now manage your API keys in the dashboard."
                 : isRejected
-                ? "Your access request was not approved. Please contact support for more information."
-                : "An admin will review your request. You'll receive an email notification when a decision is made."
-              }
+                  ? "Your access request was not approved. Please contact support for more information."
+                  : "An admin will review your request. You'll receive an email notification when a decision is made."}
             </p>
           </div>
         </section>
@@ -107,25 +113,32 @@ export default function AccessStatusPage() {
         <section className="mx-auto flex w-full max-w-md flex-col gap-6">
           <Card className="border-primary/10 bg-card/95 shadow-xl shadow-foreground/10 backdrop-blur">
             <CardHeader className="p-6 pb-0">
-              <div className={`mb-5 flex size-12 items-center justify-center rounded-3xl ${
-                isApproved ? "bg-emerald-500/10 text-emerald-700" : 
-                isRejected ? "bg-red-500/10 text-red-700" : 
-                "bg-amber-500/10 text-amber-700"
-              }`}>
-                {isApproved ? <CheckCircle2 className="size-6" /> : 
-                 isRejected ? <XCircle className="size-6" /> : 
-                 <Clock className="size-6" />}
+              <div
+                className={`mb-5 flex size-12 items-center justify-center rounded-3xl ${
+                  isApproved
+                    ? "bg-emerald-500/10 text-emerald-700"
+                    : isRejected
+                      ? "bg-red-500/10 text-red-700"
+                      : "bg-amber-500/10 text-amber-700"
+                }`}
+              >
+                {isApproved ? (
+                  <CheckCircle2 className="size-6" />
+                ) : isRejected ? (
+                  <XCircle className="size-6" />
+                ) : (
+                  <Clock className="size-6" />
+                )}
               </div>
               <CardTitle className="text-2xl tracking-[-0.025em]">
                 {isApproved ? "Approved" : isRejected ? "Rejected" : "Pending Review"}
               </CardTitle>
               <CardDescription>
-                {isApproved 
+                {isApproved
                   ? "Your access has been granted by the admin team"
                   : isRejected
-                  ? "Your access request was denied"
-                  : "Your request is being reviewed by an admin"
-                }
+                    ? "Your access request was denied"
+                    : "Your request is being reviewed by an admin"}
               </CardDescription>
             </CardHeader>
             <CardContent className="p-6">
@@ -141,7 +154,11 @@ export default function AccessStatusPage() {
                 </div>
               )}
               {isRejected && (
-                <Button variant="outline" onClick={() => router.push("/access/request")} className="w-full">
+                <Button
+                  variant="outline"
+                  onClick={() => router.push("/access/request")}
+                  className="w-full"
+                >
                   Submit New Request
                 </Button>
               )}

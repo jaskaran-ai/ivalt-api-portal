@@ -16,7 +16,14 @@ import {
   LockKeyhole,
   ShieldCheck,
 } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardFooter,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -55,9 +62,15 @@ export default async function DashboardPage() {
         <Card className="border-primary/15 bg-primary/5 shadow-sm shadow-primary/5">
           <CardContent className="px-4 py-3">
             <div className="flex flex-col gap-2 text-sm sm:flex-row sm:items-center">
-              <Badge variant="secondary" className="w-fit border-primary/10 bg-card text-primary">Demo Mode</Badge>
+              <Badge variant="secondary" className="w-fit border-primary/10 bg-card text-primary">
+                Demo Mode
+              </Badge>
               <span className="text-muted-foreground">
-                You are viewing safe demo data. Set <code className="rounded bg-card px-1.5 py-0.5 text-xs text-foreground">NEXT_PUBLIC_DEMO_MODE=false</code> to connect live services.
+                You are viewing safe demo data. Set{" "}
+                <code className="rounded bg-card px-1.5 py-0.5 text-xs text-foreground">
+                  NEXT_PUBLIC_DEMO_MODE=false
+                </code>{" "}
+                to connect live services.
               </span>
             </div>
           </CardContent>
@@ -83,7 +96,8 @@ export default async function DashboardPage() {
                   Secure API access, ready for biometric auth.
                 </h2>
                 <p className="mt-5 max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg">
-                  Manage production-bound keys, review the biometric request cycle, and keep every integration moving from one calm control surface.
+                  Manage production-bound keys, review the biometric request cycle, and keep every
+                  integration moving from one calm control surface.
                 </p>
               </div>
               <div className="flex flex-col gap-3 sm:flex-row">
@@ -104,15 +118,23 @@ export default async function DashboardPage() {
 
             <div className="grid gap-3 sm:grid-cols-3">
               <div className="rounded-2xl border border-border/80 bg-background/70 p-4">
-                <p className="text-xs font-medium tracking-[0.08em] text-muted-foreground uppercase">Total keys</p>
-                <p className="mt-2 text-3xl font-semibold tracking-[-0.03em]">{keyCount}/{MAX_KEYS}</p>
+                <p className="text-xs font-medium tracking-[0.08em] text-muted-foreground uppercase">
+                  Total keys
+                </p>
+                <p className="mt-2 text-3xl font-semibold tracking-[-0.03em]">
+                  {keyCount}/{MAX_KEYS}
+                </p>
               </div>
               <div className="rounded-2xl border border-border/80 bg-background/70 p-4">
-                <p className="text-xs font-medium tracking-[0.08em] text-muted-foreground uppercase">Active</p>
+                <p className="text-xs font-medium tracking-[0.08em] text-muted-foreground uppercase">
+                  Active
+                </p>
                 <p className="mt-2 text-3xl font-semibold tracking-[-0.03em]">{activeCount}</p>
               </div>
               <div className="rounded-2xl border border-border/80 bg-background/70 p-4">
-                <p className="text-xs font-medium tracking-[0.08em] text-muted-foreground uppercase">Available</p>
+                <p className="text-xs font-medium tracking-[0.08em] text-muted-foreground uppercase">
+                  Available
+                </p>
                 <p className="mt-2 text-3xl font-semibold tracking-[-0.03em]">{availableSlots}</p>
               </div>
             </div>
@@ -124,9 +146,11 @@ export default async function DashboardPage() {
             <div className="flex items-start justify-between gap-4">
               <div>
                 <CardTitle className="text-xl tracking-[-0.02em]">Key capacity</CardTitle>
-                <CardDescription>Keep room for staging, production, and test integrations.</CardDescription>
+                <CardDescription>
+                  Keep room for staging, production, and test integrations.
+                </CardDescription>
               </div>
-              <div className="size-11 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+              <div className="flex size-11 items-center justify-center rounded-2xl bg-primary/10 text-primary">
                 <Gauge className="size-5" />
               </div>
             </div>
@@ -139,11 +163,16 @@ export default async function DashboardPage() {
                   <p className="text-sm text-muted-foreground">of key allowance used</p>
                 </div>
                 <Badge variant={availableSlots > 0 ? "secondary" : "destructive"}>
-                  {availableSlots > 0 ? `${availableSlots} slot${availableSlots === 1 ? "" : "s"} open` : "Limit reached"}
+                  {availableSlots > 0
+                    ? `${availableSlots} slot${availableSlots === 1 ? "" : "s"} open`
+                    : "Limit reached"}
                 </Badge>
               </div>
               <div className="h-3 overflow-hidden rounded-full bg-muted">
-                <div className="h-full rounded-full bg-primary" style={{ width: `${usagePercent}%` }} />
+                <div
+                  className="h-full rounded-full bg-primary"
+                  style={{ width: `${usagePercent}%` }}
+                />
               </div>
             </div>
 
@@ -151,27 +180,37 @@ export default async function DashboardPage() {
 
             <div className="flex flex-col gap-3">
               <div className="flex items-center gap-3 rounded-2xl border border-border/80 bg-background/70 p-3">
-                <div className="size-9 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                <div className="flex size-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
                   <LockKeyhole className="size-4" />
                 </div>
                 <div>
                   <p className="text-sm font-medium">Keys are shown once</p>
-                  <p className="text-xs text-muted-foreground">Store new secrets immediately after creation.</p>
+                  <p className="text-xs text-muted-foreground">
+                    Store new secrets immediately after creation.
+                  </p>
                 </div>
               </div>
               <div className="flex items-center gap-3 rounded-2xl border border-border/80 bg-background/70 p-3">
-                <div className="size-9 rounded-xl bg-accent flex items-center justify-center text-accent-foreground">
+                <div className="flex size-9 items-center justify-center rounded-xl bg-accent text-accent-foreground">
                   <Activity className="size-4" />
                 </div>
                 <div>
-                  <p className="text-sm font-medium">{activeCount} active credential{activeCount === 1 ? "" : "s"}</p>
-                  <p className="text-xs text-muted-foreground">Disable unused keys without deleting history.</p>
+                  <p className="text-sm font-medium">
+                    {activeCount} active credential{activeCount === 1 ? "" : "s"}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    Disable unused keys without deleting history.
+                  </p>
                 </div>
               </div>
             </div>
           </CardContent>
           <CardFooter className="bg-muted/40 p-6">
-            <Button asChild variant={keyCount < MAX_KEYS ? "default" : "secondary"} className="w-full">
+            <Button
+              asChild
+              variant={keyCount < MAX_KEYS ? "default" : "secondary"}
+              className="w-full"
+            >
               <Link href="/dashboard/keys">
                 {keyCount < MAX_KEYS ? "Create or manage keys" : "Review keys"}
                 <ArrowRight data-icon="inline-end" />
@@ -185,7 +224,7 @@ export default async function DashboardPage() {
         <Card className="border-primary/10 bg-card shadow-sm shadow-foreground/5">
           <CardHeader className="p-6 pb-0">
             <div className="flex items-center gap-3">
-              <div className="size-11 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+              <div className="flex size-11 items-center justify-center rounded-2xl bg-primary/10 text-primary">
                 <Key className="size-5" />
               </div>
               <div>
@@ -196,7 +235,8 @@ export default async function DashboardPage() {
           </CardHeader>
           <CardContent className="flex flex-col gap-5 p-6">
             <p className="text-sm leading-6 text-muted-foreground">
-              Create, disable, and remove AWS API Gateway keys linked to your iVALT usage plan. You can keep up to {MAX_KEYS} keys per account.
+              Create, disable, and remove AWS API Gateway keys linked to your iVALT usage plan. You
+              can keep up to {MAX_KEYS} keys per account.
             </p>
             <Button asChild className="w-fit">
               <Link href="/dashboard/keys">
@@ -210,7 +250,7 @@ export default async function DashboardPage() {
         <Card className="border-primary/10 bg-card shadow-sm shadow-foreground/5">
           <CardHeader className="p-6 pb-0">
             <div className="flex items-center gap-3">
-              <div className="size-11 rounded-2xl bg-accent flex items-center justify-center text-accent-foreground">
+              <div className="flex size-11 items-center justify-center rounded-2xl bg-accent text-accent-foreground">
                 <BookOpen className="size-5" />
               </div>
               <div>
@@ -221,7 +261,8 @@ export default async function DashboardPage() {
           </CardHeader>
           <CardContent className="flex flex-col gap-5 p-6">
             <p className="text-sm leading-6 text-muted-foreground">
-              Review the biometric auth request and polling contract with implementation notes for production applications.
+              Review the biometric auth request and polling contract with implementation notes for
+              production applications.
             </p>
             <Button asChild variant="outline" className="w-fit bg-card">
               <Link href="/dashboard/docs">
@@ -235,12 +276,14 @@ export default async function DashboardPage() {
         <Card className="border-primary/10 bg-primary text-primary-foreground shadow-sm shadow-primary/15">
           <CardHeader className="p-6 pb-0">
             <div className="flex items-center gap-3">
-              <div className="size-11 rounded-2xl bg-primary-foreground/12 flex items-center justify-center">
+              <div className="flex size-11 items-center justify-center rounded-2xl bg-primary-foreground/12">
                 <Fingerprint className="size-5" />
               </div>
               <div>
                 <CardTitle className="text-lg tracking-[-0.01em]">Biometric trust layer</CardTitle>
-                <CardDescription className="text-primary-foreground/70">No passwords in the sign-in path.</CardDescription>
+                <CardDescription className="text-primary-foreground/70">
+                  No passwords in the sign-in path.
+                </CardDescription>
               </div>
             </div>
           </CardHeader>
@@ -266,7 +309,9 @@ export default async function DashboardPage() {
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <CardTitle className="text-2xl tracking-[-0.025em]">Authentication flow</CardTitle>
-              <CardDescription>The production handoff is intentionally short: request, poll, then create a session.</CardDescription>
+              <CardDescription>
+                The production handoff is intentionally short: request, poll, then create a session.
+              </CardDescription>
             </div>
             <Badge variant="outline" className="w-fit bg-background">
               <Clock3 className="mr-1 size-3" />
@@ -278,7 +323,7 @@ export default async function DashboardPage() {
           <div className="grid gap-4 lg:grid-cols-3">
             <div className="relative rounded-2xl border border-border/80 bg-background/70 p-5">
               <div className="mb-5 flex items-center justify-between gap-4">
-                <div className="size-9 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-semibold">
+                <div className="flex size-9 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
                   01
                 </div>
                 <Key className="size-5 text-muted-foreground" />
@@ -290,7 +335,7 @@ export default async function DashboardPage() {
             </div>
             <div className="relative rounded-2xl border border-border/80 bg-background/70 p-5">
               <div className="mb-5 flex items-center justify-between gap-4">
-                <div className="size-9 rounded-full bg-accent text-accent-foreground flex items-center justify-center text-sm font-semibold">
+                <div className="flex size-9 items-center justify-center rounded-full bg-accent text-sm font-semibold text-accent-foreground">
                   02
                 </div>
                 <Activity className="size-5 text-muted-foreground" />
@@ -302,7 +347,7 @@ export default async function DashboardPage() {
             </div>
             <div className="relative rounded-2xl border border-border/80 bg-background/70 p-5">
               <div className="mb-5 flex items-center justify-between gap-4">
-                <div className="size-9 rounded-full bg-foreground text-background flex items-center justify-center text-sm font-semibold">
+                <div className="flex size-9 items-center justify-center rounded-full bg-foreground text-sm font-semibold text-background">
                   03
                 </div>
                 <ShieldCheck className="size-5 text-muted-foreground" />

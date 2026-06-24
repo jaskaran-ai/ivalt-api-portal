@@ -5,7 +5,14 @@ import { Key, ShieldCheck } from "lucide-react";
 import AdminShell from "@/components/layout/AdminShell";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { toast } from "sonner";
 
 interface ApiKey {
@@ -48,32 +55,32 @@ export default function AdminKeysPage() {
   }, []);
 
   const filteredKeys = keys.filter((key) => {
-    const matchesSearch = search === "" || 
+    const matchesSearch =
+      search === "" ||
       key.keyName.toLowerCase().includes(search.toLowerCase()) ||
       key.awsKeyId.toLowerCase().includes(search.toLowerCase()) ||
       (key.user?.name && key.user.name.toLowerCase().includes(search.toLowerCase()));
-    
-    const matchesStatus = statusFilter === "all" || 
+
+    const matchesStatus =
+      statusFilter === "all" ||
       (statusFilter === "active" && key.isActive) ||
       (statusFilter === "inactive" && !key.isActive);
-    
+
     return matchesSearch && matchesStatus;
   });
 
-  const activeCount = filteredKeys.filter(k => k.isActive).length;
-  const inactiveCount = filteredKeys.filter(k => !k.isActive).length;
+  const activeCount = filteredKeys.filter((k) => k.isActive).length;
+  const inactiveCount = filteredKeys.filter((k) => !k.isActive).length;
 
   return (
     <AdminShell>
       <div className="mx-auto max-w-7xl">
         <div className="mb-6">
           <h1 className="text-2xl font-semibold tracking-[-0.03em]">API Keys</h1>
-          <p className="text-sm text-muted-foreground">
-            Monitor all API keys across the system
-          </p>
+          <p className="text-sm text-muted-foreground">Monitor all API keys across the system</p>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-4 mb-6">
+        <div className="mb-6 grid gap-4 md:grid-cols-4">
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium">Total Keys</CardTitle>
@@ -104,7 +111,7 @@ export default function AdminKeysPage() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {filteredKeys.filter(k => k.lastUsedAt).length}
+                {filteredKeys.filter((k) => k.lastUsedAt).length}
               </div>
             </CardContent>
           </Card>
@@ -113,9 +120,7 @@ export default function AdminKeysPage() {
         <Card>
           <CardHeader>
             <CardTitle>API Keys</CardTitle>
-            <CardDescription>
-              Showing {filteredKeys.length} keys across all users
-            </CardDescription>
+            <CardDescription>Showing {filteredKeys.length} keys across all users</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="mb-4 flex items-center gap-2">
@@ -124,24 +129,24 @@ export default function AdminKeysPage() {
                 placeholder="Search keys..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="flex-1 px-3 py-2 border rounded-md text-sm"
+                className="flex-1 rounded-md border px-3 py-2 text-sm"
               />
               <div className="flex gap-2">
                 <button
                   onClick={() => setStatusFilter("all")}
-                  className={`px-3 py-1 text-sm rounded-md ${statusFilter === "all" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}
+                  className={`rounded-md px-3 py-1 text-sm ${statusFilter === "all" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}
                 >
                   All
                 </button>
                 <button
                   onClick={() => setStatusFilter("active")}
-                  className={`px-3 py-1 text-sm rounded-md ${statusFilter === "active" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}
+                  className={`rounded-md px-3 py-1 text-sm ${statusFilter === "active" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}
                 >
                   Active
                 </button>
                 <button
                   onClick={() => setStatusFilter("inactive")}
-                  className={`px-3 py-1 text-sm rounded-md ${statusFilter === "inactive" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}
+                  className={`rounded-md px-3 py-1 text-sm ${statusFilter === "inactive" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}
                 >
                   Inactive
                 </button>
@@ -150,13 +155,13 @@ export default function AdminKeysPage() {
 
             {loading ? (
               <div className="flex items-center justify-center p-12">
-                <div className="animate-spin size-6 border-2 border-primary border-t-transparent rounded-full" />
+                <div className="size-6 animate-spin rounded-full border-2 border-primary border-t-transparent" />
               </div>
             ) : filteredKeys.length === 0 ? (
               <div className="flex flex-col items-center justify-center p-12 text-center">
-                <Key className="size-12 text-muted-foreground mb-4" />
+                <Key className="mb-4 size-12 text-muted-foreground" />
                 <h3 className="font-semibold">No API keys found</h3>
-                <p className="text-sm text-muted-foreground mt-1">
+                <p className="mt-1 text-sm text-muted-foreground">
                   No keys match the current filters.
                 </p>
               </div>
@@ -177,31 +182,27 @@ export default function AdminKeysPage() {
                       <TableCell>
                         <div>
                           <p className="font-medium">{key.keyName}</p>
-                          <p className="text-xs text-muted-foreground font-mono">
+                          <p className="font-mono text-xs text-muted-foreground">
                             {key.awsKeyId.slice(0, 12)}…
                           </p>
                         </div>
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center gap-3">
-                          <div className="size-8 rounded-full bg-primary/10 flex items-center justify-center">
+                          <div className="flex size-8 items-center justify-center rounded-full bg-primary/10">
                             <ShieldCheck className="size-4 text-primary" />
                           </div>
                           <div>
-                            <p className="font-medium">
-                              {key.user?.name || "Unknown"}
-                            </p>
-                            <p className="text-xs text-muted-foreground">
-                              {key.user?.phoneNumber}
-                            </p>
-                            <Badge 
-                              variant="secondary" 
-                              className={`text-xs mt-1 ${
-                                key.user?.status === "approved" 
+                            <p className="font-medium">{key.user?.name || "Unknown"}</p>
+                            <p className="text-xs text-muted-foreground">{key.user?.phoneNumber}</p>
+                            <Badge
+                              variant="secondary"
+                              className={`mt-1 text-xs ${
+                                key.user?.status === "approved"
                                   ? "bg-emerald-500/10 text-emerald-700"
                                   : key.user?.status === "rejected"
-                                  ? "bg-red-500/10 text-red-700"
-                                  : "bg-amber-500/10 text-amber-700"
+                                    ? "bg-red-500/10 text-red-700"
+                                    : "bg-amber-500/10 text-amber-700"
                               }`}
                             >
                               {key.user?.status || "pending"}

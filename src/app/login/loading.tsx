@@ -30,7 +30,10 @@ export default function LoginLoading() {
 
           <div className="grid max-w-2xl gap-3 sm:grid-cols-3">
             {[0, 1, 2].map((item) => (
-              <div key={item} className="rounded-2xl border border-border/80 bg-card/70 p-4 shadow-sm shadow-foreground/5 backdrop-blur">
+              <div
+                key={item}
+                className="rounded-2xl border border-border/80 bg-card/70 p-4 shadow-sm shadow-foreground/5 backdrop-blur"
+              >
                 <Skeleton className="h-5 w-24" />
                 <Skeleton className="mt-3 h-3 w-full" />
                 <Skeleton className="mt-2 h-3 w-4/5" />

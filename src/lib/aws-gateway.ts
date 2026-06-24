@@ -14,7 +14,7 @@ import {
 function getClient() {
   if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY) {
     throw new Error(
-      "AWS credentials not configured. Set AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY in .env.local, or enable NEXT_PUBLIC_DEMO_MODE=true"
+      "AWS credentials not configured. Set AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY in .env.local, or enable NEXT_PUBLIC_DEMO_MODE=true",
     );
   }
   return new APIGatewayClient({
@@ -36,7 +36,10 @@ export interface CreatedApiKey {
   createdDate?: Date;
 }
 
-export async function createAwsApiKey(keyName: string, description?: string): Promise<CreatedApiKey> {
+export async function createAwsApiKey(
+  keyName: string,
+  description?: string,
+): Promise<CreatedApiKey> {
   const client = getClient();
 
   const createResult = await client.send(
@@ -45,7 +48,7 @@ export async function createAwsApiKey(keyName: string, description?: string): Pr
       description: description || `iVALT Portal key: ${keyName}`,
       enabled: true,
       generateDistinctId: true,
-    })
+    }),
   );
 
   if (!createResult.id || !createResult.value) {
@@ -58,7 +61,7 @@ export async function createAwsApiKey(keyName: string, description?: string): Pr
         usagePlanId: USAGE_PLAN_ID,
         keyId: createResult.id,
         keyType: "API_KEY",
-      })
+      }),
     );
   }
 
@@ -76,7 +79,9 @@ export async function deleteAwsApiKey(keyId: string): Promise<void> {
   if (USAGE_PLAN_ID) {
     try {
       await client.send(new DeleteUsagePlanKeyCommand({ usagePlanId: USAGE_PLAN_ID, keyId }));
-    } catch { /* ignore if not attached */ }
+    } catch {
+      /* ignore if not attached */
+    }
   }
   await client.send(new DeleteApiKeyCommand({ apiKey: keyId }));
 }
@@ -87,7 +92,7 @@ export async function toggleAwsApiKey(keyId: string, enabled: boolean): Promise<
     new UpdateApiKeyCommand({
       apiKey: keyId,
       patchOperations: [{ op: "replace", path: "/enabled", value: enabled.toString() }],
-    })
+    }),
   );
 }
 

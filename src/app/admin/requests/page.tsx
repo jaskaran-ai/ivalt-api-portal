@@ -7,7 +7,14 @@ import AdminShell from "@/components/layout/AdminShell";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { toast } from "sonner";
 
 interface AccessRequest {
@@ -76,9 +83,7 @@ export default function AdminRequestsPage() {
         <div className="mb-6 flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-semibold tracking-[-0.03em]">Access Requests</h1>
-            <p className="text-sm text-muted-foreground">
-              Review and approve user access requests
-            </p>
+            <p className="text-sm text-muted-foreground">Review and approve user access requests</p>
           </div>
           <div className="flex gap-2">
             <Button
@@ -109,15 +114,15 @@ export default function AdminRequestsPage() {
           <CardContent className="p-0">
             {loading ? (
               <div className="flex items-center justify-center p-12">
-                <div className="animate-spin size-6 border-2 border-primary border-t-transparent rounded-full" />
+                <div className="size-6 animate-spin rounded-full border-2 border-primary border-t-transparent" />
               </div>
             ) : requests.length === 0 ? (
               <div className="flex flex-col items-center justify-center p-12 text-center">
-                <Clock className="size-12 text-muted-foreground mb-4" />
+                <Clock className="mb-4 size-12 text-muted-foreground" />
                 <h3 className="font-semibold">No requests found</h3>
-                <p className="text-sm text-muted-foreground mt-1">
-                  {statusFilter === "pending" 
-                    ? "All caught up! No pending requests." 
+                <p className="mt-1 text-sm text-muted-foreground">
+                  {statusFilter === "pending"
+                    ? "All caught up! No pending requests."
                     : "No requests match the current filter."}
                 </p>
               </div>
@@ -137,26 +142,20 @@ export default function AdminRequestsPage() {
                     <TableRow key={req.id}>
                       <TableCell>
                         <div className="flex items-center gap-3">
-                          <div className="size-8 rounded-full bg-primary/10 flex items-center justify-center">
+                          <div className="flex size-8 items-center justify-center rounded-full bg-primary/10">
                             <User className="size-4 text-primary" />
                           </div>
                           <div>
-                            <p className="font-medium">
-                              {req.user?.name || "Unknown User"}
-                            </p>
-                            <p className="text-xs text-muted-foreground">
-                              {req.user?.phoneNumber}
-                            </p>
+                            <p className="font-medium">{req.user?.name || "Unknown User"}</p>
+                            <p className="text-xs text-muted-foreground">{req.user?.phoneNumber}</p>
                           </div>
                         </div>
                       </TableCell>
                       <TableCell>
                         <div className="max-w-xs">
-                          <p className="line-clamp-2 text-sm">
-                            {req.useCase}
-                          </p>
+                          <p className="line-clamp-2 text-sm">{req.useCase}</p>
                           {req.adminNotes && (
-                            <p className="text-xs text-muted-foreground mt-1 italic">
+                            <p className="mt-1 text-xs text-muted-foreground italic">
                               Admin: {req.adminNotes}
                             </p>
                           )}
@@ -184,7 +183,7 @@ export default function AdminRequestsPage() {
                               onClick={() => handleApproval(req.id, true)}
                               disabled={processingId === req.id}
                             >
-                              <Check className="size-4 mr-1" />
+                              <Check className="mr-1 size-4" />
                               Approve
                             </Button>
                             <Button
@@ -193,7 +192,7 @@ export default function AdminRequestsPage() {
                               onClick={() => handleApproval(req.id, false)}
                               disabled={processingId === req.id}
                             >
-                              <X className="size-4 mr-1" />
+                              <X className="mr-1 size-4" />
                               Reject
                             </Button>
                           </div>

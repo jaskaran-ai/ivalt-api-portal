@@ -35,7 +35,10 @@ export default function DashboardLoading() {
 
             <div className="grid gap-3 sm:grid-cols-3">
               {[0, 1, 2].map((item) => (
-                <div key={item} className="rounded-2xl border border-border/80 bg-background/70 p-4">
+                <div
+                  key={item}
+                  className="rounded-2xl border border-border/80 bg-background/70 p-4"
+                >
                   <Skeleton className="h-3 w-24" />
                   <Skeleton className="mt-3 h-9 w-20 rounded-xl" />
                 </div>
@@ -68,7 +71,10 @@ export default function DashboardLoading() {
             <Separator />
             <div className="flex flex-col gap-3">
               {[0, 1].map((item) => (
-                <div key={item} className="flex items-center gap-3 rounded-2xl border border-border/80 bg-background/70 p-3">
+                <div
+                  key={item}
+                  className="flex items-center gap-3 rounded-2xl border border-border/80 bg-background/70 p-3"
+                >
                   <Skeleton className="size-9 rounded-xl" />
                   <div className="flex flex-1 flex-col gap-2">
                     <Skeleton className="h-4 w-36" />
