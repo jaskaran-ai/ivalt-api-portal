@@ -83,44 +83,20 @@ export async function POST(req: NextRequest) {
 
     const user = await db.query.users.findFirst({
       where: eq(users.id, session.userId),
-      columns: { id: true, name: true, phoneNumber: true, role: true, status: true, createdAt: true },
     });
 
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    const description = JSON.stringify({
-      userId: user.id,
-      name: user.name,
-      phoneNumber: user.phoneNumber,
-      role: user.role,
-      status: user.status,
-      createdAt: user.createdAt.toISOString(),
-    });
-
-    const sanitizedName = `ivalt-portal-${session.userId.slice(0, 8)}-${keyName.trim().replace(/[^a-zA-Z0-9-_]/g, "-")}`;
-    const awsKey = await createAwsApiKey(sanitizedName, description);
-
-    if (existingKey) {
-      return NextResponse.json(
-        { error: `You already have a key named "${keyName.trim()}". Choose a different name.` },
-        { status: 409 },
-      );
-    }
-
-    const user = await db.query.users.findFirst({
-      where: eq(users.id, session.userId),
-    });
-
-    const userName = user?.name || user?.phoneNumber || `user-${session.userId.slice(0, 8)}`;
-    const phone = user?.phoneNumber || session.phoneNumber || "unknown";
+    const userName = user.name || user.phoneNumber || `user-${session.userId.slice(0, 8)}`;
+    const phone = user.phoneNumber || session.phoneNumber || "unknown";
 
     const sanitizedUserName = userName.replace(/[^a-zA-Z0-9]/g, "_");
     const sanitizedKeyName = keyName.trim().replace(/[^a-zA-Z0-9-_]/g, "-");
     const awsKeyName = `ivalt-${sanitizedUserName}-${sanitizedKeyName}`;
 
-    const description = JSON.stringify({
+    const keyDescription = JSON.stringify({
       userId: session.userId,
       name: userName,
       phoneNumber: phone,
@@ -128,7 +104,7 @@ export async function POST(req: NextRequest) {
       createdAt: new Date().toISOString(),
     });
 
-    const awsKey = await createAwsApiKey(awsKeyName, description);
+    const awsKey = await createAwsApiKey(awsKeyName, keyDescription);
 
     const [newKey] = await db
       .insert(apiKeys)
