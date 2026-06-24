@@ -3,5 +3,5 @@
 [cmd]: https://commandcode.ai/
 
 # UI
-- Use hugeicon library for icons instead of custom SVG or emojis. Confidence: 0.75
 
+- Use hugeicon library for icons instead of custom SVG or emojis. Confidence: 0.75

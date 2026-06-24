@@ -45,15 +45,15 @@ Set `NEXT_PUBLIC_DEMO_MODE=true` to bypass all real external calls (DB, AWS, iVA
 
 ### API routes
 
-| Route | Method | Purpose |
-|---|---|---|
-| `/api/auth/request` | POST | Initiate biometric auth |
-| `/api/auth/verify` | POST | Poll result + create session |
-| `/api/auth/logout` | POST | Destroy session |
-| `/api/keys` | GET | List user's keys |
-| `/api/keys/create` | POST | Create key (max 4 per user) |
-| `/api/keys/[id]` | DELETE | Delete key |
-| `/api/keys/[id]` | PATCH | Enable/disable key |
+| Route               | Method | Purpose                      |
+| ------------------- | ------ | ---------------------------- |
+| `/api/auth/request` | POST   | Initiate biometric auth      |
+| `/api/auth/verify`  | POST   | Poll result + create session |
+| `/api/auth/logout`  | POST   | Destroy session              |
+| `/api/keys`         | GET    | List user's keys             |
+| `/api/keys/create`  | POST   | Create key (max 4 per user)  |
+| `/api/keys/[id]`    | DELETE | Delete key                   |
+| `/api/keys/[id]`    | PATCH  | Enable/disable key           |
 
 ### UI structure
 
@@ -62,6 +62,7 @@ Set `NEXT_PUBLIC_DEMO_MODE=true` to bypass all real external calls (DB, AWS, iVA
 ### Design system
 
 Slack-inspired tokens defined in `src/app/globals.css`:
+
 - Primary: `#611f69` (Purple Heart)
 - Background: `#fefbff` (Canvas Ice)
 - Accent: `#1264a3` (Electric Blue)
@@ -71,16 +72,16 @@ Slack-inspired tokens defined in `src/app/globals.css`:
 
 Copy `.env.local.example` → `.env` and fill in values. Required in production:
 
-| Variable | Purpose |
-|---|---|
-| `DATABASE_URL` | PostgreSQL connection string |
-| `IVALT_API_BASE_URL` | iVALT API base (default: `https://api.ivalt.com`) |
-| `IVALT_SECURITY_TOKEN` | iVALT security token |
-| `AWS_REGION` | API Gateway region |
-| `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` | IAM credentials |
-| `AWS_API_GATEWAY_USAGE_PLAN_ID` | Usage plan to attach keys to |
-| `SESSION_SECRET` | ≥32-char random string for iron-session |
-| `NEXT_PUBLIC_DEMO_MODE` | Set `true` to skip all external calls |
-| `SMTP_HOST` / `SMTP_PORT` | SMTP server (e.g., `smtp.gmail.com` / `587`) |
-| `SMTP_USER` / `SMTP_PASS` | SMTP credentials |
-| `ADMIN_EMAIL` | Comma-separated admin emails |
+| Variable                                      | Purpose                                           |
+| --------------------------------------------- | ------------------------------------------------- |
+| `DATABASE_URL`                                | PostgreSQL connection string                      |
+| `IVALT_API_BASE_URL`                          | iVALT API base (default: `https://api.ivalt.com`) |
+| `IVALT_SECURITY_TOKEN`                        | iVALT security token                              |
+| `AWS_REGION`                                  | API Gateway region                                |
+| `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` | IAM credentials                                   |
+| `AWS_API_GATEWAY_USAGE_PLAN_ID`               | Usage plan to attach keys to                      |
+| `SESSION_SECRET`                              | ≥32-char random string for iron-session           |
+| `NEXT_PUBLIC_DEMO_MODE`                       | Set `true` to skip all external calls             |
+| `SMTP_HOST` / `SMTP_PORT`                     | SMTP server (e.g., `smtp.gmail.com` / `587`)      |
+| `SMTP_USER` / `SMTP_PASS`                     | SMTP credentials                                  |
+| `ADMIN_EMAIL`                                 | Comma-separated admin emails                      |
