@@ -184,8 +184,7 @@ Every API call requires these HTTP headers:
 
 | Header         | Value                     | Description                 |
 | -------------- | ------------------------- | --------------------------- |
-| `x-api-key`    | Your API key              | Identifies your application |
-| `token`        | Your iVALT security token | Authenticates your account  |
+| `x-api-key`    | Your IVALT API key        | Identifies your application |
 | `Content-Type` | `application/json`        | Request body format         |
 
 ### Endpoint 1: Initiate Authentication
@@ -209,8 +208,7 @@ POST /biometric-auth-request
 ```bash
 curl -X POST https://api.ivalt.com/biometric-auth-request \
   -H "Content-Type: application/json" \
-  -H "token: YOUR_IVALT_SECURITY_TOKEN" \
-  -H "x-api-key: YOUR_API_KEY" \
+  -H "x-api-key: YOUR_IVALT_API_KEY" \
   -d '{"mobile_number": "+919876543210"}'
 ```
 
@@ -245,8 +243,7 @@ POST /biometric-auth-result
 ```bash
 curl -X POST https://api.ivalt.com/biometric-auth-result \
   -H "Content-Type: application/json" \
-  -H "token: YOUR_IVALT_SECURITY_TOKEN" \
-  -H "x-api-key: YOUR_API_KEY" \
+  -H "x-api-key: YOUR_IVALT_API_KEY" \
   -d '{"mobile_number": "+919876543210"}'
 ```
 
@@ -288,8 +285,7 @@ Add latitude, longitude, and radius to the poll request:
 ```bash
 curl -X POST https://api.ivalt.com/biometric-auth-result \
   -H "Content-Type: application/json" \
-  -H "token: YOUR_IVALT_SECURITY_TOKEN" \
-  -H "x-api-key: YOUR_API_KEY" \
+  -H "x-api-key: YOUR_IVALT_API_KEY" \
   -d '{
     "mobile_number": "+919876543210",
     "latitude": 30.7333,
@@ -332,7 +328,7 @@ Use cases for geo-fence authentication:
 | Code | Meaning        | Description                            |
 | ---- | -------------- | -------------------------------------- |
 | 200  | Success        | Push notification sent to user's phone |
-| 403  | Invalid token  | Security token is missing or incorrect |
+| 403  | Invalid API key | API key is missing or incorrect |
 | 404  | User not found | Phone number not registered in iVALT   |
 
 ### Biometric Auth Result
@@ -411,7 +407,7 @@ The admin interface allows you to:
 
 | Issue               | Solution                                                                         |
 | ------------------- | -------------------------------------------------------------------------------- |
-| Key returns 403     | Check if the key is enabled in the portal. Verify the security token is correct. |
+| Key returns 403     | Check if the key is enabled in the portal. Verify the API key is correct. |
 | Lost a key value    | Keys cannot be retrieved. Delete the key and create a new one.                   |
 | Cannot create a key | You may have reached the 4-key limit. Delete an unused key first.                |
 | Key name rejected   | Use at least 3 characters. Avoid special characters.                             |
@@ -460,8 +456,8 @@ The admin interface allows you to:
 - Always validate the API response before creating user sessions
 - Use HTTPS for all API communications
 - Implement rate limiting on your end to avoid overwhelming the API
-- Cache the security token securely on your server side
-- Keep the security token separate from API keys
+- Cache the IVALT_API_KEY securely on your server side
+- Keep the IVALT_API_KEY separate from API keys
 
 ### Production Deployment
 

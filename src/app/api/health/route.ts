@@ -8,7 +8,7 @@ export async function GET() {
     "DATABASE_URL",
     "SESSION_SECRET",
     "IVALT_API_BASE_URL",
-    "IVALT_SECURITY_TOKEN",
+    "IVALT_API_KEY",
   ];
   const optionalVars = [
     "SMTP_HOST",
