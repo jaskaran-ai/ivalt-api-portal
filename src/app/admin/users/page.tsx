@@ -6,9 +6,10 @@ import AdminShell from "@/components/layout/AdminShell";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { toast } from "sonner";
+import { Pagination } from "@/components/ui/pagination";
+import { orpc } from "@/lib/orpc/client";
 
-interface User {
+interface AdminUser {
   id: string;
   phoneNumber: string;
   name: string | null;
@@ -18,19 +19,26 @@ interface User {
   apiKeyCount: number;
 }
 
+type StatusFilter = "all" | "approved" | "pending" | "rejected";
+
 export default function AdminUsersPage() {
-  const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<AdminUser[]>([]);
   const [loading, setLoading] = useState(true);
-  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [total, setTotal] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [page, setPage] = useState(1);
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
+  const perPage = 10;
 
   const fetchUsers = async () => {
     setLoading(true);
     try {
-      const res = await fetch("/api/admin/users");
-      const data = await res.json();
-      setUsers(data.users || []);
-    } catch (error) {
-      toast.error("Failed to fetch users");
+      const result = await orpc.admin.users.list({ page, perPage, status: statusFilter }) as any;
+      setUsers(result.items ?? []);
+      setTotal(result.total ?? 0);
+      setTotalPages(result.totalPages ?? 0);
+    } catch {
+      setUsers([]);
     } finally {
       setLoading(false);
     }
@@ -38,7 +46,12 @@ export default function AdminUsersPage() {
 
   useEffect(() => {
     fetchUsers();
-  }, []);
+  }, [page, statusFilter]);
+
+  const handleStatusChange = (status: StatusFilter) => {
+    setStatusFilter(status);
+    setPage(1);
+  };
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -51,10 +64,6 @@ export default function AdminUsersPage() {
     }
   };
 
-  const filteredUsers = statusFilter === "all" 
-    ? users 
-    : users.filter(u => u.status === statusFilter);
-
   return (
     <AdminShell>
       <div className="mx-auto max-w-7xl">
@@ -66,30 +75,17 @@ export default function AdminUsersPage() {
             </p>
           </div>
           <div className="flex gap-2">
-            <button
-              onClick={() => setStatusFilter("all")}
-              className={`px-3 py-1 text-sm rounded-md ${statusFilter === "all" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}
-            >
-              All
-            </button>
-            <button
-              onClick={() => setStatusFilter("approved")}
-              className={`px-3 py-1 text-sm rounded-md ${statusFilter === "approved" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}
-            >
-              Approved
-            </button>
-            <button
-              onClick={() => setStatusFilter("pending")}
-              className={`px-3 py-1 text-sm rounded-md ${statusFilter === "pending" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}
-            >
-              Pending
-            </button>
-            <button
-              onClick={() => setStatusFilter("rejected")}
-              className={`px-3 py-1 text-sm rounded-md ${statusFilter === "rejected" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}
-            >
-              Rejected
-            </button>
+            {(["all", "approved", "pending", "rejected"] as const).map((s) => (
+              <button
+                key={s}
+                onClick={() => handleStatusChange(s)}
+                className={`px-3 py-1 text-sm rounded-md capitalize ${
+                  statusFilter === s ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+                }`}
+              >
+                {s}
+              </button>
+            ))}
           </div>
         </div>
 
@@ -97,6 +93,14 @@ export default function AdminUsersPage() {
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium">Total Users</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{total}</div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium">On This Page</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{users.length}</div>
@@ -108,7 +112,7 @@ export default function AdminUsersPage() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-emerald-600">
-                {users.filter(u => u.status === "approved").length}
+                {users.filter((u) => u.status === "approved").length}
               </div>
             </CardContent>
           </Card>
@@ -118,17 +122,7 @@ export default function AdminUsersPage() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-amber-600">
-                {users.filter(u => u.status === "pending").length}
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">API Keys</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">
-                {users.reduce((sum, u) => sum + u.apiKeyCount, 0)}
+                {users.filter((u) => u.status === "pending").length}
               </div>
             </CardContent>
           </Card>
@@ -140,7 +134,7 @@ export default function AdminUsersPage() {
               <div className="flex items-center justify-center p-12">
                 <div className="animate-spin size-6 border-2 border-primary border-t-transparent rounded-full" />
               </div>
-            ) : filteredUsers.length === 0 ? (
+            ) : users.length === 0 ? (
               <div className="flex flex-col items-center justify-center p-12 text-center">
                 <User className="size-12 text-muted-foreground mb-4" />
                 <h3 className="font-semibold">No users found</h3>
@@ -149,51 +143,60 @@ export default function AdminUsersPage() {
                 </p>
               </div>
             ) : (
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>User</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>API Keys</TableHead>
-                    <TableHead>Joined</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredUsers.map((user) => (
-                    <TableRow key={user.id}>
-                      <TableCell>
-                        <div className="flex items-center gap-3">
-                          <div className="size-8 rounded-full bg-primary/10 flex items-center justify-center">
-                            <User className="size-4 text-primary" />
-                          </div>
-                          <div>
-                            <p className="font-medium">
-                              {user.name || "Unknown"}
-                            </p>
-                            <p className="text-xs text-muted-foreground">
-                              {user.phoneNumber}
-                            </p>
-                          </div>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        {getStatusBadge(user.status)}
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          <Key className="size-4 text-muted-foreground" />
-                          <span>{user.apiKeyCount}</span>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <span className="text-sm">
-                          {new Date(user.createdAt).toLocaleDateString()}
-                        </span>
-                      </TableCell>
+              <div className="p-6">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>User</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>API Keys</TableHead>
+                      <TableHead>Joined</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                  </TableHeader>
+                  <TableBody>
+                    {users.map((user) => (
+                      <TableRow key={user.id}>
+                        <TableCell>
+                          <div className="flex items-center gap-3">
+                            <div className="size-8 rounded-full bg-primary/10 flex items-center justify-center">
+                              <User className="size-4 text-primary" />
+                            </div>
+                            <div>
+                              <p className="font-medium">
+                                {user.name || "Unknown"}
+                              </p>
+                              <p className="text-xs text-muted-foreground">
+                                {user.phoneNumber}
+                              </p>
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          {getStatusBadge(user.status)}
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <Key className="size-4 text-muted-foreground" />
+                            <span>{user.apiKeyCount}</span>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <span className="text-sm">
+                            {new Date(user.createdAt).toLocaleDateString()}
+                          </span>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+                <Pagination
+                  page={page}
+                  perPage={perPage}
+                  total={total}
+                  totalPages={totalPages}
+                  onPageChange={setPage}
+                />
+              </div>
             )}
           </CardContent>
         </Card>

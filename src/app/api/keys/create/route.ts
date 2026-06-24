@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { DEMO_MODE, getDemoKeys, addDemoKey } from "@/lib/demo";
+import { DEMO_MODE, DEMO_USERS, getDemoKeys, addDemoKey } from "@/lib/demo";
 import { getSession } from "@/lib/session";
 import { db } from "@/db";
-import { apiKeys } from "@/db/schema";
+import { users, apiKeys } from "@/db/schema";
 import { eq, count } from "drizzle-orm";
 import { createAwsApiKey } from "@/lib/aws-gateway";
 
@@ -30,6 +30,16 @@ export async function POST(req: NextRequest) {
           { status: 403 }
         );
       }
+
+      const demoUser = DEMO_USERS.find((u) => u.id === session.userId) ?? DEMO_USERS[0];
+      const demoDescription = JSON.stringify({
+        userId: demoUser.id,
+        name: demoUser.name,
+        phoneNumber: demoUser.phoneNumber,
+        role: "user",
+        status: demoUser.status,
+        createdAt: demoUser.createdAt.toISOString(),
+      });
 
       await new Promise((r) => setTimeout(r, 600));
 
@@ -68,8 +78,26 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const user = await db.query.users.findFirst({
+      where: eq(users.id, session.userId),
+      columns: { id: true, name: true, phoneNumber: true, role: true, status: true, createdAt: true },
+    });
+
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    const description = JSON.stringify({
+      userId: user.id,
+      name: user.name,
+      phoneNumber: user.phoneNumber,
+      role: user.role,
+      status: user.status,
+      createdAt: user.createdAt.toISOString(),
+    });
+
     const sanitizedName = `ivalt-portal-${session.userId.slice(0, 8)}-${keyName.trim().replace(/[^a-zA-Z0-9-_]/g, "-")}`;
-    const awsKey = await createAwsApiKey(sanitizedName, `Portal key for user ${session.userId}`);
+    const awsKey = await createAwsApiKey(sanitizedName, description);
 
     const [newKey] = await db
       .insert(apiKeys)
