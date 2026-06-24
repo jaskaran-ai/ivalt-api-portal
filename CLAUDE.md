@@ -9,6 +9,9 @@ bun dev          # Start dev server (always on port 3000)
 bun run build    # Production build
 bun start        # Serve production build (or: bun run start)
 
+bun test         # Run test suite
+bun run build    # TypeScript is the primary correctness check
+
 bun run db:push      # Sync schema to DB (no migration file generated)
 bun run db:generate  # Generate a migration file from schema changes
 bun run db:migrate   # Run pending migrations
@@ -17,7 +20,7 @@ bun run db:studio    # Open Drizzle Studio GUI
 vercel deploy --prod --yes  # Deploy to Vercel production
 ```
 
-No test suite is configured. TypeScript is the primary correctness check — `bun run build` will catch type errors.
+Test files live in `tests/` mirroring `src/` structure. Demo and production route tests are in separate files to avoid `mock.module` process-wide caching conflicts when both `DEMO_MODE=true` and `DEMO_MODE=false` paths need testing.
 
 ## Architecture
 
