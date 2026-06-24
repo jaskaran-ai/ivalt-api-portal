@@ -87,7 +87,6 @@ const endpoints = [
       "Send a biometric approval request to the user's iVALT mobile app. This starts every sign-in flow.",
     code: `curl -X POST https://api.ivalt.com/biometric-auth-request \\
   -H "Content-Type: application/json" \\
-  -H "token: YOUR_IVALT_SECURITY_TOKEN" \\
   -H "x-api-key: YOUR_API_KEY" \\
   -d '{"mobile_number": "+919876543210"}'`,
     response: `{
@@ -98,7 +97,7 @@ const endpoints = [
     statusCodes: [
       { code: "200", label: "Success", type: "success" as const },
       { code: "404", label: "User not found", type: "error" as const },
-      { code: "403", label: "Invalid token", type: "error" as const },
+      { code: "403", label: "Invalid API key", type: "error" as const },
     ],
   },
   {
@@ -109,7 +108,6 @@ const endpoints = [
       "Poll every 2 seconds until the user approves, rejects, times out, or cannot be found.",
     code: `curl -X POST https://api.ivalt.com/biometric-auth-result \\
   -H "Content-Type: application/json" \\
-  -H "token: YOUR_IVALT_SECURITY_TOKEN" \\
   -H "x-api-key: YOUR_API_KEY" \\
   -d '{"mobile_number": "+919876543210"}'`,
     response: `{
@@ -134,7 +132,6 @@ const endpoints = [
       "Verify biometric approval together with a latitude, longitude, and allowed radius.",
     code: `curl -X POST https://api.ivalt.com/biometric-auth-result \\
   -H "Content-Type: application/json" \\
-  -H "token: YOUR_IVALT_SECURITY_TOKEN" \\
   -H "x-api-key: YOUR_API_KEY" \\
   -d '{
     "mobile_number": "+919876543210",
@@ -177,7 +174,7 @@ const responseStates = [
   {
     code: "403",
     title: "Failed / timeout",
-    text: "Authentication failed, the token is missing, or the approval window has expired.",
+    text: "Authentication failed. The API key is invalid or the approval window has expired.",
     icon: AlertCircle,
     tone: "bg-destructive/10 text-destructive",
   },
@@ -286,7 +283,7 @@ export default function DocsPage() {
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <CardTitle className="text-2xl tracking-[-0.025em]">Authentication headers</CardTitle>
-              <CardDescription>Send both credentials with every protected request.</CardDescription>
+              <CardDescription>Send your API key with every protected request.</CardDescription>
             </div>
             <Badge variant="outline" className="w-fit bg-background">
               <ShieldCheck className="mr-1 size-3" />
@@ -297,8 +294,7 @@ export default function DocsPage() {
         <CardContent className="grid gap-4 p-6 lg:grid-cols-3">
           {[
             { step: "01", title: "API key", value: "x-api-key: YOUR_API_KEY" },
-            { step: "02", title: "Security token", value: "token: YOUR_IVALT_SECURITY_TOKEN" },
-            { step: "03", title: "Content type", value: "Content-Type: application/json" },
+            { step: "02", title: "Content type", value: "Content-Type: application/json" },
           ].map((item) => (
             <div
               key={item.step}

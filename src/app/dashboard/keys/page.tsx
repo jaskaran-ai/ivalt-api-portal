@@ -598,7 +598,6 @@ export default function KeysPage() {
             <div className="rounded-2xl border border-border/80 bg-background/70 p-4 font-mono text-xs leading-6">
               <p className="mb-2 text-muted-foreground">// Include in request headers</p>
               <p>x-api-key: YOUR_API_KEY</p>
-              <p>token: YOUR_IVALT_SECURITY_TOKEN</p>
             </div>
             <p className="text-sm leading-6 text-muted-foreground">
               Use one key per environment where possible. Disable credentials before deleting them
