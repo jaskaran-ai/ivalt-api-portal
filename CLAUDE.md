@@ -41,7 +41,7 @@ Set `NEXT_PUBLIC_DEMO_MODE=true` to bypass all real external calls (DB, AWS, iVA
 
 - **DB** (`src/db/`): Drizzle ORM + `postgres` driver. Two tables: `users` (keyed by UUID, unique on `phone_number`) and `api_keys` (FK → users, cascade delete). `keyValue` is stored once at creation then masked in the DB record — the raw value is never re-fetched from AWS.
 - **AWS API Gateway** (`src/lib/aws-gateway.ts`): Creates/deletes/toggles keys in AWS and attaches them to a single usage plan. The client is constructed lazily and throws if credentials are missing in non-demo mode.
-- **iVALT API** (`src/lib/ivalt.ts`): Two calls only — `POST /biometric-auth-request` (initiates push with `{ mobile }`) and `POST /biometric-auth-result` (polls result with `{ mobile }`). Auth header: `x-api-key: <IVALT_SECURITY_TOKEN>`. Status codes: 200 = authenticated, 422 = pending, 403 = rejected, 404 = user not found.
+- **iVALT API** (`src/lib/ivalt.ts`): Two calls only — `POST /biometric-auth-request` (initiates push with `{ mobile }`) and `POST /biometric-auth-result` (polls result with `{ mobile }`). Auth header: `x-api-key: <IVALT_API_KEY>`. Status codes: 200 = authenticated, 422 = pending, 403 = rejected, 404 = user not found.
 
 ### API routes
 
@@ -76,7 +76,7 @@ Copy `.env.local.example` → `.env` and fill in values. Required in production:
 | --------------------------------------------- | ------------------------------------------------- |
 | `DATABASE_URL`                                | PostgreSQL connection string                      |
 | `IVALT_API_BASE_URL`                          | iVALT API base (default: `https://api.ivalt.com`) |
-| `IVALT_SECURITY_TOKEN`                        | iVALT security token                              |
+| `IVALT_API_KEY`                        | iVALT API key sent as the x-api-key header      |
 | `AWS_REGION`                                  | API Gateway region                                |
 | `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` | IAM credentials                                   |
 | `AWS_API_GATEWAY_USAGE_PLAN_ID`               | Usage plan to attach keys to                      |

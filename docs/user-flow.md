@@ -121,8 +121,7 @@ Every API call requires these headers:
 
 | Header         | Value                     | Purpose                     |
 | -------------- | ------------------------- | --------------------------- |
-| `x-api-key`    | Your API key              | Identifies your application |
-| `token`        | Your iVALT security token | Authenticates your account  |
+| `x-api-key`    | Your IVALT API key        | Identifies your application |
 | `Content-Type` | `application/json`        | Request format              |
 
 ### Flow: Initiate Authentication
@@ -136,8 +135,7 @@ Send a push notification to the user's iVALT app:
 ```bash
 curl -X POST https://api.ivalt.com/biometric-auth-request \
   -H "Content-Type: application/json" \
-  -H "token: YOUR_IVALT_SECURITY_TOKEN" \
-  -H "x-api-key: YOUR_API_KEY" \
+  -H "x-api-key: YOUR_IVALT_API_KEY" \
   -d '{"mobile_number": "+919876543210"}'
 ```
 
@@ -154,8 +152,7 @@ Poll every 2 seconds until a terminal status is reached:
 ```bash
 curl -X POST https://api.ivalt.com/biometric-auth-result \
   -H "Content-Type: application/json" \
-  -H "token: YOUR_IVALT_SECURITY_TOKEN" \
-  -H "x-api-key: YOUR_API_KEY" \
+  -H "x-api-key: YOUR_IVALT_API_KEY" \
   -d '{"mobile_number": "+919876543210"}'
 ```
 
@@ -175,8 +172,7 @@ Add location constraints to the poll request:
 ```bash
 curl -X POST https://api.ivalt.com/biometric-auth-result \
   -H "Content-Type: application/json" \
-  -H "token: YOUR_IVALT_SECURITY_TOKEN" \
-  -H "x-api-key: YOUR_API_KEY" \
+  -H "x-api-key: YOUR_IVALT_API_KEY" \
   -d '{
     "mobile_number": "+919876543210",
     "latitude": 30.7333,

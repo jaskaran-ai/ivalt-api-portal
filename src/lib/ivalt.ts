@@ -1,7 +1,7 @@
 // iVALT API client — only called in non-demo mode.
 
 const IVALT_BASE_URL = process.env.IVALT_API_BASE_URL || "https://api.ivalt.com";
-const SECURITY_TOKEN = process.env.IVALT_SECURITY_TOKEN || "";
+const IVALT_API_KEY = process.env.IVALT_API_KEY || "";
 
 export type BiometricAuthStatus = "pending" | "authenticated" | "failed" | "not_found" | "timeout";
 
@@ -23,7 +23,7 @@ export async function sendBiometricAuthRequest(
   try {
     const response = await fetch(`${IVALT_BASE_URL}/biometric-auth-request`, {
       method: "POST",
-      headers: { "Content-Type": "application/json", "x-api-key": SECURITY_TOKEN },
+      headers: { "Content-Type": "application/json", "x-api-key": IVALT_API_KEY },
       body: JSON.stringify({ mobile: mobileNumber, requestFrom: "iVALT Api Portal" }),
     });
 
@@ -47,7 +47,7 @@ export async function getBiometricResult(mobileNumber: string): Promise<Biometri
   try {
     const response = await fetch(`${IVALT_BASE_URL}/biometric-auth-result`, {
       method: "POST",
-      headers: { "Content-Type": "application/json", "x-api-key": SECURITY_TOKEN },
+      headers: { "Content-Type": "application/json", "x-api-key": IVALT_API_KEY },
       body: JSON.stringify({ mobile: mobileNumber, requestFrom: "iVALT Api Portal" }),
     });
 

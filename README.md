@@ -144,7 +144,7 @@ Login → Biometric Push → Approve in iVALT App → Access Request → Admin R
 | POST   | `https://api.ivalt.com/biometric-auth-request` | Send biometric push |
 | POST   | `https://api.ivalt.com/biometric-auth-result`  | Poll auth status    |
 
-**Auth headers:** `x-api-key: YOUR_API_KEY`, `token: YOUR_IVALT_SECURITY_TOKEN`, `Content-Type: application/json`
+**Auth headers:** `x-api-key: YOUR_IVALT_API_KEY`, `Content-Type: application/json`
 
 **Status codes:** 200 = authenticated, 422 = pending, 403 = failed/timeout, 404 = user not found
 
@@ -206,7 +206,7 @@ Copy `.env.local.example` → `.env.local`:
 | ------------------------------- | --------- | ------------------------------------------------- |
 | `DATABASE_URL`                  | Yes       | PostgreSQL connection string                      |
 | `IVALT_API_BASE_URL`            | Yes       | iVALT API base (default: `https://api.ivalt.com`) |
-| `IVALT_SECURITY_TOKEN`          | Yes       | iVALT security token                              |
+| `IVALT_API_KEY`                      | Yes       | iVALT API key sent as the x-api-key header      |
 | `AWS_REGION`                    | Yes       | AWS region (e.g. `us-east-1`)                     |
 | `AWS_ACCESS_KEY_ID`             | Yes       | IAM access key                                    |
 | `AWS_SECRET_ACCESS_KEY`         | Yes       | IAM secret key                                    |
