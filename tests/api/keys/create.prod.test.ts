@@ -5,6 +5,7 @@ import { describe, test, expect, mock, beforeEach } from "bun:test";
 const mockGetSession = mock<() => unknown>();
 const mockCreateAwsApiKey = mock<() => unknown>();
 const mockUserFindFirst = mock<() => unknown>();
+const mockApiKeyFindFirst = mock<() => unknown>();
 let mockKeyCount = 0;
 
 mock.module("@/lib/session", () => ({ getSession: mockGetSession }));
@@ -24,6 +25,7 @@ mock.module("@/db", () => ({
   db: {
     query: {
       users: { findFirst: mockUserFindFirst },
+      apiKeys: { findFirst: mockApiKeyFindFirst },
     },
     select: () => ({
       from: () => ({
@@ -45,6 +47,7 @@ mock.module("@/db/schema", () => ({
 
 mock.module("drizzle-orm", () => ({
   eq: (a: unknown, b: unknown) => ({ a, b }),
+  and: (...args: unknown[]) => ({ op: "and", args }),
   count: () => "count",
 }));
 
@@ -60,6 +63,7 @@ describe("POST /api/keys/create (production mode)", () => {
       name: "Test User",
       phoneNumber: "+919876543210",
     });
+    mockApiKeyFindFirst.mockReturnValue(null);
     mockCreateAwsApiKey.mockReturnValue({
       id: "aws-key-123",
       name: "ivalt-portal-prod-user-key",
@@ -95,6 +99,14 @@ describe("POST /api/keys/create (production mode)", () => {
     expect(res.status).toBe(403);
     const body = await res.json();
     expect(body.error).toContain("maximum");
+  });
+
+  test("returns 409 if key name already exists", async () => {
+    mockApiKeyFindFirst.mockReturnValue({ id: "existing", keyName: "My Key" });
+    const res = await post({ keyName: "My Key" });
+    expect(res.status).toBe(409);
+    const body = await res.json();
+    expect(body.error).toContain("already have a key");
   });
 
   test("creates key with AWS and stores in DB", async () => {

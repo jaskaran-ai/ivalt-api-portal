@@ -5,6 +5,8 @@ import {
   AlertTriangle,
   ArrowRight,
   Copy,
+  Eye,
+  EyeOff,
   Key,
   Loader2,
   LockKeyhole,
@@ -51,8 +53,12 @@ export default function KeysPage() {
     null,
   );
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
+  const [toggleConfirm, setToggleConfirm] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [togglingId, setTogglingId] = useState<string | null>(null);
+  const [revealedKeyId, setRevealedKeyId] = useState<string | null>(null);
+  const [revealedKeyValue, setRevealedKeyValue] = useState<string | null>(null);
+  const [revealingId, setRevealingId] = useState<string | null>(null);
 
   const fetchKeys = useCallback(async () => {
     const res = await fetch("/api/keys");
@@ -116,6 +122,7 @@ export default function KeysPage() {
 
   const handleToggle = async (id: string, currentState: boolean) => {
     setTogglingId(id);
+    setToggleConfirm(null);
     try {
       const res = await fetch(`/api/keys/${id}`, {
         method: "PATCH",
@@ -123,7 +130,8 @@ export default function KeysPage() {
         body: JSON.stringify({ isActive: !currentState }),
       });
       if (!res.ok) {
-        toast.error("Failed to update key");
+        const data = await res.json();
+        toast.error(data.error || "Failed to update key");
         return;
       }
       setKeys((ks) => ks.map((k) => (k.id === id ? { ...k, isActive: !currentState } : k)));
@@ -132,6 +140,27 @@ export default function KeysPage() {
       toast.error("Network error");
     } finally {
       setTogglingId(null);
+    }
+  };
+
+  const revealKey = async (id: string) => {
+    if (revealedKeyId === id) {
+      setRevealedKeyId(null);
+      setRevealedKeyValue(null);
+      return;
+    }
+
+    setRevealingId(id);
+    try {
+      const res = await fetch(`/api/keys/${id}`);
+      if (!res.ok) throw new Error("Failed to fetch key");
+      const data = await res.json();
+      setRevealedKeyId(id);
+      setRevealedKeyValue(data.keyValue);
+    } catch {
+      toast.error("Failed to reveal key value");
+    } finally {
+      setRevealingId(null);
     }
   };
 
@@ -423,18 +452,37 @@ export default function KeysPage() {
                             </div>
                             <div className="mt-2 flex items-center gap-2">
                               <code className="truncate text-xs text-muted-foreground">
-                                {key.keyValue || "••••••••••••••••••••••••"}
+                                {revealedKeyId === key.id && revealedKeyValue
+                                  ? revealedKeyValue
+                                  : key.keyValue || "••••••••••••••••••••••••"}
                               </code>
-                              {key.keyValue && (
+                              {revealedKeyId === key.id && revealedKeyValue && (
                                 <Button
                                   variant="ghost"
                                   size="icon"
                                   className="size-7"
                                   onClick={() =>
-                                    copyToClipboard(key.keyValue!, "Key prefix copied")
+                                    copyToClipboard(revealedKeyValue, "Key copied!")
                                   }
                                 >
                                   <Copy />
+                                </Button>
+                              )}
+                              {key.keyValue && (
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="size-7"
+                                  onClick={() => revealKey(key.id)}
+                                  disabled={revealingId === key.id}
+                                >
+                                  {revealingId === key.id ? (
+                                    <Loader2 className="size-3 animate-spin" />
+                                  ) : revealedKeyId === key.id ? (
+                                    <EyeOff className="size-3.5" />
+                                  ) : (
+                                    <Eye className="size-3.5" />
+                                  )}
                                 </Button>
                               )}
                             </div>
@@ -446,18 +494,51 @@ export default function KeysPage() {
                         </div>
                         <div className="flex shrink-0 flex-wrap items-center gap-2 border-t border-border/80 pt-4 xl:border-t-0 xl:pt-0">
                           <div className="flex items-center gap-2 rounded-full border border-border/80 bg-card px-3 py-2">
-                            <span className="text-xs font-medium text-muted-foreground">
-                              {togglingId === key.id
-                                ? "Updating"
-                                : key.isActive
-                                  ? "Enabled"
-                                  : "Disabled"}
-                            </span>
-                            <Switch
-                              checked={key.isActive}
-                              onCheckedChange={() => handleToggle(key.id, key.isActive)}
-                              disabled={togglingId === key.id}
-                            />
+                            {toggleConfirm === key.id ? (
+                              <>
+                                <span className="text-xs font-medium text-muted-foreground">
+                                  {key.isActive ? "Disable?" : "Enable?"}
+                                </span>
+                                <Button
+                                  size="sm"
+                                  variant={key.isActive ? "destructive" : "default"}
+                                  className="h-7 px-2 text-xs"
+                                  onClick={() => handleToggle(key.id, key.isActive)}
+                                  disabled={togglingId === key.id}
+                                >
+                                  {togglingId === key.id ? (
+                                    <Loader2 className="size-3 animate-spin" />
+                                  ) : key.isActive ? (
+                                    "Disable"
+                                  ) : (
+                                    "Enable"
+                                  )}
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  className="h-7 px-2 text-xs"
+                                  onClick={() => setToggleConfirm(null)}
+                                >
+                                  Cancel
+                                </Button>
+                              </>
+                            ) : (
+                              <>
+                                <span className="text-xs font-medium text-muted-foreground">
+                                  {togglingId === key.id
+                                    ? "Updating"
+                                    : key.isActive
+                                      ? "Enabled"
+                                      : "Disabled"}
+                                </span>
+                                <Switch
+                                  checked={key.isActive}
+                                  onCheckedChange={() => setToggleConfirm(key.id)}
+                                  disabled={togglingId === key.id}
+                                />
+                              </>
+                            )}
                           </div>
                           {deleteConfirm === key.id ? (
                             <div className="flex items-center gap-2">

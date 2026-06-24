@@ -3,7 +3,7 @@ import { DEMO_MODE, getDemoKeys, addDemoKey, DEMO_USERS } from "@/lib/demo";
 import { getSession } from "@/lib/session";
 import { db } from "@/db";
 import { apiKeys, users } from "@/db/schema";
-import { eq, count } from "drizzle-orm";
+import { eq, and, count } from "drizzle-orm";
 import { createAwsApiKey } from "@/lib/aws-gateway";
 
 const MAX_KEYS_PER_USER = 4;
@@ -31,6 +31,13 @@ export async function POST(req: NextRequest) {
         return NextResponse.json(
           { error: `You can have a maximum of ${MAX_KEYS_PER_USER} API keys` },
           { status: 403 },
+        );
+      }
+
+      if (currentKeys.some((k) => k.keyName === keyName.trim())) {
+        return NextResponse.json(
+          { error: `You already have a key named "${keyName.trim()}". Choose a different name.` },
+          { status: 409 },
         );
       }
 
@@ -71,6 +78,17 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(
         { error: `You can have a maximum of ${MAX_KEYS_PER_USER} API keys` },
         { status: 403 },
+      );
+    }
+
+    const existingKey = await db.query.apiKeys.findFirst({
+      where: and(eq(apiKeys.userId, session.userId), eq(apiKeys.keyName, keyName.trim())),
+    });
+
+    if (existingKey) {
+      return NextResponse.json(
+        { error: `You already have a key named "${keyName.trim()}". Choose a different name.` },
+        { status: 409 },
       );
     }
 

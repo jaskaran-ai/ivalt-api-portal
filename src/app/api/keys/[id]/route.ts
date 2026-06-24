@@ -4,7 +4,36 @@ import { getSession } from "@/lib/session";
 import { db } from "@/db";
 import { apiKeys } from "@/db/schema";
 import { eq, and } from "drizzle-orm";
-import { deleteAwsApiKey, toggleAwsApiKey } from "@/lib/aws-gateway";
+import { deleteAwsApiKey, toggleAwsApiKey, getAwsApiKey } from "@/lib/aws-gateway";
+
+export async function GET(
+  _req: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  const session = await getSession();
+  if (!session.isLoggedIn || !session.userId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const { id } = await params;
+
+  if (DEMO_MODE) {
+    const keys = getDemoKeys();
+    const key = keys.find((k) => k.id === id);
+    if (!key) return NextResponse.json({ error: "Key not found" }, { status: 404 });
+    return NextResponse.json({ keyValue: key.keyValue });
+  }
+
+  const key = await db.query.apiKeys.findFirst({
+    where: and(eq(apiKeys.id, id), eq(apiKeys.userId, session.userId)),
+  });
+
+  if (!key) {
+    return NextResponse.json({ error: "API key not found" }, { status: 404 });
+  }
+
+  return NextResponse.json({ keyValue: key.keyValue || "" });
+}
 
 export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await getSession();
