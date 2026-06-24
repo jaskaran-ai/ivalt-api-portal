@@ -77,12 +77,10 @@ export default function AdminKeysPage() {
       <div className="mx-auto max-w-7xl">
         <div className="mb-6">
           <h1 className="text-2xl font-semibold tracking-[-0.03em]">API Keys</h1>
-          <p className="text-sm text-muted-foreground">
-            Monitor all API keys across the system
-          </p>
+          <p className="text-sm text-muted-foreground">Monitor all API keys across the system</p>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-4 mb-6">
+        <div className="mb-6 grid gap-4 md:grid-cols-4">
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium">Total Keys</CardTitle>
@@ -163,13 +161,13 @@ export default function AdminKeysPage() {
 
             {loading ? (
               <div className="flex items-center justify-center p-12">
-                <div className="animate-spin size-6 border-2 border-primary border-t-transparent rounded-full" />
+                <div className="size-6 animate-spin rounded-full border-2 border-primary border-t-transparent" />
               </div>
             ) : keys.length === 0 ? (
               <div className="flex flex-col items-center justify-center p-12 text-center">
-                <Key className="size-12 text-muted-foreground mb-4" />
+                <Key className="mb-4 size-12 text-muted-foreground" />
                 <h3 className="font-semibold">No API keys found</h3>
-                <p className="text-sm text-muted-foreground mt-1">
+                <p className="mt-1 text-sm text-muted-foreground">
                   No keys match the current filters.
                 </p>
               </div>

@@ -24,6 +24,7 @@ The iVALT API Portal is a developer platform that enables you to integrate biome
 ### Platform Overview
 
 The portal provides:
+
 - **Biometric login** using the iVALT mobile app
 - **API key management** with secure creation and lifecycle controls
 - **API documentation** with interactive code samples
@@ -50,11 +51,11 @@ Navigate to the portal URL in your browser. The portal is fully responsive and w
 
 If the portal is running in demo mode (`NEXT_PUBLIC_DEMO_MODE=true`), all external services are simulated:
 
--   No real push notifications are sent
--   Authentication is simulated automatically
--   Access requests are auto-approved
--   Demo API keys are pre-populated
--   No database or AWS credentials are required
+- No real push notifications are sent
+- Authentication is simulated automatically
+- Access requests are auto-approved
+- Demo API keys are pre-populated
+- No database or AWS credentials are required
 
 Use demo mode for UI exploration and development testing.
 
@@ -80,9 +81,9 @@ Your browser polls the authentication status every 2 seconds. Once you approve o
 
 After successful authentication, a secure session is created using encrypted cookies. Your session persists until you log out or the session expires. The session stores:
 
--   User ID
--   Phone number
--   Access status (pending, approved, or rejected)
+- User ID
+- Phone number
+- Access status (pending, approved, or rejected)
 
 ---
 
@@ -99,10 +100,11 @@ New users must submit an access request before using the portal:
 ### Writing an Effective Use Case
 
 To expedite approval, include:
--   **Application type**: mobile app, web platform, internal system, etc.
--   **Use case**: how biometric authentication fits into your workflow
--   **Scale**: expected user volume and authentication frequency
--   **Timeline**: target launch date and milestones
+
+- **Application type**: mobile app, web platform, internal system, etc.
+- **Use case**: how biometric authentication fits into your workflow
+- **Scale**: expected user volume and authentication frequency
+- **Timeline**: target launch date and milestones
 
 ### After Submission
 
@@ -110,11 +112,11 @@ Your request is reviewed by an administrator. You will receive an email notifica
 
 ### Possible Outcomes
 
-| Outcome | Description | Next Steps |
-|---------|-------------|------------|
-| **Approved** | Access granted | Log in to access the dashboard and manage API keys |
-| **Rejected** | Access denied | Review feedback, update your use case, and re-submit |
-| **Pending** | Under review | Wait for admin decision |
+| Outcome      | Description    | Next Steps                                           |
+| ------------ | -------------- | ---------------------------------------------------- |
+| **Approved** | Access granted | Log in to access the dashboard and manage API keys   |
+| **Rejected** | Access denied  | Review feedback, update your use case, and re-submit |
+| **Pending**  | Under review   | Wait for admin decision                              |
 
 ---
 
@@ -132,16 +134,18 @@ Your request is reviewed by an administrator. You will receive an email notifica
 ### Key Naming Conventions
 
 Use descriptive names that reflect the key's purpose:
--   `Production App` -- for your live production application
--   `Mobile SDK iOS` -- for your iOS mobile SDK
--   `Staging Environment` -- for testing and development
--   `CI/CD Pipeline` -- for automated deployment systems
+
+- `Production App` -- for your live production application
+- `Mobile SDK iOS` -- for your iOS mobile SDK
+- `Staging Environment` -- for testing and development
+- `CI/CD Pipeline` -- for automated deployment systems
 
 ### Enabling and Disabling Keys
 
 You can temporarily disable a key without deleting it:
--   **Disable** a key to immediately stop it from authenticating API requests. Disabled keys return a 403 error.
--   **Enable** a key to restore access.
+
+- **Disable** a key to immediately stop it from authenticating API requests. Disabled keys return a 403 error.
+- **Enable** a key to restore access.
 
 This is useful for rotating credentials or pausing access during maintenance.
 
@@ -151,16 +155,16 @@ Deleting a key permanently removes it from both the portal and AWS API Gateway. 
 
 ### Key Limits
 
--   Maximum **4 API keys** per user account
--   Delete unused keys to stay within the limit
--   Plan your key allocation based on your environments and applications
+- Maximum **4 API keys** per user account
+- Delete unused keys to stay within the limit
+- Plan your key allocation based on your environments and applications
 
 ### Key Security
 
--   Store key values in environment variables or a secrets manager
--   Never commit key values to version control
--   Rotate keys periodically
--   Use separate keys for development and production environments
+- Store key values in environment variables or a secrets manager
+- Never commit key values to version control
+- Rotate keys periodically
+- Use separate keys for development and production environments
 
 ---
 
@@ -178,28 +182,30 @@ https://api.ivalt.com
 
 Every API call requires these HTTP headers:
 
-| Header | Value | Description |
-|--------|-------|-------------|
-| `x-api-key` | Your API key | Identifies your application |
-| `token` | Your iVALT security token | Authenticates your account |
-| `Content-Type` | `application/json` | Request body format |
+| Header         | Value                     | Description                 |
+| -------------- | ------------------------- | --------------------------- |
+| `x-api-key`    | Your API key              | Identifies your application |
+| `token`        | Your iVALT security token | Authenticates your account  |
+| `Content-Type` | `application/json`        | Request body format         |
 
 ### Endpoint 1: Initiate Authentication
 
 Sends a biometric authentication request to the user's iVALT app.
 
 **Request:**
+
 ```
 POST /biometric-auth-request
 ```
 
 ```json
 {
-    "mobile_number": "+919876543210"
+  "mobile_number": "+919876543210"
 }
 ```
 
 **cURL Example:**
+
 ```bash
 curl -X POST https://api.ivalt.com/biometric-auth-request \
   -H "Content-Type: application/json" \
@@ -209,11 +215,12 @@ curl -X POST https://api.ivalt.com/biometric-auth-request \
 ```
 
 **Response (200):**
+
 ```json
 {
-    "success": true,
-    "message": "Authentication request sent",
-    "request_id": "auth_abc123xyz"
+  "success": true,
+  "message": "Authentication request sent",
+  "request_id": "auth_abc123xyz"
 }
 ```
 
@@ -222,17 +229,19 @@ curl -X POST https://api.ivalt.com/biometric-auth-request \
 Checks whether the user has approved, rejected, or timed out.
 
 **Request:**
+
 ```
 POST /biometric-auth-result
 ```
 
 ```json
 {
-    "mobile_number": "+919876543210"
+  "mobile_number": "+919876543210"
 }
 ```
 
 **cURL Example:**
+
 ```bash
 curl -X POST https://api.ivalt.com/biometric-auth-result \
   -H "Content-Type: application/json" \
@@ -242,13 +251,14 @@ curl -X POST https://api.ivalt.com/biometric-auth-result \
 ```
 
 **Response (200 - Authenticated):**
+
 ```json
 {
-    "authenticated": true,
-    "user": {
-        "mobile_number": "+919876543210",
-        "verified_at": "2025-05-07T10:30:00Z"
-    }
+  "authenticated": true,
+  "user": {
+    "mobile_number": "+919876543210",
+    "verified_at": "2025-05-07T10:30:00Z"
+  }
 }
 ```
 
@@ -274,6 +284,7 @@ The iVALT API supports geo-fenced authentication, where the biometric verificati
 Add latitude, longitude, and radius to the poll request:
 
 **cURL Example:**
+
 ```bash
 curl -X POST https://api.ivalt.com/biometric-auth-result \
   -H "Content-Type: application/json" \
@@ -289,27 +300,28 @@ curl -X POST https://api.ivalt.com/biometric-auth-result \
 
 ### Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `mobile_number` | string | User's registered phone number |
-| `latitude` | number | Center latitude for the geofence |
-| `longitude` | number | Center longitude for the geofence |
+| Parameter       | Type   | Description                              |
+| --------------- | ------ | ---------------------------------------- |
+| `mobile_number` | string | User's registered phone number           |
+| `latitude`      | number | Center latitude for the geofence         |
+| `longitude`     | number | Center longitude for the geofence        |
 | `radius_meters` | number | Allowed radius in meters from the center |
 
 ### Responses
 
-| Code | Meaning | Description |
-|------|---------|-------------|
-| 200 | Authenticated and inside fence | User approved and is within the allowed geographic area |
-| 422 | Pending | Authentication still pending |
-| 403 | Failed or outside fence | User rejected, timed out, or is outside the geofence radius |
-| 404 | Not found | Phone number not registered |
+| Code | Meaning                        | Description                                                 |
+| ---- | ------------------------------ | ----------------------------------------------------------- |
+| 200  | Authenticated and inside fence | User approved and is within the allowed geographic area     |
+| 422  | Pending                        | Authentication still pending                                |
+| 403  | Failed or outside fence        | User rejected, timed out, or is outside the geofence radius |
+| 404  | Not found                      | Phone number not registered                                 |
 
 Use cases for geo-fence authentication:
--   Employee attendance tracking at office locations
--   Secure access to physical premises
--   Location-based verification for compliance
--   Event check-in and verification
+
+- Employee attendance tracking at office locations
+- Secure access to physical premises
+- Location-based verification for compliance
+- Event check-in and verification
 
 ---
 
@@ -317,31 +329,31 @@ Use cases for geo-fence authentication:
 
 ### Biometric Auth Request
 
-| Code | Meaning | Description |
-|------|---------|-------------|
-| 200 | Success | Push notification sent to user's phone |
-| 403 | Invalid token | Security token is missing or incorrect |
-| 404 | User not found | Phone number not registered in iVALT |
+| Code | Meaning        | Description                            |
+| ---- | -------------- | -------------------------------------- |
+| 200  | Success        | Push notification sent to user's phone |
+| 403  | Invalid token  | Security token is missing or incorrect |
+| 404  | User not found | Phone number not registered in iVALT   |
 
 ### Biometric Auth Result
 
-| Code | Meaning | Action Required |
-|------|---------|-----------------|
-| 200 | Authenticated | Stop polling. Create user session. Proceed to next step. |
-| 422 | Pending | Continue polling every 2 seconds. |
-| 403 | Failed / Timeout | Stop polling. Show authentication error to user. Offer retry. |
-| 404 | Not found | Stop polling. Prompt user to install and register in iVALT app. |
+| Code | Meaning          | Action Required                                                 |
+| ---- | ---------------- | --------------------------------------------------------------- |
+| 200  | Authenticated    | Stop polling. Create user session. Proceed to next step.        |
+| 422  | Pending          | Continue polling every 2 seconds.                               |
+| 403  | Failed / Timeout | Stop polling. Show authentication error to user. Offer retry.   |
+| 404  | Not found        | Stop polling. Prompt user to install and register in iVALT app. |
 
 ### Portal API
 
-| Code | Meaning | Description |
-|------|---------|-------------|
-| 200 | Success | Request completed successfully |
-| 400 | Bad request | Invalid input (e.g., missing phone number, short key name) |
-| 401 | Unauthorized | No valid session |
-| 403 | Forbidden | Access denied (e.g., max keys reached, not approved) |
-| 404 | Not found | Resource not found |
-| 500 | Server error | Internal error. Contact support if persistent. |
+| Code | Meaning      | Description                                                |
+| ---- | ------------ | ---------------------------------------------------------- |
+| 200  | Success      | Request completed successfully                             |
+| 400  | Bad request  | Invalid input (e.g., missing phone number, short key name) |
+| 401  | Unauthorized | No valid session                                           |
+| 403  | Forbidden    | Access denied (e.g., max keys reached, not approved)       |
+| 404  | Not found    | Resource not found                                         |
+| 500  | Server error | Internal error. Contact support if persistent.             |
 
 ---
 
@@ -350,11 +362,12 @@ Use cases for geo-fence authentication:
 ### Admin Dashboard
 
 The admin dashboard (`/admin/dashboard`) provides an overview of:
--   Total registered users
--   Total API keys across all users
--   Active vs. inactive keys
--   Recently used keys (last 24 hours)
--   Usage statistics from AWS API Gateway
+
+- Total registered users
+- Total API keys across all users
+- Active vs. inactive keys
+- Recently used keys (last 24 hours)
+- Usage statistics from AWS API Gateway
 
 ### Managing Access Requests
 
@@ -365,19 +378,20 @@ The admin dashboard (`/admin/dashboard`) provides an overview of:
 
 ### Approval Checklist
 
--   User provided a clear and specific use case
--   No history of abuse or policy violations
--   Business justification is valid
--   Use case aligns with acceptable use policy
--   Add admin notes for record-keeping
+- User provided a clear and specific use case
+- No history of abuse or policy violations
+- Business justification is valid
+- Use case aligns with acceptable use policy
+- Add admin notes for record-keeping
 
 ### User Management
 
 The admin interface allows you to:
--   View all registered users with their current status
--   Track API key counts per user
--   Monitor last login and approval dates
--   View usage statistics per key
+
+- View all registered users with their current status
+- Track API key counts per user
+- Monitor last login and approval dates
+- View usage statistics per key
 
 ---
 
@@ -385,38 +399,38 @@ The admin interface allows you to:
 
 ### Login Issues
 
-| Issue | Solution |
-|-------|----------|
-| "Phone number not registered" | Install the iVALT app and register your number first |
-| Push notification not received | Ensure your phone has internet connectivity. Check iVALT app notifications are enabled. |
-| Authentication request times out | Refresh the page and try again. Ensure the iVALT app is open when approving. |
-| Biometric scan fails | Ensure adequate lighting and clean camera lens. Try re-registering biometrics in the iVALT app. |
-| Session expires frequently | Re-authenticate through the login flow |
+| Issue                            | Solution                                                                                        |
+| -------------------------------- | ----------------------------------------------------------------------------------------------- |
+| "Phone number not registered"    | Install the iVALT app and register your number first                                            |
+| Push notification not received   | Ensure your phone has internet connectivity. Check iVALT app notifications are enabled.         |
+| Authentication request times out | Refresh the page and try again. Ensure the iVALT app is open when approving.                    |
+| Biometric scan fails             | Ensure adequate lighting and clean camera lens. Try re-registering biometrics in the iVALT app. |
+| Session expires frequently       | Re-authenticate through the login flow                                                          |
 
 ### API Key Issues
 
-| Issue | Solution |
-|-------|----------|
-| Key returns 403 | Check if the key is enabled in the portal. Verify the security token is correct. |
-| Lost a key value | Keys cannot be retrieved. Delete the key and create a new one. |
-| Cannot create a key | You may have reached the 4-key limit. Delete an unused key first. |
-| Key name rejected | Use at least 3 characters. Avoid special characters. |
+| Issue               | Solution                                                                         |
+| ------------------- | -------------------------------------------------------------------------------- |
+| Key returns 403     | Check if the key is enabled in the portal. Verify the security token is correct. |
+| Lost a key value    | Keys cannot be retrieved. Delete the key and create a new one.                   |
+| Cannot create a key | You may have reached the 4-key limit. Delete an unused key first.                |
+| Key name rejected   | Use at least 3 characters. Avoid special characters.                             |
 
 ### Access Request Issues
 
-| Issue | Solution |
-|-------|----------|
-| Request not submitted | Ensure you completed biometric authentication first |
-| Request still pending after days | Contact support to follow up |
-| Request rejected | Review the admin notes, update your use case, and re-submit |
-| Cannot access dashboard | Check your access status. If approved, try logging out and back in. |
+| Issue                            | Solution                                                            |
+| -------------------------------- | ------------------------------------------------------------------- |
+| Request not submitted            | Ensure you completed biometric authentication first                 |
+| Request still pending after days | Contact support to follow up                                        |
+| Request rejected                 | Review the admin notes, update your use case, and re-submit         |
+| Cannot access dashboard          | Check your access status. If approved, try logging out and back in. |
 
 ### General Issues
 
-| Issue | Solution |
-|-------|----------|
-| Page not loading | Check your internet connection. Try a different browser. Clear cache. |
-| Styling appears broken | Ensure you are using a modern browser (Chrome, Firefox, Safari, Edge). |
+| Issue                  | Solution                                                                             |
+| ---------------------- | ------------------------------------------------------------------------------------ |
+| Page not loading       | Check your internet connection. Try a different browser. Clear cache.                |
+| Styling appears broken | Ensure you are using a modern browser (Chrome, Firefox, Safari, Edge).               |
 | Error 500 on API calls | Check server logs. Verify all environment variables are configured. Contact support. |
 
 ---
@@ -464,28 +478,29 @@ The admin interface allows you to:
 
 ### Contact Information
 
--   **Email:** support@ivalt.com
--   **Portal:** https://ivalt-api-portal.vercel.app
--   **API Base URL:** https://api.ivalt.com
+- **Email:** support@ivalt.com
+- **Portal:** https://ivalt-api-portal.vercel.app
+- **API Base URL:** https://api.ivalt.com
 
 ### Documentation
 
--   **User Flow:** Detailed walkthrough of the portal experience
--   **Admin Guide:** Managing users and access requests
--   **API Reference:** Complete endpoint documentation (in-app)
+- **User Flow:** Detailed walkthrough of the portal experience
+- **Admin Guide:** Managing users and access requests
+- **API Reference:** Complete endpoint documentation (in-app)
 
 ### Reporting Issues
 
 When reporting an issue, please include:
--   The error message and status code
--   Steps to reproduce the issue
--   Your API key identifier (not the full key)
--   Timestamp of when the issue occurred
--   Browser and operating system version
--   Screenshots if applicable
+
+- The error message and status code
+- Steps to reproduce the issue
+- Your API key identifier (not the full key)
+- Timestamp of when the issue occurred
+- Browser and operating system version
+- Screenshots if applicable
 
 ---
 
-*© 2025 iVALT Inc. All rights reserved.*
+_© 2025 iVALT Inc. All rights reserved._
 
-*Document version 1.0 -- Last updated June 2025*
+_Document version 1.0 -- Last updated June 2025_

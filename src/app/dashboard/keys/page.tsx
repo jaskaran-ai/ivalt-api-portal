@@ -1,11 +1,31 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { AlertTriangle, ArrowRight, Copy, Key, Loader2, LockKeyhole, Plus, ShieldCheck, Trash2, X } from "lucide-react";
+import {
+  AlertTriangle,
+  ArrowRight,
+  Copy,
+  Eye,
+  EyeOff,
+  Key,
+  Loader2,
+  LockKeyhole,
+  Plus,
+  ShieldCheck,
+  Trash2,
+  X,
+} from "lucide-react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
@@ -29,10 +49,16 @@ export default function KeysPage() {
   const [creating, setCreating] = useState(false);
   const [showCreate, setShowCreate] = useState(false);
   const [newKeyName, setNewKeyName] = useState("");
-  const [newlyCreatedKey, setNewlyCreatedKey] = useState<{ id: string; value: string } | null>(null);
+  const [newlyCreatedKey, setNewlyCreatedKey] = useState<{ id: string; value: string } | null>(
+    null,
+  );
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
+  const [toggleConfirm, setToggleConfirm] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [togglingId, setTogglingId] = useState<string | null>(null);
+  const [revealedKeyId, setRevealedKeyId] = useState<string | null>(null);
+  const [revealedKeyValue, setRevealedKeyValue] = useState<string | null>(null);
+  const [revealingId, setRevealingId] = useState<string | null>(null);
 
   const fetchKeys = useCallback(async () => {
     const res = await fetch("/api/keys");
@@ -96,6 +122,7 @@ export default function KeysPage() {
 
   const handleToggle = async (id: string, currentState: boolean) => {
     setTogglingId(id);
+    setToggleConfirm(null);
     try {
       const res = await fetch(`/api/keys/${id}`, {
         method: "PATCH",
@@ -103,7 +130,8 @@ export default function KeysPage() {
         body: JSON.stringify({ isActive: !currentState }),
       });
       if (!res.ok) {
-        toast.error("Failed to update key");
+        const data = await res.json();
+        toast.error(data.error || "Failed to update key");
         return;
       }
       setKeys((ks) => ks.map((k) => (k.id === id ? { ...k, isActive: !currentState } : k)));
@@ -112,6 +140,27 @@ export default function KeysPage() {
       toast.error("Network error");
     } finally {
       setTogglingId(null);
+    }
+  };
+
+  const revealKey = async (id: string) => {
+    if (revealedKeyId === id) {
+      setRevealedKeyId(null);
+      setRevealedKeyValue(null);
+      return;
+    }
+
+    setRevealingId(id);
+    try {
+      const res = await fetch(`/api/keys/${id}`);
+      if (!res.ok) throw new Error("Failed to fetch key");
+      const data = await res.json();
+      setRevealedKeyId(id);
+      setRevealedKeyValue(data.keyValue);
+    } catch {
+      toast.error("Failed to reveal key value");
+    } finally {
+      setRevealingId(null);
     }
   };
 
@@ -158,19 +207,26 @@ export default function KeysPage() {
                   <LockKeyhole className="mr-1 size-3" />
                   Credential vault
                 </Badge>
-                <span className="text-xs font-medium tracking-[0.08em] text-muted-foreground uppercase">Keys are shown once</span>
+                <span className="text-xs font-medium tracking-[0.08em] text-muted-foreground uppercase">
+                  Keys are shown once
+                </span>
               </div>
               <div className="max-w-3xl">
                 <h2 className="text-2xl font-semibold tracking-[-0.03em] text-foreground sm:text-3xl lg:text-4xl">
                   Keep every integration keyed and controlled.
                 </h2>
                 <p className="mt-5 max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg">
-                  Create environment-specific API keys, disable stale credentials, and keep production access inside the iVALT usage plan.
+                  Create environment-specific API keys, disable stale credentials, and keep
+                  production access inside the iVALT usage plan.
                 </p>
               </div>
             </div>
             {keys.length < MAX_KEYS && !showCreate && (
-              <Button onClick={() => setShowCreate(true)} size="lg" className="w-fit shadow-sm shadow-primary/20">
+              <Button
+                onClick={() => setShowCreate(true)}
+                size="lg"
+                className="w-fit shadow-sm shadow-primary/20"
+              >
                 <Plus data-icon="inline-start" />
                 Create API key
               </Button>
@@ -194,7 +250,9 @@ export default function KeysPage() {
             <div>
               <div className="mb-3 flex items-end justify-between gap-4">
                 <div>
-                  <p className="text-5xl font-semibold tracking-[-0.04em]">{keys.length}/{MAX_KEYS}</p>
+                  <p className="text-5xl font-semibold tracking-[-0.04em]">
+                    {keys.length}/{MAX_KEYS}
+                  </p>
                   <p className="text-sm text-muted-foreground">key slots used</p>
                 </div>
                 <Badge variant={availableSlots > 0 ? "secondary" : "destructive"}>
@@ -202,17 +260,24 @@ export default function KeysPage() {
                 </Badge>
               </div>
               <div className="h-3 overflow-hidden rounded-full bg-muted">
-                <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${usagePercent}%` }} />
+                <div
+                  className="h-full rounded-full bg-primary transition-all"
+                  style={{ width: `${usagePercent}%` }}
+                />
               </div>
             </div>
             <Separator />
             <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-2">
               <div className="rounded-2xl border border-border/80 bg-background/70 p-4">
-                <p className="text-xs font-medium tracking-[0.08em] text-muted-foreground uppercase">Active</p>
+                <p className="text-xs font-medium tracking-[0.08em] text-muted-foreground uppercase">
+                  Active
+                </p>
                 <p className="mt-2 text-3xl font-semibold tracking-[-0.03em]">{activeCount}</p>
               </div>
               <div className="rounded-2xl border border-border/80 bg-background/70 p-4">
-                <p className="text-xs font-medium tracking-[0.08em] text-muted-foreground uppercase">Available</p>
+                <p className="text-xs font-medium tracking-[0.08em] text-muted-foreground uppercase">
+                  Available
+                </p>
                 <p className="mt-2 text-3xl font-semibold tracking-[-0.03em]">{availableSlots}</p>
               </div>
             </div>
@@ -229,8 +294,12 @@ export default function KeysPage() {
                   <ShieldCheck className="size-5" />
                 </div>
                 <div>
-                  <CardTitle className="text-base tracking-[-0.01em]">Key created — copy it now</CardTitle>
-                  <CardDescription>This value is only visible once. Store it before leaving this page.</CardDescription>
+                  <CardTitle className="text-base tracking-[-0.01em]">
+                    Key created — copy it now
+                  </CardTitle>
+                  <CardDescription>
+                    This value is only visible once. Store it before leaving this page.
+                  </CardDescription>
                 </div>
               </div>
               <Button variant="ghost" size="icon" onClick={() => setNewlyCreatedKey(null)}>
@@ -240,8 +309,14 @@ export default function KeysPage() {
           </CardHeader>
           <CardContent className="p-5">
             <div className="flex items-center gap-3 rounded-2xl border border-emerald-500/20 bg-card p-3">
-              <code className="min-w-0 flex-1 break-all text-xs leading-6">{newlyCreatedKey.value}</code>
-              <Button variant="outline" size="sm" onClick={() => copyToClipboard(newlyCreatedKey.value, "API key copied!")}>
+              <code className="min-w-0 flex-1 text-xs leading-6 break-all">
+                {newlyCreatedKey.value}
+              </code>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => copyToClipboard(newlyCreatedKey.value, "API key copied!")}
+              >
                 <Copy data-icon="inline-start" />
                 Copy
               </Button>
@@ -254,7 +329,9 @@ export default function KeysPage() {
         <Card className="border-primary/10 bg-card shadow-sm shadow-foreground/5">
           <CardHeader className="p-6 pb-0">
             <CardTitle className="text-xl tracking-[-0.02em]">Create new API key</CardTitle>
-            <CardDescription>Name the credential by environment or application so future rotation is obvious.</CardDescription>
+            <CardDescription>
+              Name the credential by environment or application so future rotation is obvious.
+            </CardDescription>
           </CardHeader>
           <CardContent className="p-6">
             <div className="flex flex-col gap-4 lg:flex-row lg:items-end">
@@ -273,12 +350,20 @@ export default function KeysPage() {
                   {creating && <Loader2 data-icon="inline-start" className="animate-spin" />}
                   Create key
                 </Button>
-                <Button variant="outline" onClick={() => { setShowCreate(false); setNewKeyName(""); }}>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setShowCreate(false);
+                    setNewKeyName("");
+                  }}
+                >
                   Cancel
                 </Button>
               </div>
             </div>
-            <p className="mt-3 text-xs text-muted-foreground">Names must be at least 3 characters. The secret is shown once after creation.</p>
+            <p className="mt-3 text-xs text-muted-foreground">
+              Names must be at least 3 characters. The secret is shown once after creation.
+            </p>
           </CardContent>
         </Card>
       )}
@@ -287,7 +372,9 @@ export default function KeysPage() {
         <Card className="border-amber-500/25 bg-amber-500/5 shadow-sm shadow-amber-950/5">
           <CardContent className="flex items-center gap-3 p-4">
             <AlertTriangle className="size-5 shrink-0 text-amber-700" />
-            <p className="text-sm">Maximum of {MAX_KEYS} API keys reached. Delete an existing key to create a new one.</p>
+            <p className="text-sm">
+              Maximum of {MAX_KEYS} API keys reached. Delete an existing key to create a new one.
+            </p>
           </CardContent>
         </Card>
       )}
@@ -298,10 +385,18 @@ export default function KeysPage() {
             <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
               <div>
                 <CardTitle className="text-2xl tracking-[-0.025em]">API keys</CardTitle>
-                <CardDescription>{keys.length === 0 ? "Create your first credential to start integrating." : "Rotate, disable, or delete environment credentials."}</CardDescription>
+                <CardDescription>
+                  {keys.length === 0
+                    ? "Create your first credential to start integrating."
+                    : "Rotate, disable, or delete environment credentials."}
+                </CardDescription>
               </div>
               {keys.length < MAX_KEYS && !showCreate && (
-                <Button onClick={() => setShowCreate(true)} variant="outline" className="w-fit bg-card">
+                <Button
+                  onClick={() => setShowCreate(true)}
+                  variant="outline"
+                  className="w-fit bg-card"
+                >
                   <Plus data-icon="inline-start" />
                   New key
                 </Button>
@@ -315,7 +410,10 @@ export default function KeysPage() {
                   <Key className="size-7" />
                 </div>
                 <h3 className="text-xl font-semibold tracking-[-0.02em]">No API keys yet</h3>
-                <p className="mt-2 max-w-sm text-sm leading-6 text-muted-foreground">Create your first key to call iVALT biometric authentication endpoints from your backend.</p>
+                <p className="mt-2 max-w-sm text-sm leading-6 text-muted-foreground">
+                  Create your first key to call iVALT biometric authentication endpoints from your
+                  backend.
+                </p>
                 <Button onClick={() => setShowCreate(true)} className="mt-6">
                   <Plus data-icon="inline-start" />
                   Create first key
@@ -324,44 +422,153 @@ export default function KeysPage() {
             ) : (
               <div className="flex flex-col gap-3">
                 {keys.map((key) => (
-                  <Card key={key.id} size="sm" className={cn("border-border/80 bg-background/70 shadow-none", !key.isActive && "opacity-70")}>
+                  <Card
+                    key={key.id}
+                    size="sm"
+                    className={cn(
+                      "border-border/80 bg-background/70 shadow-none",
+                      !key.isActive && "opacity-70",
+                    )}
+                  >
                     <CardContent className="p-4">
                       <div className="flex flex-col gap-4 xl:flex-row xl:items-start">
                         <div className="flex min-w-0 flex-1 gap-4">
-                          <div className={cn("flex size-11 shrink-0 items-center justify-center rounded-2xl", key.isActive ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground")}>
+                          <div
+                            className={cn(
+                              "flex size-11 shrink-0 items-center justify-center rounded-2xl",
+                              key.isActive
+                                ? "bg-primary/10 text-primary"
+                                : "bg-muted text-muted-foreground",
+                            )}
+                          >
                             <Key className="size-5" />
                           </div>
                           <div className="min-w-0 flex-1">
                             <div className="flex flex-wrap items-center gap-2">
                               <p className="font-semibold tracking-[-0.01em]">{key.keyName}</p>
-                              <Badge variant={key.isActive ? "default" : "secondary"}>{key.isActive ? "Active" : "Disabled"}</Badge>
+                              <Badge variant={key.isActive ? "default" : "secondary"}>
+                                {key.isActive ? "Active" : "Disabled"}
+                              </Badge>
                             </div>
                             <div className="mt-2 flex items-center gap-2">
-                              <code className="truncate text-xs text-muted-foreground">{key.keyValue || "••••••••••••••••••••••••"}</code>
-                              {key.keyValue && (
-                                <Button variant="ghost" size="icon" className="size-7" onClick={() => copyToClipboard(key.keyValue!, "Key prefix copied")}>
+                              <code className="truncate text-xs text-muted-foreground">
+                                {revealedKeyId === key.id && revealedKeyValue
+                                  ? revealedKeyValue
+                                  : key.keyValue || "••••••••••••••••••••••••"}
+                              </code>
+                              {revealedKeyId === key.id && revealedKeyValue && (
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="size-7"
+                                  onClick={() =>
+                                    copyToClipboard(revealedKeyValue, "Key copied!")
+                                  }
+                                >
                                   <Copy />
                                 </Button>
                               )}
+                              {key.keyValue && (
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="size-7"
+                                  onClick={() => revealKey(key.id)}
+                                  disabled={revealingId === key.id}
+                                >
+                                  {revealingId === key.id ? (
+                                    <Loader2 className="size-3 animate-spin" />
+                                  ) : revealedKeyId === key.id ? (
+                                    <EyeOff className="size-3.5" />
+                                  ) : (
+                                    <Eye className="size-3.5" />
+                                  )}
+                                </Button>
+                              )}
                             </div>
-                            <p className="mt-2 text-xs text-muted-foreground">Created {formatDate(key.createdAt)} · AWS ID: {key.awsKeyId.slice(0, 12)}…</p>
+                            <p className="mt-2 text-xs text-muted-foreground">
+                              Created {formatDate(key.createdAt)} · AWS ID:{" "}
+                              {key.awsKeyId.slice(0, 12)}…
+                            </p>
                           </div>
                         </div>
                         <div className="flex shrink-0 flex-wrap items-center gap-2 border-t border-border/80 pt-4 xl:border-t-0 xl:pt-0">
                           <div className="flex items-center gap-2 rounded-full border border-border/80 bg-card px-3 py-2">
-                            <span className="text-xs font-medium text-muted-foreground">{togglingId === key.id ? "Updating" : key.isActive ? "Enabled" : "Disabled"}</span>
-                            <Switch checked={key.isActive} onCheckedChange={() => handleToggle(key.id, key.isActive)} disabled={togglingId === key.id} />
+                            {toggleConfirm === key.id ? (
+                              <>
+                                <span className="text-xs font-medium text-muted-foreground">
+                                  {key.isActive ? "Disable?" : "Enable?"}
+                                </span>
+                                <Button
+                                  size="sm"
+                                  variant={key.isActive ? "destructive" : "default"}
+                                  className="h-7 px-2 text-xs"
+                                  onClick={() => handleToggle(key.id, key.isActive)}
+                                  disabled={togglingId === key.id}
+                                >
+                                  {togglingId === key.id ? (
+                                    <Loader2 className="size-3 animate-spin" />
+                                  ) : key.isActive ? (
+                                    "Disable"
+                                  ) : (
+                                    "Enable"
+                                  )}
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  className="h-7 px-2 text-xs"
+                                  onClick={() => setToggleConfirm(null)}
+                                >
+                                  Cancel
+                                </Button>
+                              </>
+                            ) : (
+                              <>
+                                <span className="text-xs font-medium text-muted-foreground">
+                                  {togglingId === key.id
+                                    ? "Updating"
+                                    : key.isActive
+                                      ? "Enabled"
+                                      : "Disabled"}
+                                </span>
+                                <Switch
+                                  checked={key.isActive}
+                                  onCheckedChange={() => setToggleConfirm(key.id)}
+                                  disabled={togglingId === key.id}
+                                />
+                              </>
+                            )}
                           </div>
                           {deleteConfirm === key.id ? (
                             <div className="flex items-center gap-2">
-                              <Button size="sm" variant="destructive" onClick={() => handleDelete(key.id)} disabled={deletingId === key.id}>
-                                {deletingId === key.id ? <Loader2 data-icon="inline-start" className="animate-spin" /> : <Trash2 data-icon="inline-start" />}
+                              <Button
+                                size="sm"
+                                variant="destructive"
+                                onClick={() => handleDelete(key.id)}
+                                disabled={deletingId === key.id}
+                              >
+                                {deletingId === key.id ? (
+                                  <Loader2 data-icon="inline-start" className="animate-spin" />
+                                ) : (
+                                  <Trash2 data-icon="inline-start" />
+                                )}
                                 Delete
                               </Button>
-                              <Button size="sm" variant="outline" onClick={() => setDeleteConfirm(null)}>Cancel</Button>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => setDeleteConfirm(null)}
+                              >
+                                Cancel
+                              </Button>
                             </div>
                           ) : (
-                            <Button variant="ghost" size="icon" onClick={() => setDeleteConfirm(key.id)}>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => setDeleteConfirm(key.id)}
+                            >
                               <Trash2 className="text-muted-foreground" />
                             </Button>
                           )}
@@ -391,10 +598,10 @@ export default function KeysPage() {
             <div className="rounded-2xl border border-border/80 bg-background/70 p-4 font-mono text-xs leading-6">
               <p className="mb-2 text-muted-foreground">// Include in request headers</p>
               <p>x-api-key: YOUR_API_KEY</p>
-              <p>token: YOUR_IVALT_SECURITY_TOKEN</p>
             </div>
             <p className="text-sm leading-6 text-muted-foreground">
-              Use one key per environment where possible. Disable credentials before deleting them when you need a reversible safety step.
+              Use one key per environment where possible. Disable credentials before deleting them
+              when you need a reversible safety step.
             </p>
           </CardContent>
           <CardFooter className="p-6">

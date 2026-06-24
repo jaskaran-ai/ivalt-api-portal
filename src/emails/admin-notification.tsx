@@ -56,17 +56,11 @@ export function AdminNotification({
         `}</style>
       </Head>
       <Tailwind>
-        <Body
-          className="bg-[#f4f2f7] m-0"
-          style={{ padding: "32px 16px" }}
-        >
-          <Container
-            className="mx-auto"
-            style={{ maxWidth: "520px", width: "100%" }}
-          >
+        <Body className="m-0 bg-[#f4f2f7]" style={{ padding: "32px 16px" }}>
+          <Container className="mx-auto" style={{ maxWidth: "520px", width: "100%" }}>
             <Section className="mb-5">
               <Section
-                className="rounded-xl overflow-hidden email-header"
+                className="email-header overflow-hidden rounded-xl"
                 style={{
                   background: "#ffffff",
                   padding: "32px 28px",
@@ -84,16 +78,13 @@ export function AdminNotification({
             </Section>
 
             <Section
-              className="rounded-xl overflow-hidden"
+              className="overflow-hidden rounded-xl"
               style={{
                 background: "#ffffff",
                 border: "1px solid #e8e6ee",
               }}
             >
-              <div
-                className="email-card-body"
-                style={{ padding: "32px 28px" }}
-              >
+              <div className="email-card-body" style={{ padding: "32px 28px" }}>
                 <Section className="mb-5">
                   <table cellPadding="0" cellSpacing="0">
                     <tr>
@@ -134,7 +125,7 @@ export function AdminNotification({
                     Admin Notification
                   </Text>
                   <Heading
-                    className="m-0 email-heading"
+                    className="email-heading m-0"
                     style={{
                       fontSize: "20px",
                       fontWeight: 700,
@@ -147,14 +138,15 @@ export function AdminNotification({
                     New access request received
                   </Heading>
                   <Text
-                    className="m-0 email-text"
+                    className="email-text m-0"
                     style={{
                       fontSize: "14px",
                       color: "#6b7280",
                       lineHeight: "1.5",
                     }}
                   >
-                    {userName} is requesting access to the iVALT API Portal. Review the details below and take action in the admin dashboard.
+                    {userName} is requesting access to the iVALT API Portal. Review the details
+                    below and take action in the admin dashboard.
                   </Text>
                 </Section>
 
@@ -178,7 +170,7 @@ export function AdminNotification({
                         }}
                       >
                         <Text
-                          className="m-0 email-detail-label-text"
+                          className="email-detail-label-text m-0"
                           style={{
                             fontSize: "11px",
                             fontWeight: 600,
@@ -197,7 +189,7 @@ export function AdminNotification({
                         }}
                       >
                         <Text
-                          className="m-0 email-detail-value"
+                          className="email-detail-value m-0"
                           style={{
                             fontSize: "14px",
                             fontWeight: 600,
@@ -218,7 +210,7 @@ export function AdminNotification({
                         }}
                       >
                         <Text
-                          className="m-0 email-detail-label-text"
+                          className="email-detail-label-text m-0"
                           style={{
                             fontSize: "11px",
                             fontWeight: 600,
@@ -237,7 +229,7 @@ export function AdminNotification({
                         }}
                       >
                         <Text
-                          className="m-0 email-detail-value"
+                          className="email-detail-value m-0"
                           style={{
                             fontSize: "14px",
                             fontWeight: 600,
@@ -257,7 +249,7 @@ export function AdminNotification({
                         }}
                       >
                         <Text
-                          className="m-0 email-detail-label-text"
+                          className="email-detail-label-text m-0"
                           style={{
                             fontSize: "11px",
                             fontWeight: 600,
@@ -275,7 +267,7 @@ export function AdminNotification({
                         }}
                       >
                         <Text
-                          className="m-0 email-detail-value"
+                          className="email-detail-value m-0"
                           style={{
                             fontSize: "14px",
                             fontWeight: 600,
@@ -312,7 +304,7 @@ export function AdminNotification({
                     }}
                   >
                     <Text
-                      className="m-0 email-text"
+                      className="email-text m-0"
                       style={{
                         fontSize: "14px",
                         color: "#4b5563",
@@ -359,12 +351,9 @@ export function AdminNotification({
               </div>
             </Section>
 
-            <Section
-              className="mt-5"
-              style={{ textAlign: "center" as const, padding: "0 12px" }}
-            >
+            <Section className="mt-5" style={{ textAlign: "center" as const, padding: "0 12px" }}>
               <Text
-                className="m-0 email-footer-text"
+                className="email-footer-text m-0"
                 style={{
                   fontSize: "12px",
                   color: "#9ca3af",
@@ -374,7 +363,7 @@ export function AdminNotification({
                 iVALT API Portal — Biometric Authentication Platform
               </Text>
               <Text
-                className="m-0 email-footer-text"
+                className="email-footer-text m-0"
                 style={{
                   fontSize: "11px",
                   color: "#c4c4cc",

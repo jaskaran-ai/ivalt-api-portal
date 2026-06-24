@@ -59,9 +59,7 @@ export default function PhoneInput({
       >
         <span>{countryCode.flag}</span>
         <span className="font-medium">{countryCode.code}</span>
-        {!disabled && (
-          <ChevronDown className="size-3.5 text-muted-foreground" />
-        )}
+        {!disabled && <ChevronDown className="size-3.5 text-muted-foreground" />}
       </button>
 
       {showDropdown && !disabled && (
@@ -72,7 +70,7 @@ export default function PhoneInput({
             onClick={() => setShowDropdown(false)}
             onKeyDown={() => setShowDropdown(false)}
           />
-          <div className="absolute left-0 top-full z-20 mt-2 max-h-64 w-64 overflow-auto rounded-xl border border-border bg-popover p-1 shadow-lg">
+          <div className="absolute top-full left-0 z-20 mt-2 max-h-64 w-64 overflow-auto rounded-xl border border-border bg-popover p-1 shadow-lg">
             {COUNTRY_CODES.map((c, i) => (
               <button
                 key={`${c.country}-${c.code}`}
@@ -85,9 +83,7 @@ export default function PhoneInput({
               >
                 <span>{c.flag}</span>
                 <span className="flex-1">{c.name}</span>
-                <span className="text-xs text-muted-foreground">
-                  {c.code}
-                </span>
+                <span className="text-xs text-muted-foreground">{c.code}</span>
               </button>
             ))}
           </div>

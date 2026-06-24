@@ -75,7 +75,10 @@ export default function DocsLoading() {
             </div>
             <div className="grid gap-3 sm:grid-cols-3 xl:grid-cols-1">
               {[0, 1].map((item) => (
-                <div key={item} className="flex items-center gap-2 rounded-2xl border border-border/80 bg-background/70 px-3 py-2">
+                <div
+                  key={item}
+                  className="flex items-center gap-2 rounded-2xl border border-border/80 bg-background/70 px-3 py-2"
+                >
                   <Skeleton className="size-4 rounded-md" />
                   <Skeleton className="h-4 w-28" />
                 </div>
@@ -119,7 +122,10 @@ export default function DocsLoading() {
         </div>
 
         {[0, 1, 2].map((item) => (
-          <Card key={item} className="overflow-hidden border-primary/10 bg-card shadow-sm shadow-foreground/5">
+          <Card
+            key={item}
+            className="overflow-hidden border-primary/10 bg-card shadow-sm shadow-foreground/5"
+          >
             <div className="border-b border-border/80 bg-muted/35 p-6">
               <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                 <div className="flex flex-col gap-3">

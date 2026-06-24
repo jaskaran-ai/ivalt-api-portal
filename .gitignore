@@ -103,3 +103,7 @@ temp/
 
 # Vercel local env pull
 .env.vercel
+.env.*
+.env
+codedb.*
+codedb.snapshot

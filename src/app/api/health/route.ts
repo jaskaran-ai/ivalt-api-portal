@@ -35,7 +35,9 @@ export async function GET() {
   checks.env = {
     status: missingRequired.length === 0 ? "ok" : "missing_required",
     ...(missingRequired.length > 0 && { error: `Missing: ${missingRequired.join(", ")}` }),
-    ...(missingOptional.length > 0 && { warning: `Missing optional: ${missingOptional.join(", ")}` }),
+    ...(missingOptional.length > 0 && {
+      warning: `Missing optional: ${missingOptional.join(", ")}`,
+    }),
   };
 
   // 2. Database
@@ -94,7 +96,9 @@ export async function GET() {
     checks.aws = { status: "not_configured" };
   }
 
-  const allOk = Object.values(checks).every((c) => c.status === "ok" || c.status === "configured" || c.status === "reachable");
+  const allOk = Object.values(checks).every(
+    (c) => c.status === "ok" || c.status === "configured" || c.status === "reachable",
+  );
 
   return NextResponse.json({
     status: allOk ? "healthy" : "degraded",

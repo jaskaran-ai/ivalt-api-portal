@@ -51,8 +51,8 @@ export default function AdminDashboardPage() {
   if (loading) {
     return (
       <AdminShell>
-        <div className="flex items-center justify-center min-h-[calc(100vh-4rem)]">
-          <div className="animate-spin size-8 border-2 border-primary border-t-transparent rounded-full" />
+        <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center">
+          <div className="size-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
         </div>
       </AdminShell>
     );
@@ -63,20 +63,22 @@ export default function AdminDashboardPage() {
       <div className="mx-auto max-w-7xl">
         <header className="mb-8">
           <h1 className="text-3xl font-semibold tracking-[-0.03em]">Admin Dashboard</h1>
-          <p className="text-muted-foreground mt-2">
+          <p className="mt-2 text-muted-foreground">
             Overview of API key usage and user statistics
           </p>
         </header>
 
         {/* Summary Cards */}
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-8">
+        <div className="mb-8 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium">Total Users</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stats?.summary?.totalUsers ?? 0}</div>
-              <p className="text-xs text-muted-foreground">+{stats?.summary?.usersThisWeek ?? 0} this week</p>
+              <p className="text-xs text-muted-foreground">
+                +{stats?.summary?.usersThisWeek ?? 0} this week
+              </p>
             </CardContent>
           </Card>
 
@@ -121,39 +123,37 @@ export default function AdminDashboardPage() {
         <Card>
           <CardHeader>
             <CardTitle>API Key Usage</CardTitle>
-            <CardDescription>
-              Real-time usage statistics from AWS API Gateway
-            </CardDescription>
+            <CardDescription>Real-time usage statistics from AWS API Gateway</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b">
-                    <th className="text-left py-3 px-2">Key Name</th>
-                    <th className="text-left py-3 px-2">User</th>
-                    <th className="text-right py-3 px-2">Requests</th>
-                    <th className="text-right py-3 px-2">Status</th>
+                    <th className="px-2 py-3 text-left">Key Name</th>
+                    <th className="px-2 py-3 text-left">User</th>
+                    <th className="px-2 py-3 text-right">Requests</th>
+                    <th className="px-2 py-3 text-right">Status</th>
                   </tr>
                 </thead>
                 <tbody>
                   {(stats?.usage ?? []).slice(0, 10).map((key) => (
                     <tr key={key.id} className="border-b">
-                      <td className="py-3 px-2 font-medium">{key.keyName}</td>
-                      <td className="py-3 px-2">
+                      <td className="px-2 py-3 font-medium">{key.keyName}</td>
+                      <td className="px-2 py-3">
                         {key.user ? (
                           <div>
                             <div>{key.user.name}</div>
-                            <div className="text-xs text-muted-foreground">{key.user.phoneNumber}</div>
+                            <div className="text-xs text-muted-foreground">
+                              {key.user.phoneNumber}
+                            </div>
                           </div>
                         ) : (
                           <span className="text-muted-foreground">Unknown</span>
                         )}
                       </td>
-                      <td className="text-right py-3 px-2">
-                        {key.usageCount.toLocaleString()}
-                      </td>
-                      <td className="text-right py-3 px-2">
+                      <td className="px-2 py-3 text-right">{key.usageCount.toLocaleString()}</td>
+                      <td className="px-2 py-3 text-right">
                         <Badge variant={key.isActive ? "secondary" : "destructive"}>
                           {key.isActive ? "Active" : "Inactive"}
                         </Badge>

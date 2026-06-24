@@ -24,13 +24,13 @@ export const metadata: Metadata = {
   description: "Manage your iVALT API keys and documentation",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={cn("font-sans", dmSans.variable, syne.variable)} suppressHydrationWarning>
+    <html
+      lang="en"
+      className={cn("font-sans", dmSans.variable, syne.variable)}
+      suppressHydrationWarning
+    >
       <body>
         <ThemeProvider>
           <ORPCProvider>

@@ -47,10 +47,11 @@ export async function GET(_req: NextRequest) {
     const activeKeys = keysWithUsage.filter((k) => k.isActive).length;
     const totalRequests = keysWithUsage.reduce((sum, k) => sum + k.usageCount, 0);
     const recentlyUsed = keysWithUsage.filter(
-      (k) => k.lastUsedAt && new Date(k.lastUsedAt) > new Date(Date.now() - 24 * 60 * 60 * 1000)
+      (k) => k.lastUsedAt && new Date(k.lastUsedAt) > new Date(Date.now() - 24 * 60 * 60 * 1000),
     ).length;
     const inactive = keysWithUsage.filter(
-      (k) => !k.lastUsedAt || new Date(k.lastUsedAt) < new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
+      (k) =>
+        !k.lastUsedAt || new Date(k.lastUsedAt) < new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
     ).length;
 
     const totalUsers = await db.$count(users);
@@ -71,18 +72,21 @@ export async function GET(_req: NextRequest) {
     });
   } catch (error) {
     console.error("Usage API error:", error);
-    return NextResponse.json({
-      usage: [],
-      summary: {
-        totalUsers: 0,
-        usersThisWeek: 0,
-        totalKeys: 0,
-        activeKeys: 0,
-        inactiveKeys: 0,
-        recentlyUsed: 0,
-        totalRequests: 0,
+    return NextResponse.json(
+      {
+        usage: [],
+        summary: {
+          totalUsers: 0,
+          usersThisWeek: 0,
+          totalKeys: 0,
+          activeKeys: 0,
+          inactiveKeys: 0,
+          recentlyUsed: 0,
+          totalRequests: 0,
+        },
+        error: "Internal server error",
       },
-      error: "Internal server error",
-    }, { status: 500 });
+      { status: 500 },
+    );
   }
 }

@@ -9,6 +9,9 @@ bun dev          # Start dev server (always on port 3000)
 bun run build    # Production build
 bun start        # Serve production build (or: bun run start)
 
+bun test         # Run test suite
+bun run build    # TypeScript is the primary correctness check
+
 bun run db:push      # Sync schema to DB (no migration file generated)
 bun run db:generate  # Generate a migration file from schema changes
 bun run db:migrate   # Run pending migrations
@@ -17,7 +20,7 @@ bun run db:studio    # Open Drizzle Studio GUI
 vercel deploy --prod --yes  # Deploy to Vercel production
 ```
 
-No test suite is configured. TypeScript is the primary correctness check — `bun run build` will catch type errors.
+Test files live in `tests/` mirroring `src/` structure. Demo and production route tests are in separate files to avoid `mock.module` process-wide caching conflicts when both `DEMO_MODE=true` and `DEMO_MODE=false` paths need testing.
 
 ## Architecture
 
@@ -42,15 +45,15 @@ Set `NEXT_PUBLIC_DEMO_MODE=true` to bypass all real external calls (DB, AWS, iVA
 
 ### API routes
 
-| Route | Method | Purpose |
-|---|---|---|
-| `/api/auth/request` | POST | Initiate biometric auth |
-| `/api/auth/verify` | POST | Poll result + create session |
-| `/api/auth/logout` | POST | Destroy session |
-| `/api/keys` | GET | List user's keys |
-| `/api/keys/create` | POST | Create key (max 4 per user) |
-| `/api/keys/[id]` | DELETE | Delete key |
-| `/api/keys/[id]` | PATCH | Enable/disable key |
+| Route               | Method | Purpose                      |
+| ------------------- | ------ | ---------------------------- |
+| `/api/auth/request` | POST   | Initiate biometric auth      |
+| `/api/auth/verify`  | POST   | Poll result + create session |
+| `/api/auth/logout`  | POST   | Destroy session              |
+| `/api/keys`         | GET    | List user's keys             |
+| `/api/keys/create`  | POST   | Create key (max 4 per user)  |
+| `/api/keys/[id]`    | DELETE | Delete key                   |
+| `/api/keys/[id]`    | PATCH  | Enable/disable key           |
 
 ### UI structure
 
@@ -59,6 +62,7 @@ Set `NEXT_PUBLIC_DEMO_MODE=true` to bypass all real external calls (DB, AWS, iVA
 ### Design system
 
 Slack-inspired tokens defined in `src/app/globals.css`:
+
 - Primary: `#611f69` (Purple Heart)
 - Background: `#fefbff` (Canvas Ice)
 - Accent: `#1264a3` (Electric Blue)
@@ -68,16 +72,16 @@ Slack-inspired tokens defined in `src/app/globals.css`:
 
 Copy `.env.local.example` → `.env` and fill in values. Required in production:
 
-| Variable | Purpose |
-|---|---|
-| `DATABASE_URL` | PostgreSQL connection string |
-| `IVALT_API_BASE_URL` | iVALT API base (default: `https://api.ivalt.com`) |
-| `IVALT_SECURITY_TOKEN` | iVALT security token |
-| `AWS_REGION` | API Gateway region |
-| `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` | IAM credentials |
-| `AWS_API_GATEWAY_USAGE_PLAN_ID` | Usage plan to attach keys to |
-| `SESSION_SECRET` | ≥32-char random string for iron-session |
-| `NEXT_PUBLIC_DEMO_MODE` | Set `true` to skip all external calls |
-| `SMTP_HOST` / `SMTP_PORT` | SMTP server (e.g., `smtp.gmail.com` / `587`) |
-| `SMTP_USER` / `SMTP_PASS` | SMTP credentials |
-| `ADMIN_EMAIL` | Comma-separated admin emails |
+| Variable                                      | Purpose                                           |
+| --------------------------------------------- | ------------------------------------------------- |
+| `DATABASE_URL`                                | PostgreSQL connection string                      |
+| `IVALT_API_BASE_URL`                          | iVALT API base (default: `https://api.ivalt.com`) |
+| `IVALT_SECURITY_TOKEN`                        | iVALT security token                              |
+| `AWS_REGION`                                  | API Gateway region                                |
+| `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` | IAM credentials                                   |
+| `AWS_API_GATEWAY_USAGE_PLAN_ID`               | Usage plan to attach keys to                      |
+| `SESSION_SECRET`                              | ≥32-char random string for iron-session           |
+| `NEXT_PUBLIC_DEMO_MODE`                       | Set `true` to skip all external calls             |
+| `SMTP_HOST` / `SMTP_PORT`                     | SMTP server (e.g., `smtp.gmail.com` / `587`)      |
+| `SMTP_USER` / `SMTP_PASS`                     | SMTP credentials                                  |
+| `ADMIN_EMAIL`                                 | Comma-separated admin emails                      |

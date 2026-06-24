@@ -85,8 +85,7 @@ export default function LoginPage() {
           clearInterval(interval);
           setStep("success");
           const accessStatus = data.accessStatus || "pending";
-          const redirectPath =
-            accessStatus === "approved" ? "/dashboard" : "/access/request";
+          const redirectPath = accessStatus === "approved" ? "/dashboard" : "/access/request";
           setTimeout(() => router.push(redirectPath), 1500);
         } else if (data.status === "failed" || data.status === "not_found") {
           clearInterval(interval);
@@ -173,7 +172,7 @@ export default function LoginPage() {
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_12%,rgba(97,31,105,0.13),transparent_32%),radial-gradient(circle_at_86%_18%,rgba(53,91,146,0.12),transparent_30%),linear-gradient(135deg,rgba(97,31,105,0.06),transparent_42%)]" />
       <div className="absolute inset-x-0 bottom-0 h-1/2 bg-[linear-gradient(to_top,rgba(97,31,105,0.05),transparent)]" />
 
-      <div className="absolute right-4 top-4 z-10 flex items-center gap-1">
+      <div className="absolute top-4 right-4 z-10 flex items-center gap-1">
         <button
           type="button"
           onClick={() => setTheme(nextTheme[theme])}
@@ -194,9 +193,7 @@ export default function LoginPage() {
           <div className="flex items-center gap-3">
             <Logo className="h-8 w-auto" />
             <div>
-              <p className="text-sm font-semibold tracking-[-0.03em]">
-                APIs Access
-              </p>
+              <p className="text-sm font-semibold tracking-[-0.03em]">APIs Access</p>
             </div>
             {DEMO_MODE && (
               <Badge variant="secondary" className="ml-1">
@@ -207,12 +204,11 @@ export default function LoginPage() {
 
           <div className="max-w-xl">
             <h1 className="text-3xl font-semibold tracking-[-0.04em] text-foreground xl:text-4xl">
-              Sign in with a verified{" "}
-              <span className="text-primary">human signal</span>.
+              Sign in with a verified <span className="text-primary">human signal</span>.
             </h1>
             <p className="mt-4 text-base leading-7 text-muted-foreground">
-              Access API keys and integration docs through the same biometric
-              trust layer your customers will use in production.
+              Access API keys and integration docs through the same biometric trust layer your
+              customers will use in production.
             </p>
           </div>
 
@@ -222,28 +218,19 @@ export default function LoginPage() {
               { label: "2s polling", text: "Explicit pending state" },
               { label: "API-ready", text: "Keys and docs after sign-in" },
             ].map((item) => (
-              <div
-                key={item.label}
-                className="rounded-xl border border-border/60 bg-card/50 p-3.5"
-              >
-                <p className="text-sm font-semibold tracking-[-0.01em]">
-                  {item.label}
-                </p>
-                <p className="mt-1 text-xs leading-5 text-muted-foreground">
-                  {item.text}
-                </p>
+              <div key={item.label} className="rounded-xl border border-border/60 bg-card/50 p-3.5">
+                <p className="text-sm font-semibold tracking-[-0.01em]">{item.label}</p>
+                <p className="mt-1 text-xs leading-5 text-muted-foreground">{item.text}</p>
               </div>
             ))}
           </div>
         </section>
 
         {/* Right — Form (no card, no shadow) */}
-        <section className="flex flex-col justify-center px-6 pb-16 pt-8 lg:flex-1 lg:px-16 lg:py-0">
+        <section className="flex flex-col justify-center px-6 pt-8 pb-16 lg:flex-1 lg:px-16 lg:py-0">
           <div className="flex items-center justify-center gap-3 lg:hidden">
             <Logo className="h-7 w-auto" />
-            <span className="text-lg font-semibold tracking-[-0.03em]">
-              iVALT
-            </span>
+            <span className="text-lg font-semibold tracking-[-0.03em]">iVALT</span>
             {DEMO_MODE && <Badge variant="secondary">Demo</Badge>}
           </div>
 
@@ -276,8 +263,7 @@ export default function LoginPage() {
                   {DEMO_MODE && (
                     <div className="flex items-center gap-3 rounded-xl border border-primary/10 bg-primary/5 p-3 text-sm text-muted-foreground">
                       <FlaskConical className="size-4 shrink-0 text-primary" />
-                      Demo mode is active — no live biometric request will be
-                      sent.
+                      Demo mode is active — no live biometric request will be sent.
                     </div>
                   )}
 
@@ -307,11 +293,7 @@ export default function LoginPage() {
                     ) : DEMO_MODE ? (
                       <FlaskConical data-icon="inline-start" />
                     ) : null}
-                    {isLoading
-                      ? "Sending request..."
-                      : DEMO_MODE
-                        ? "Enter portal"
-                        : "Continue"}
+                    {isLoading ? "Sending request..." : DEMO_MODE ? "Enter portal" : "Continue"}
                   </Button>
 
                   <p className="text-center text-xs leading-5 text-muted-foreground">
@@ -351,9 +333,7 @@ export default function LoginPage() {
                                 <Clock className="size-4" />
                               )}
                             </div>
-                            <span className="flex-1 font-medium">
-                              {profile.label}
-                            </span>
+                            <span className="flex-1 font-medium">{profile.label}</span>
                             <Badge
                               variant={
                                 profile.status === "approved"
@@ -362,7 +342,7 @@ export default function LoginPage() {
                                     ? ("destructive" as const)
                                     : ("secondary" as const)
                               }
-                              className="text-[10px] px-1.5 py-0"
+                              className="px-1.5 py-0 text-[10px]"
                             >
                               {profile.status}
                             </Badge>
@@ -380,9 +360,7 @@ export default function LoginPage() {
                     <Smartphone className="size-10" />
                   </div>
                   <div className="rounded-xl border border-border/80 bg-background/70 p-4 text-left">
-                    <p className="mb-3 text-sm font-semibold">
-                      Approval checklist
-                    </p>
+                    <p className="mb-3 text-sm font-semibold">Approval checklist</p>
                     <ol className="flex flex-col gap-2 text-sm text-muted-foreground">
                       <li>1. Open the iVALT app.</li>
                       <li>2. Tap the authentication notification.</li>
@@ -391,13 +369,15 @@ export default function LoginPage() {
                   </div>
                   <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
                     <Loader2 className="size-4 animate-spin" />
-                    Waiting\u2026 {(() => { const s = Math.ceil((150 - pollCount) * 2); const m = Math.floor(s / 60); return `${m}m ${s % 60}s`; })()} remaining
+                    Waiting\u2026{" "}
+                    {(() => {
+                      const s = Math.ceil((150 - pollCount) * 2);
+                      const m = Math.floor(s / 60);
+                      return `${m}m ${s % 60}s`;
+                    })()}{" "}
+                    remaining
                   </div>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setStep("phone")}
-                  >
+                  <Button variant="ghost" size="sm" onClick={() => setStep("phone")}>
                     Use different number
                   </Button>
                 </div>
@@ -412,7 +392,7 @@ export default function LoginPage() {
                     {[0, 1, 2].map((i) => (
                       <div
                         key={i}
-                        className="size-2 rounded-full bg-primary animate-bounce"
+                        className="size-2 animate-bounce rounded-full bg-primary"
                         style={{ animationDelay: `${i * 150}ms` }}
                       />
                     ))}

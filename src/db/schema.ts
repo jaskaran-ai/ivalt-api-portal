@@ -2,7 +2,9 @@ import { pgTable, text, timestamp, varchar, boolean, integer } from "drizzle-orm
 import { relations } from "drizzle-orm/relations";
 
 export const users = pgTable("users", {
-  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
   phoneNumber: varchar("phone_number", { length: 20 }).notNull().unique(),
   name: varchar("name", { length: 255 }),
   createdAt: timestamp("created_at").defaultNow().notNull(),
@@ -14,7 +16,9 @@ export const users = pgTable("users", {
 });
 
 export const apiKeys = pgTable("api_keys", {
-  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
   userId: text("user_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
@@ -28,7 +32,9 @@ export const apiKeys = pgTable("api_keys", {
 });
 
 export const accessRequests = pgTable("access_requests", {
-  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
   userId: text("user_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
@@ -40,7 +46,9 @@ export const accessRequests = pgTable("access_requests", {
 
 // NEW: API Key Usage Tracking Table
 export const apiKeyUsage = pgTable("api_key_usage", {
-  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
   apiKeyId: text("api_key_id")
     .notNull()
     .references(() => apiKeys.id, { onDelete: "cascade" }),

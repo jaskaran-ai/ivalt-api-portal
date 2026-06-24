@@ -18,7 +18,10 @@ export async function POST(req: NextRequest) {
     const { keyName } = await req.json();
 
     if (!keyName || typeof keyName !== "string" || keyName.trim().length < 3) {
-      return NextResponse.json({ error: "Key name must be at least 3 characters" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Key name must be at least 3 characters" },
+        { status: 400 },
+      );
     }
 
     // ── DEMO MODE ─────────────────────────────────────────────────────────────
@@ -27,7 +30,7 @@ export async function POST(req: NextRequest) {
       if (currentKeys.length >= MAX_KEYS_PER_USER) {
         return NextResponse.json(
           { error: `You can have a maximum of ${MAX_KEYS_PER_USER} API keys` },
-          { status: 403 }
+          { status: 403 },
         );
       }
 
@@ -43,7 +46,7 @@ export async function POST(req: NextRequest) {
 
       await new Promise((r) => setTimeout(r, 600));
 
-      const fakeKeyValue = `ivalt_demo_${ Math.random().toString(36).slice(2, 18) }`;
+      const fakeKeyValue = `ivalt_demo_${Math.random().toString(36).slice(2, 18)}`;
       const newKey = {
         id: `demo-key-${Date.now()}`,
         userId: session.userId,
@@ -74,7 +77,7 @@ export async function POST(req: NextRequest) {
     if (Number(keyCount) >= MAX_KEYS_PER_USER) {
       return NextResponse.json(
         { error: `You can have a maximum of ${MAX_KEYS_PER_USER} API keys` },
-        { status: 403 }
+        { status: 403 },
       );
     }
 
@@ -98,6 +101,34 @@ export async function POST(req: NextRequest) {
 
     const sanitizedName = `ivalt-portal-${session.userId.slice(0, 8)}-${keyName.trim().replace(/[^a-zA-Z0-9-_]/g, "-")}`;
     const awsKey = await createAwsApiKey(sanitizedName, description);
+
+    if (existingKey) {
+      return NextResponse.json(
+        { error: `You already have a key named "${keyName.trim()}". Choose a different name.` },
+        { status: 409 },
+      );
+    }
+
+    const user = await db.query.users.findFirst({
+      where: eq(users.id, session.userId),
+    });
+
+    const userName = user?.name || user?.phoneNumber || `user-${session.userId.slice(0, 8)}`;
+    const phone = user?.phoneNumber || session.phoneNumber || "unknown";
+
+    const sanitizedUserName = userName.replace(/[^a-zA-Z0-9]/g, "_");
+    const sanitizedKeyName = keyName.trim().replace(/[^a-zA-Z0-9-_]/g, "-");
+    const awsKeyName = `ivalt-${sanitizedUserName}-${sanitizedKeyName}`;
+
+    const description = JSON.stringify({
+      userId: session.userId,
+      name: userName,
+      phoneNumber: phone,
+      keyName: keyName.trim(),
+      createdAt: new Date().toISOString(),
+    });
+
+    const awsKey = await createAwsApiKey(awsKeyName, description);
 
     const [newKey] = await db
       .insert(apiKeys)

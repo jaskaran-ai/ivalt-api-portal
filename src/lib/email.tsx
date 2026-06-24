@@ -16,7 +16,11 @@ function getTransporter() {
     console.error("[EMAIL] Missing SMTP_USER or SMTP_PASS in env");
     throw new Error("SMTP credentials not configured. Set SMTP_USER and SMTP_PASS in .env");
   }
-  console.log("[EMAIL] Creating transporter:", { host: SMTP_HOST, port: SMTP_PORT, user: SMTP_USER });
+  console.log("[EMAIL] Creating transporter:", {
+    host: SMTP_HOST,
+    port: SMTP_PORT,
+    user: SMTP_USER,
+  });
   return nodemailer.createTransport({
     host: SMTP_HOST,
     port: SMTP_PORT,
@@ -41,7 +45,9 @@ async function sendRawEmail({ to, subject, html }: { to: string; subject: string
 
 function getAdminEmails(): string[] {
   if (!ADMIN_EMAIL) return [];
-  return ADMIN_EMAIL.split(",").map((e) => e.trim()).filter(Boolean);
+  return ADMIN_EMAIL.split(",")
+    .map((e) => e.trim())
+    .filter(Boolean);
 }
 
 export async function sendAdminNotification({
@@ -64,7 +70,7 @@ export async function sendAdminNotification({
       userPhone={userPhone}
       useCase={useCase}
       requestedAt={new Date().toLocaleString()}
-    />
+    />,
   );
   await Promise.all(
     adminEmails.map((email) =>
@@ -72,18 +78,12 @@ export async function sendAdminNotification({
         to: email,
         subject: "New Access Request - iVALT Portal",
         html,
-      })
-    )
+      }),
+    ),
   );
 }
 
-export async function sendUserApprovedEmail({
-  to,
-  userName,
-}: {
-  to: string;
-  userName: string;
-}) {
+export async function sendUserApprovedEmail({ to, userName }: { to: string; userName: string }) {
   const html = await render(<UserApproved userName={userName} />);
   await sendRawEmail({
     to,
@@ -92,13 +92,7 @@ export async function sendUserApprovedEmail({
   });
 }
 
-export async function sendUserRejectedEmail({
-  to,
-  userName,
-}: {
-  to: string;
-  userName: string;
-}) {
+export async function sendUserRejectedEmail({ to, userName }: { to: string; userName: string }) {
   const html = await render(<UserRejected userName={userName} />);
   await sendRawEmail({
     to,

@@ -2,23 +2,23 @@
 
 ## Current Implementation
 
-| Feature | Status | Location |
-|---------|--------|----------|
-| Last used timestamp | ✅ Exists | `api_keys.lastUsedAt` |
-| Active/inactive status | ✅ Exists | `api_keys.is_active` |
-| Key creation date | ✅ Exists | `api_keys.created_at` |
-| Usage tracking table | ✅ Exists | `api_key_usage` table |
-| Admin usage API | ✅ Implemented | `GET /api/admin/usage` |
+| Feature                | Status         | Location               |
+| ---------------------- | -------------- | ---------------------- |
+| Last used timestamp    | ✅ Exists      | `api_keys.lastUsedAt`  |
+| Active/inactive status | ✅ Exists      | `api_keys.is_active`   |
+| Key creation date      | ✅ Exists      | `api_keys.created_at`  |
+| Usage tracking table   | ✅ Exists      | `api_key_usage` table  |
+| Admin usage API        | ✅ Implemented | `GET /api/admin/usage` |
 
 ## Implemented Metrics
 
-| Metric | Description |
-|--------|-------------|
-| Total API keys | Count of all keys in the system |
-| Active keys | Keys with `is_active = true` |
-| Recently used | Keys used in last 24h |
+| Metric         | Description                        |
+| -------------- | ---------------------------------- |
+| Total API keys | Count of all keys in the system    |
+| Active keys    | Keys with `is_active = true`       |
+| Recently used  | Keys used in last 24h              |
 | Total requests | Sum of all request counts from AWS |
-| Inactive keys | Keys not used in 30 days |
+| Inactive keys  | Keys not used in 30 days           |
 
 ## API Endpoint
 

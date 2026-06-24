@@ -52,7 +52,10 @@ export default function KeysLoading() {
             <Separator />
             <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-2">
               {[0, 1].map((item) => (
-                <div key={item} className="rounded-2xl border border-border/80 bg-background/70 p-4">
+                <div
+                  key={item}
+                  className="rounded-2xl border border-border/80 bg-background/70 p-4"
+                >
                   <Skeleton className="h-3 w-20" />
                   <Skeleton className="mt-3 h-9 w-14 rounded-xl" />
                 </div>
@@ -76,7 +79,11 @@ export default function KeysLoading() {
           <CardContent className="p-6">
             <div className="flex flex-col gap-3">
               {[0, 1, 2].map((item) => (
-                <Card key={item} size="sm" className="border-border/80 bg-background/70 shadow-none">
+                <Card
+                  key={item}
+                  size="sm"
+                  className="border-border/80 bg-background/70 shadow-none"
+                >
                   <CardContent className="p-4">
                     <div className="flex flex-col gap-4 xl:flex-row xl:items-start">
                       <div className="flex min-w-0 flex-1 gap-4">

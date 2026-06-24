@@ -3,11 +3,7 @@ import { getSession } from "@/lib/session";
 import { DEMO_MODE } from "@/lib/demo";
 import DashboardShell from "@/components/layout/DashboardShell";
 
-export default async function DashboardLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const session = await getSession();
 
   if (!session.isLoggedIn) {

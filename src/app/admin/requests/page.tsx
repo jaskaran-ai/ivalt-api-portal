@@ -94,9 +94,7 @@ export default function AdminRequestsPage() {
         <div className="mb-6 flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-semibold tracking-[-0.03em]">Access Requests</h1>
-            <p className="text-sm text-muted-foreground">
-              Review and approve user access requests
-            </p>
+            <p className="text-sm text-muted-foreground">Review and approve user access requests</p>
           </div>
           <div className="flex gap-2">
             <Button
@@ -127,11 +125,11 @@ export default function AdminRequestsPage() {
           <CardContent className="p-0">
             {loading ? (
               <div className="flex items-center justify-center p-12">
-                <div className="animate-spin size-6 border-2 border-primary border-t-transparent rounded-full" />
+                <div className="size-6 animate-spin rounded-full border-2 border-primary border-t-transparent" />
               </div>
             ) : requests.length === 0 ? (
               <div className="flex flex-col items-center justify-center p-12 text-center">
-                <Clock className="size-12 text-muted-foreground mb-4" />
+                <Clock className="mb-4 size-12 text-muted-foreground" />
                 <h3 className="font-semibold">No requests found</h3>
                 <p className="text-sm text-muted-foreground mt-1">
                   {statusFilter === "pending"

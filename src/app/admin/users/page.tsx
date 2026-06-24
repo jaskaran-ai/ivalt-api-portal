@@ -56,9 +56,17 @@ export default function AdminUsersPage() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "approved":
-        return <Badge variant="secondary" className="bg-emerald-500/10 text-emerald-700">Approved</Badge>;
+        return (
+          <Badge variant="secondary" className="bg-emerald-500/10 text-emerald-700">
+            Approved
+          </Badge>
+        );
       case "rejected":
-        return <Badge variant="secondary" className="bg-red-500/10 text-red-700">Rejected</Badge>;
+        return (
+          <Badge variant="secondary" className="bg-red-500/10 text-red-700">
+            Rejected
+          </Badge>
+        );
       default:
         return <Badge variant="outline">Pending</Badge>;
     }
@@ -89,7 +97,7 @@ export default function AdminUsersPage() {
           </div>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-4 mb-6">
+        <div className="mb-6 grid gap-4 md:grid-cols-4">
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium">Total Users</CardTitle>
@@ -132,13 +140,13 @@ export default function AdminUsersPage() {
           <CardContent className="p-0">
             {loading ? (
               <div className="flex items-center justify-center p-12">
-                <div className="animate-spin size-6 border-2 border-primary border-t-transparent rounded-full" />
+                <div className="size-6 animate-spin rounded-full border-2 border-primary border-t-transparent" />
               </div>
             ) : users.length === 0 ? (
               <div className="flex flex-col items-center justify-center p-12 text-center">
-                <User className="size-12 text-muted-foreground mb-4" />
+                <User className="mb-4 size-12 text-muted-foreground" />
                 <h3 className="font-semibold">No users found</h3>
-                <p className="text-sm text-muted-foreground mt-1">
+                <p className="mt-1 text-sm text-muted-foreground">
                   No users match the current filter.
                 </p>
               </div>

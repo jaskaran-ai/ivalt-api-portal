@@ -6,7 +6,9 @@ let db: import("drizzle-orm/postgres-js").PostgresJsDatabase<typeof import("./sc
 
 if (!DEMO_MODE) {
   if (!process.env.DATABASE_URL) {
-    throw new Error("DATABASE_URL is not set. Add it to .env.local or enable NEXT_PUBLIC_DEMO_MODE=true");
+    throw new Error(
+      "DATABASE_URL is not set. Add it to .env.local or enable NEXT_PUBLIC_DEMO_MODE=true",
+    );
   }
   const { drizzle } = require("drizzle-orm/postgres-js");
   const postgres = require("postgres");
@@ -18,8 +20,16 @@ if (!DEMO_MODE) {
   db = new Proxy({} as any, {
     get(_target, prop) {
       return new Proxy(() => {}, {
-        get(_t, _p) { return () => { throw new Error(`[DEMO] DB called (${String(prop)}). This is a bug — demo routes should short-circuit before hitting the DB.`); }; },
-        apply() { throw new Error(`[DEMO] DB called. This is a bug.`); },
+        get(_t, _p) {
+          return () => {
+            throw new Error(
+              `[DEMO] DB called (${String(prop)}). This is a bug — demo routes should short-circuit before hitting the DB.`,
+            );
+          };
+        },
+        apply() {
+          throw new Error(`[DEMO] DB called. This is a bug.`);
+        },
       });
     },
   });

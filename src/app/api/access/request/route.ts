@@ -33,10 +33,13 @@ export async function POST(req: NextRequest) {
     });
 
     if (existingRequest) {
-      return NextResponse.json({ 
-        error: "Access request already submitted. Please wait for admin approval.",
-        existing: true 
-      }, { status: 400 });
+      return NextResponse.json(
+        {
+          error: "Access request already submitted. Please wait for admin approval.",
+          existing: true,
+        },
+        { status: 400 },
+      );
     }
 
     // Create access request
@@ -47,10 +50,7 @@ export async function POST(req: NextRequest) {
     });
 
     // Update user status to pending
-    await db
-      .update(users)
-      .set({ status: "pending" })
-      .where(eq(users.id, userId));
+    await db.update(users).set({ status: "pending" }).where(eq(users.id, userId));
 
     const user = await db.query.users.findFirst({
       where: eq(users.id, userId),
@@ -83,7 +83,7 @@ export async function GET(req: NextRequest) {
 
     // Get all access requests with user info
     let requests;
-    
+
     if (status === "all") {
       requests = await db.query.accessRequests.findMany({});
     } else if (status === "pending") {
@@ -106,7 +106,7 @@ export async function GET(req: NextRequest) {
           ...req,
           user: user ? { id: user.id, phoneNumber: user.phoneNumber, name: user.name } : null,
         };
-      })
+      }),
     );
 
     return NextResponse.json({ requests: requestsWithUsers });
@@ -115,4 +115,3 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
-

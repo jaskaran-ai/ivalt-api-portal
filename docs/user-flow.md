@@ -29,12 +29,12 @@ flowchart LR
 
 ### Troubleshooting Login
 
-| Issue | Solution |
-|-------|----------|
-| "Phone number not registered" | Install iVALT app and register first |
-| Push not received | Check internet on your phone, try again |
-| Request timed out | Refresh the page and restart |
-| App shows "Failed" | Ensure strong biometric scan |
+| Issue                         | Solution                                |
+| ----------------------------- | --------------------------------------- |
+| "Phone number not registered" | Install iVALT app and register first    |
+| Push not received             | Check internet on your phone, try again |
+| Request timed out             | Refresh the page and restart            |
+| App shows "Failed"            | Ensure strong biometric scan            |
 
 ---
 
@@ -51,6 +51,7 @@ Your request is now pending admin review. You will receive an email notification
 ### Writing a Good Use Case
 
 Include these details for faster approval:
+
 - **What** you are building (mobile app, web platform, internal tool)
 - **How** biometric authentication fits into your flow
 - **Expected** user volume and frequency
@@ -72,6 +73,7 @@ Submit → Admin notified via email
 Once approved, you receive an email with the subject **"Access Approved — iVALT Portal"**.
 
 You can now:
+
 1. **Sign in** at the portal URL
 2. **Create API keys** from the API Keys dashboard (up to 4 keys)
 3. **Read the API docs** in-app for integration details
@@ -117,11 +119,11 @@ Click the delete icon. This removes the key from AWS permanently. Any applicatio
 
 Every API call requires these headers:
 
-| Header | Value | Purpose |
-|--------|-------|---------|
-| `x-api-key` | Your API key | Identifies your application |
-| `token` | Your iVALT security token | Authenticates your account |
-| `Content-Type` | `application/json` | Request format |
+| Header         | Value                     | Purpose                     |
+| -------------- | ------------------------- | --------------------------- |
+| `x-api-key`    | Your API key              | Identifies your application |
+| `token`        | Your iVALT security token | Authenticates your account  |
+| `Content-Type` | `application/json`        | Request format              |
 
 ### Flow: Initiate Authentication
 
@@ -159,12 +161,12 @@ curl -X POST https://api.ivalt.com/biometric-auth-result \
 
 ### Status Code Reference
 
-| Code | Meaning | Action |
-|------|---------|--------|
-| **200** | Authenticated | User verified. Create a session. |
-| **422** | Pending | Keep polling every 2 seconds |
-| **403** | Failed / Timeout | User rejected or window expired. Show error. |
-| **404** | Not found | Phone not registered in iVALT. Prompt sign-up. |
+| Code    | Meaning          | Action                                         |
+| ------- | ---------------- | ---------------------------------------------- |
+| **200** | Authenticated    | User verified. Create a session.               |
+| **422** | Pending          | Keep polling every 2 seconds                   |
+| **403** | Failed / Timeout | User rejected or window expired. Show error.   |
+| **404** | Not found        | Phone not registered in iVALT. Prompt sign-up. |
 
 ### Geo-fence Verification
 
@@ -190,6 +192,7 @@ Returns `200` only if the user is authenticated **and** within the geofence. Ret
 ## Demo Mode
 
 When `NEXT_PUBLIC_DEMO_MODE=true` is set:
+
 - Authentication is simulated (no real push notification)
 - User is auto-approved
 - Demo API keys are shown for testing

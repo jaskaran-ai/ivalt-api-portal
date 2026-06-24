@@ -1,11 +1,11 @@
 // AWS API Gateway Usage Service
 // Fetches key usage statistics from AWS API Gateway
 
-import { 
-  APIGatewayClient, 
+import {
+  APIGatewayClient,
   GetUsagePlanKeysCommand,
   GetUsageCommand,
-  type UsagePlanKey 
+  type UsagePlanKey,
 } from "@aws-sdk/client-api-gateway";
 import { NodeHttpHandler } from "@smithy/node-http-handler";
 
@@ -22,7 +22,7 @@ let client: APIGatewayClient | null = null;
 
 function getClient(): APIGatewayClient {
   if (!client) {
-    client = new APIGatewayClient({ 
+    client = new APIGatewayClient({
       region: REGION,
       requestHandler,
       maxAttempts: 1,
@@ -60,7 +60,9 @@ export async function fetchApiKeyUsage(): Promise<ApiKeyUsage[]> {
     };
 
     const keysCommand = new GetUsagePlanKeysCommand(keysParams);
-    const keysResponse = await apiKeyClient.send(keysCommand) as { keys?: { id: string; value: string }[] };
+    const keysResponse = (await apiKeyClient.send(keysCommand)) as {
+      keys?: { id: string; value: string }[];
+    };
 
     if (!keysResponse.keys || keysResponse.keys.length === 0) {
       return [];
@@ -79,7 +81,9 @@ export async function fetchApiKeyUsage(): Promise<ApiKeyUsage[]> {
       };
 
       const usageCommand = new GetUsageCommand(usageParams);
-      const usageResponse = await apiKeyClient.send(usageCommand) as { usage?: { count?: number }[] };
+      const usageResponse = (await apiKeyClient.send(usageCommand)) as {
+        usage?: { count?: number }[];
+      };
 
       // Sum up the usage count from all periods
       let totalCount = 0;

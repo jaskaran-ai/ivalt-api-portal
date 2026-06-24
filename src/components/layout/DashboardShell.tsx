@@ -4,17 +4,17 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { 
-  ShieldCheck, 
-  LayoutDashboard, 
-  BookOpen, 
-  LogOut, 
-  Key, 
+import {
+  ShieldCheck,
+  LayoutDashboard,
+  BookOpen,
+  LogOut,
+  Key,
   FlaskConical,
   ExternalLink,
   HelpCircle,
   Settings,
-  Minus
+  Minus,
 } from "lucide-react";
 
 import {
@@ -48,14 +48,14 @@ interface DashboardShellProps {
   demoMode?: boolean;
 }
 
-export default function DashboardShell({ children, phoneNumber, demoMode = false }: DashboardShellProps) {
+export default function DashboardShell({
+  children,
+  phoneNumber,
+  demoMode = false,
+}: DashboardShellProps) {
   return (
     <SidebarProvider defaultOpen={true}>
-      <SidebarContentLayout 
-        children={children}
-        phoneNumber={phoneNumber}
-        demoMode={demoMode}
-      />
+      <SidebarContentLayout children={children} phoneNumber={phoneNumber} demoMode={demoMode} />
     </SidebarProvider>
   );
 }
@@ -77,7 +77,7 @@ function SidebarContentLayout({ children, phoneNumber, demoMode }: DashboardShel
     : "Unknown";
 
   const activeItem = navItems.find(
-    (n) => n.href === pathname || (n.href !== "/dashboard" && pathname.startsWith(n.href))
+    (n) => n.href === pathname || (n.href !== "/dashboard" && pathname.startsWith(n.href)),
   );
 
   return (
@@ -85,11 +85,11 @@ function SidebarContentLayout({ children, phoneNumber, demoMode }: DashboardShel
       <Sidebar className="border-r border-sidebar-border/80 bg-sidebar" collapsible="icon">
         <SidebarHeader className="border-b border-sidebar-border/80">
           <div className="flex items-center gap-3 px-3 py-3">
-            <div className="size-9 rounded-2xl bg-primary flex items-center justify-center shrink-0 shadow-sm shadow-primary/20">
-              <ShieldCheck className="w-5 h-5 text-white" />
+            <div className="flex size-9 shrink-0 items-center justify-center rounded-2xl bg-primary shadow-sm shadow-primary/20">
+              <ShieldCheck className="h-5 w-5 text-white" />
             </div>
             <div className="min-w-0 flex-1 group-data-[state=collapsed]:hidden">
-              <p className="font-semibold text-sm">iVALT</p>
+              <p className="text-sm font-semibold">iVALT</p>
               <p className="text-xs text-sidebar-foreground/60">Developer Portal</p>
             </div>
           </div>
@@ -100,7 +100,7 @@ function SidebarContentLayout({ children, phoneNumber, demoMode }: DashboardShel
           {demoMode && (
             <div className="mb-2 px-2 group-data-[state=collapsed]:hidden">
               <div className="flex items-center gap-2 rounded-2xl border border-primary/15 bg-primary/10 px-3 py-2 text-xs font-medium text-primary">
-                <FlaskConical className="w-4 h-4 shrink-0" />
+                <FlaskConical className="h-4 w-4 shrink-0" />
                 <span className="truncate">Demo Mode Active</span>
               </div>
             </div>
@@ -108,23 +108,21 @@ function SidebarContentLayout({ children, phoneNumber, demoMode }: DashboardShel
 
           {/* Main Navigation */}
           <SidebarGroup>
-            <SidebarGroupLabel className="group-data-[state=collapsed]:hidden px-2 py-1 text-xs">
+            <SidebarGroupLabel className="px-2 py-1 text-xs group-data-[state=collapsed]:hidden">
               Navigation
             </SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 {navItems.map((item) => {
-                  const isActive = pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href));
+                  const isActive =
+                    pathname === item.href ||
+                    (item.href !== "/dashboard" && pathname.startsWith(item.href));
                   const Icon = item.icon;
                   return (
                     <SidebarMenuItem key={item.href}>
-                      <SidebarMenuButton 
-                        asChild 
-                        isActive={isActive}
-                        tooltip={item.label}
-                      >
+                      <SidebarMenuButton asChild isActive={isActive} tooltip={item.label}>
                         <Link href={item.href}>
-                          <Icon className="w-5 h-5" />
+                          <Icon className="h-5 w-5" />
                           <span className="group-data-[state=collapsed]:hidden">{item.label}</span>
                           {isActive && (
                             <div className="ml-auto size-1.5 rounded-full bg-primary group-data-[state=collapsed]:hidden" />
@@ -142,22 +140,19 @@ function SidebarContentLayout({ children, phoneNumber, demoMode }: DashboardShel
 
           {/* Secondary Navigation */}
           <SidebarGroup>
-            <SidebarGroupLabel className="group-data-[state=collapsed]:hidden px-2 py-1 text-xs">
+            <SidebarGroupLabel className="px-2 py-1 text-xs group-data-[state=collapsed]:hidden">
               Resources
             </SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 <SidebarMenuItem>
-                  <SidebarMenuButton 
-                    tooltip="Postman Collection"
-                    asChild
-                  >
-                    <a 
-                      href="https://documenter.getpostman.com/view/10533913/2sB2j4grRW" 
-                      target="_blank" 
+                  <SidebarMenuButton tooltip="Postman Collection" asChild>
+                    <a
+                      href="https://documenter.getpostman.com/view/10533913/2sB2j4grRW"
+                      target="_blank"
                       rel="noopener noreferrer"
                     >
-                      <ExternalLink className="w-5 h-5" />
+                      <ExternalLink className="h-5 w-5" />
                       <span className="group-data-[state=collapsed]:hidden">Postman Docs</span>
                     </a>
                   </SidebarMenuButton>
@@ -171,14 +166,14 @@ function SidebarContentLayout({ children, phoneNumber, demoMode }: DashboardShel
           {/* User section */}
           <div className="mb-2 px-2 group-data-[state=collapsed]:hidden">
             <div className="flex items-center gap-3 rounded-2xl border border-sidebar-border/80 bg-sidebar-accent/80 p-2.5">
-              <div className="size-8 rounded-2xl bg-primary flex items-center justify-center text-xs font-bold text-primary-foreground shrink-0">
+              <div className="flex size-8 shrink-0 items-center justify-center rounded-2xl bg-primary text-xs font-bold text-primary-foreground">
                 {phoneNumber.slice(-2) || "DM"}
               </div>
               <div className="min-w-0 flex-1">
-                <p className="text-xs font-medium truncate">
+                <p className="truncate text-xs font-medium">
                   {demoMode ? "Demo User" : maskedPhone}
                 </p>
-                <p className="text-xs text-sidebar-foreground/60 truncate">
+                <p className="truncate text-xs text-sidebar-foreground/60">
                   {demoMode ? "Demo account" : "Verified via iVALT"}
                 </p>
               </div>
@@ -194,7 +189,7 @@ function SidebarContentLayout({ children, phoneNumber, demoMode }: DashboardShel
                 tooltip={demoMode ? "Exit Demo" : "Log out"}
                 className="text-sidebar-foreground/80 hover:text-destructive"
               >
-                <LogOut className="w-5 h-5" />
+                <LogOut className="h-5 w-5" />
                 <span className="group-data-[state=collapsed]:hidden">
                   {loggingOut ? "Logging out…" : demoMode ? "Exit Demo" : "Log out"}
                 </span>
@@ -210,19 +205,19 @@ function SidebarContentLayout({ children, phoneNumber, demoMode }: DashboardShel
       {/* Main content area */}
       <SidebarInset>
         {/* Top bar */}
-        <header className="flex items-center gap-4 border-b border-border/80 bg-card/90 px-6 py-4 shadow-sm shadow-foreground/5 backdrop-blur shrink-0">
+        <header className="flex shrink-0 items-center gap-4 border-b border-border/80 bg-card/90 px-6 py-4 shadow-sm shadow-foreground/5 backdrop-blur">
           <div className="flex items-center gap-2">
             <SidebarTrigger />
             <span className="hidden text-xs text-muted-foreground md:inline">⌘B to toggle</span>
           </div>
-          <div className="flex-1 min-w-0">
+          <div className="min-w-0 flex-1">
             <h1 className="truncate text-lg font-semibold tracking-[-0.01em] text-foreground">
               {activeItem?.label || "Dashboard"}
             </h1>
           </div>
           {demoMode && (
             <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/15 bg-primary/10 px-3 py-1.5 text-xs font-medium text-primary">
-              <FlaskConical className="w-4 h-4" />
+              <FlaskConical className="h-4 w-4" />
               Demo
             </span>
           )}
