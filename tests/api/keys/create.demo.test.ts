@@ -56,10 +56,7 @@ describe("POST /api/keys/create (demo mode)", () => {
   });
 
   test("returns 403 if max keys reached", async () => {
-    mockDemoKeys = [
-      { id: "k1" }, { id: "k2" },
-      { id: "k3" }, { id: "k4" },
-    ];
+    mockDemoKeys = [{ id: "k1" }, { id: "k2" }, { id: "k3" }, { id: "k4" }];
     const res = await post({ keyName: "My Key" });
     expect(res.status).toBe(403);
     const body = await res.json();

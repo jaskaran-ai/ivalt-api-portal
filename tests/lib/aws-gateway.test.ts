@@ -26,12 +26,8 @@ process.env.AWS_ACCESS_KEY_ID = "test-key";
 process.env.AWS_SECRET_ACCESS_KEY = "test-secret";
 process.env.AWS_API_GATEWAY_USAGE_PLAN_ID = "test-plan";
 
-const {
-  createAwsApiKey,
-  deleteAwsApiKey,
-  toggleAwsApiKey,
-  getAwsApiKey,
-} = await import("@/lib/aws-gateway");
+const { createAwsApiKey, deleteAwsApiKey, toggleAwsApiKey, getAwsApiKey } =
+  await import("@/lib/aws-gateway");
 
 beforeEach(() => {
   mockSend = mock<(command: unknown) => unknown>();

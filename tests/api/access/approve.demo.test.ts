@@ -4,9 +4,7 @@ import { describe, test, expect, mock } from "bun:test";
 
 mock.module("@/lib/demo", () => ({
   DEMO_MODE: true,
-  getDemoAccessRequests: () => [
-    { id: "req-1", userId: "user-1", approvedAt: null },
-  ],
+  getDemoAccessRequests: () => [{ id: "req-1", userId: "user-1", approvedAt: null }],
 }));
 
 describe("POST /api/access/approve (demo mode)", () => {

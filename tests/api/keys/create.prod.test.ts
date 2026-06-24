@@ -29,9 +29,7 @@ mock.module("@/db", () => ({
     }),
     insert: () => ({
       values: () => ({
-        returning: () => [
-          { id: "db-key-id", keyName: "My Key", awsKeyId: "aws-key-123" },
-        ],
+        returning: () => [{ id: "db-key-id", keyName: "My Key", awsKeyId: "aws-key-123" }],
       }),
     }),
   },

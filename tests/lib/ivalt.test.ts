@@ -1,8 +1,5 @@
 import { describe, test, expect, afterEach } from "bun:test";
-import {
-  sendBiometricAuthRequest,
-  getBiometricResult,
-} from "@/lib/ivalt";
+import { sendBiometricAuthRequest, getBiometricResult } from "@/lib/ivalt";
 
 const originalFetch = globalThis.fetch;
 
