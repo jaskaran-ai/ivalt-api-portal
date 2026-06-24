@@ -13,12 +13,13 @@ ALTER TABLE "users" ADD COLUMN "status" VARCHAR(20) DEFAULT 'pending' NOT NULL;
 ALTER TABLE "users" ADD COLUMN "approved_at" TIMESTAMP;
 ```
 
-| Column | Type | Default | Description |
-|--------|------|---------|-------------|
-| `status` | VARCHAR(20) | `'pending'` | User's access status |
-| `approved_at` | TIMESTAMP | NULL | When user was approved |
+| Column        | Type        | Default     | Description            |
+| ------------- | ----------- | ----------- | ---------------------- |
+| `status`      | VARCHAR(20) | `'pending'` | User's access status   |
+| `approved_at` | TIMESTAMP   | NULL        | When user was approved |
 
 **Status Values:**
+
 - `pending` - Biometric auth complete, awaiting approval
 - `approved` - Admin approved, full access granted
 - `rejected` - Admin denied, must resubmit
@@ -36,14 +37,14 @@ CREATE TABLE "access_requests" (
 );
 ```
 
-| Column | Type | Description |
-|--------|------|-------------|
-| `id` | TEXT | Unique identifier |
-| `user_id` | TEXT | Foreign key to users |
-| `use_case` | VARCHAR(500) | User's explained use case |
-| `requested_at` | TIMESTAMP | When request was submitted |
-| `approved_at` | TIMESTAMP | When request was approved |
-| `admin_notes` | VARCHAR(1000) | Optional admin comments |
+| Column         | Type          | Description                |
+| -------------- | ------------- | -------------------------- |
+| `id`           | TEXT          | Unique identifier          |
+| `user_id`      | TEXT          | Foreign key to users       |
+| `use_case`     | VARCHAR(500)  | User's explained use case  |
+| `requested_at` | TIMESTAMP     | When request was submitted |
+| `approved_at`  | TIMESTAMP     | When request was approved  |
+| `admin_notes`  | VARCHAR(1000) | Optional admin comments    |
 
 ## API Endpoints
 
@@ -52,6 +53,7 @@ CREATE TABLE "access_requests" (
 Submit a new access request.
 
 **Request Body:**
+
 ```json
 {
   "useCase": "Building a mobile app for biometric authentication"
@@ -59,6 +61,7 @@ Submit a new access request.
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -67,6 +70,7 @@ Submit a new access request.
 ```
 
 **Error Responses:**
+
 - `401 Unauthorized` - Not authenticated
 - `400 Bad Request` - Request already exists
 
@@ -75,6 +79,7 @@ Submit a new access request.
 Get current user's access status.
 
 **Response:**
+
 ```json
 {
   "status": "pending",
@@ -91,9 +96,11 @@ Get current user's access status.
 List all access requests.
 
 **Query Parameters:**
+
 - `status` - Filter by status: `pending`, `approved`, `all`
 
 **Response:**
+
 ```json
 {
   "requests": [
@@ -118,6 +125,7 @@ List all access requests.
 Approve or reject a request.
 
 **Request Body:**
+
 ```json
 {
   "requestId": "xxx",
@@ -164,6 +172,7 @@ console.log(`[ADMIN NOTIFICATION] New access request from user ${userId}: ${useC
 ```
 
 **In Production:** Replace this with:
+
 - SMTP email to admin
 - Slack webhook notification
 - SMS alert
@@ -171,6 +180,7 @@ console.log(`[ADMIN NOTIFICATION] New access request from user ${userId}: ${useC
 ## Demo Mode Behavior
 
 In demo mode:
+
 - User is auto-approved
 - No access request submitted
 - Demo API keys shown

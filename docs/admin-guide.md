@@ -8,12 +8,12 @@ This guide explains how administrators can approve or reject user access request
 
 The admin dashboard (`/admin/dashboard`) provides an overview of:
 
-| Metric | Description |
-|--------|-------------|
-| Total Users | Count of all registered users |
-| Total API Keys | Count of all API keys |
-| Active Keys | Keys currently enabled |
-| Recently Used | Keys used in last 24h |
+| Metric         | Description                   |
+| -------------- | ----------------------------- |
+| Total Users    | Count of all registered users |
+| Total API Keys | Count of all API keys         |
+| Active Keys    | Keys currently enabled        |
+| Recently Used  | Keys used in last 24h         |
 
 ## How Requests Are Created
 
@@ -57,11 +57,11 @@ curl http://localhost:3000/api/access/approve?status=all
 
 ## User States
 
-| State | Description | Can Access |
-|-------|-------------|------------|
-| `pending` | Biographic auth complete, access request submitted | Access request form, status page |
-| `approved` | Admin approved access | Dashboard, API keys, docs |
-| `rejected` | Admin denied access | Access request form (new submission) |
+| State      | Description                                        | Can Access                           |
+| ---------- | -------------------------------------------------- | ------------------------------------ |
+| `pending`  | Biographic auth complete, access request submitted | Access request form, status page     |
+| `approved` | Admin approved access                              | Dashboard, API keys, docs            |
+| `rejected` | Admin denied access                                | Access request form (new submission) |
 
 ## Approving Requests
 
@@ -116,12 +116,12 @@ curl -X POST http://localhost:3000/api/access/approve \
 
 ### Common Rejection Reasons
 
-| Reason | Description |
-|--------|-------------|
-| Insufficient detail | Use case too vague |
-| Duplicate request | Already have access |
-| Business policy | Doesn't fit API usage policy |
-| Misuse detected | Previously abused system |
+| Reason              | Description                  |
+| ------------------- | ---------------------------- |
+| Insufficient detail | Use case too vague           |
+| Duplicate request   | Already have access          |
+| Business policy     | Doesn't fit API usage policy |
+| Misuse detected     | Previously abused system     |
 
 ### Approval Checklist
 
@@ -158,11 +158,11 @@ curl http://localhost:3000/api/access/me
 ### List All Users with Status
 
 ```sql
-SELECT 
-    id, 
-    phone_number, 
-    status, 
-    created_at, 
+SELECT
+    id,
+    phone_number,
+    status,
+    created_at,
     approved_at
 FROM users
 ORDER BY created_at DESC;
@@ -175,7 +175,7 @@ To enable admin email notifications, update `sendAdminNotification()` in `src/ap
 ```typescript
 async function sendAdminNotification(userId: string, useCase: string) {
   const adminEmail = process.env.ADMIN_EMAIL;
-  
+
   await sendEmail({
     to: adminEmail,
     subject: `New Access Request - ${userId}`,
@@ -184,7 +184,7 @@ async function sendAdminNotification(userId: string, useCase: string) {
       <p><strong>User ID:</strong> ${userId}</p>
       <p><strong>Use Case:</strong> ${useCase}</p>
       <p><a href="${process.env.ADMIN_PORTAL_URL}/requests">Review in Admin Panel</a></p>
-    `
+    `,
   });
 }
 ```
@@ -195,13 +195,13 @@ The admin dashboard provides real-time API key usage statistics from AWS API Gat
 
 ### Usage Metrics
 
-| Metric | Description |
-|--------|-------------|
-| Total API Keys | Count of all keys |
-| Active Keys | Keys with `is_active = true` |
-| Recently Used | Keys used in last 24h |
-| Total Requests | Sum of all request counts |
-| Inactive Keys | Keys not used in 30 days |
+| Metric         | Description                  |
+| -------------- | ---------------------------- |
+| Total API Keys | Count of all keys            |
+| Active Keys    | Keys with `is_active = true` |
+| Recently Used  | Keys used in last 24h        |
+| Total Requests | Sum of all request counts    |
+| Inactive Keys  | Keys not used in 30 days     |
 
 ### API Endpoint
 
