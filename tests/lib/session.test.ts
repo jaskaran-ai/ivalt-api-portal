@@ -22,6 +22,47 @@ mock.module("iron-session", () => ({
   SessionOptions: class {},
 }));
 
+// Mock the demo module before importing session (other test files
+// may have loaded it first with different values)
+mock.module("@/lib/demo", () => ({
+  DEMO_MODE: true,
+  DEMO_USERS: [
+    {
+      id: "demo-user-approved",
+      phoneNumber: "+919876543210",
+      name: "Jaskaran (Approved)",
+      status: "approved",
+      createdAt: new Date("2025-01-15T10:00:00Z"),
+      updatedAt: new Date("2025-04-01T09:00:00Z"),
+      lastLoginAt: new Date("2025-05-07T08:30:00Z"),
+    },
+  ],
+  getDemoKeys: () => [],
+  addDemoKey: () => {},
+  getDemoAccessRequests: () => [],
+  addDemoAccessRequest: () => {},
+  updateDemoAccessRequest: () => {},
+  getDemoUser: (phone: string) => {
+    const users = [
+      {
+        id: "demo-user-approved",
+        phoneNumber: "+919876543210",
+        name: "Jaskaran (Approved)",
+        status: "approved",
+      },
+    ];
+    return users.find((u) => u.phoneNumber === phone) || undefined;
+  },
+  DEMO_SESSION: {
+    userId: "demo-session-user",
+    phoneNumber: "+919876543210",
+    isLoggedIn: true,
+    accessStatus: "approved",
+    save: async () => {},
+    destroy: () => {},
+  },
+}));
+
 // Set demo mode so we can test the demo path
 process.env.NEXT_PUBLIC_DEMO_MODE = "true";
 
