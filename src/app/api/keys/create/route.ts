@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
       }
 
       const demoUser = DEMO_USERS.find((u) => u.id === session.userId);
-      const userName = demoUser?.name || "Unknown";
+      const userName = demoUser?.name || demoUser?.phoneNumber || `user-${session.userId.slice(0, 8)}`;
 
       await new Promise((r) => setTimeout(r, 600));
 
@@ -96,7 +96,7 @@ export async function POST(req: NextRequest) {
       where: eq(users.id, session.userId),
     });
 
-    const userName = user?.name || "Unknown";
+    const userName = user?.name || user?.phoneNumber || `user-${session.userId.slice(0, 8)}`;
     const phone = user?.phoneNumber || session.phoneNumber || "unknown";
 
     const sanitizedUserName = userName.replace(/[^a-zA-Z0-9]/g, "_");
