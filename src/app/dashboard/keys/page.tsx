@@ -594,7 +594,7 @@ export default function KeysPage() {
           </CardHeader>
           <CardContent className="flex flex-col gap-4 p-6">
             <div className="rounded-2xl border border-border/80 bg-background/70 p-4 font-mono text-xs leading-6">
-              <p className="mb-2 text-muted-foreground">{"// Include in request headers"}</p>
+              <p className="mb-2 text-muted-foreground">{'// Include in request headers'}</p>
               <p>x-api-key: YOUR_API_KEY</p>
             </div>
             <p className="text-sm leading-6 text-muted-foreground">
