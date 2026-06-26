@@ -76,7 +76,7 @@ Copy `.env.local.example` → `.env` and fill in values. Required in production:
 | --------------------------------------------- | ------------------------------------------------- |
 | `DATABASE_URL`                                | PostgreSQL connection string                      |
 | `IVALT_API_BASE_URL`                          | iVALT API base (default: `https://api.ivalt.com`) |
-| `IVALT_API_KEY`                        | iVALT API key sent as the x-api-key header      |
+| `IVALT_API_KEY`                               | iVALT API key sent as the x-api-key header        |
 | `AWS_REGION`                                  | API Gateway region                                |
 | `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` | IAM credentials                                   |
 | `AWS_API_GATEWAY_USAGE_PLAN_ID`               | Usage plan to attach keys to                      |

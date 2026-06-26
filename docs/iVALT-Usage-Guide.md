@@ -182,10 +182,10 @@ https://api.ivalt.com
 
 Every API call requires these HTTP headers:
 
-| Header         | Value                     | Description                 |
-| -------------- | ------------------------- | --------------------------- |
-| `x-api-key`    | Your IVALT API key        | Identifies your application |
-| `Content-Type` | `application/json`        | Request body format         |
+| Header         | Value              | Description                 |
+| -------------- | ------------------ | --------------------------- |
+| `x-api-key`    | Your IVALT API key | Identifies your application |
+| `Content-Type` | `application/json` | Request body format         |
 
 ### Endpoint 1: Initiate Authentication
 
@@ -325,11 +325,11 @@ Use cases for geo-fence authentication:
 
 ### Biometric Auth Request
 
-| Code | Meaning        | Description                            |
-| ---- | -------------- | -------------------------------------- |
-| 200  | Success        | Push notification sent to user's phone |
-| 403  | Invalid API key | API key is missing or incorrect |
-| 404  | User not found | Phone number not registered in iVALT   |
+| Code | Meaning         | Description                            |
+| ---- | --------------- | -------------------------------------- |
+| 200  | Success         | Push notification sent to user's phone |
+| 403  | Invalid API key | API key is missing or incorrect        |
+| 404  | User not found  | Phone number not registered in iVALT   |
 
 ### Biometric Auth Result
 
@@ -405,12 +405,12 @@ The admin interface allows you to:
 
 ### API Key Issues
 
-| Issue               | Solution                                                                         |
-| ------------------- | -------------------------------------------------------------------------------- |
+| Issue               | Solution                                                                  |
+| ------------------- | ------------------------------------------------------------------------- |
 | Key returns 403     | Check if the key is enabled in the portal. Verify the API key is correct. |
-| Lost a key value    | Keys cannot be retrieved. Delete the key and create a new one.                   |
-| Cannot create a key | You may have reached the 4-key limit. Delete an unused key first.                |
-| Key name rejected   | Use at least 3 characters. Avoid special characters.                             |
+| Lost a key value    | Keys cannot be retrieved. Delete the key and create a new one.            |
+| Cannot create a key | You may have reached the 4-key limit. Delete an unused key first.         |
+| Key name rejected   | Use at least 3 characters. Avoid special characters.                      |
 
 ### Access Request Issues
 

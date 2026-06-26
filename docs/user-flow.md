@@ -119,10 +119,10 @@ Click the delete icon. This removes the key from AWS permanently. Any applicatio
 
 Every API call requires these headers:
 
-| Header         | Value                     | Purpose                     |
-| -------------- | ------------------------- | --------------------------- |
-| `x-api-key`    | Your IVALT API key        | Identifies your application |
-| `Content-Type` | `application/json`        | Request format              |
+| Header         | Value              | Purpose                     |
+| -------------- | ------------------ | --------------------------- |
+| `x-api-key`    | Your IVALT API key | Identifies your application |
+| `Content-Type` | `application/json` | Request format              |
 
 ### Flow: Initiate Authentication
 

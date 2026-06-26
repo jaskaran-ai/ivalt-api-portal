@@ -206,7 +206,7 @@ Copy `.env.local.example` → `.env.local`:
 | ------------------------------- | --------- | ------------------------------------------------- |
 | `DATABASE_URL`                  | Yes       | PostgreSQL connection string                      |
 | `IVALT_API_BASE_URL`            | Yes       | iVALT API base (default: `https://api.ivalt.com`) |
-| `IVALT_API_KEY`                      | Yes       | iVALT API key sent as the x-api-key header      |
+| `IVALT_API_KEY`                 | Yes       | iVALT API key sent as the x-api-key header        |
 | `AWS_REGION`                    | Yes       | AWS region (e.g. `us-east-1`)                     |
 | `AWS_ACCESS_KEY_ID`             | Yes       | IAM access key                                    |
 | `AWS_SECRET_ACCESS_KEY`         | Yes       | IAM secret key                                    |
