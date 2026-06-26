@@ -1,37 +1,37 @@
-"use client";
+'use client';
 
-import { useCallback, useState } from "react";
-import { useRouter } from "next/navigation";
 import {
   ArrowRight,
   CheckCircle2,
   Loader2,
-  Smartphone,
   Lock,
-  Sun,
-  Moon,
   Monitor,
-} from "lucide-react";
-import { useTheme } from "@/components/ui/theme-provider";
-import { Logo } from "@/components/ui/logo";
-import { toast } from "sonner";
-import PhoneInput, { type CountryCode, COUNTRY_CODES } from "@/components/ui/phone-input";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
+  Moon,
+  Smartphone,
+  Sun,
+} from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useCallback, useState } from 'react';
+import { toast } from 'sonner';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import { Logo } from '@/components/ui/logo';
+import PhoneInput, { COUNTRY_CODES, type CountryCode } from '@/components/ui/phone-input';
+import { useTheme } from '@/components/ui/theme-provider';
 
 const themeIcons = { light: Sun, dark: Moon, system: Monitor };
-const themeLabels = { light: "Light", dark: "Dark", system: "System" };
-const nextTheme = { light: "dark" as const, dark: "system" as const, system: "light" as const };
+const themeLabels = { light: 'Light', dark: 'Dark', system: 'System' };
+const nextTheme = { light: 'dark' as const, dark: 'system' as const, system: 'light' as const };
 
-type Step = "phone" | "waiting" | "success";
+type Step = 'phone' | 'waiting' | 'success';
 
 export default function AdminLoginPage() {
   const router = useRouter();
   const { theme, setTheme } = useTheme();
-  const [step, setStep] = useState<Step>("phone");
+  const [step, setStep] = useState<Step>('phone');
   const [selectedCountry, setSelectedCountry] = useState<CountryCode>(COUNTRY_CODES[0]);
-  const [phoneNumber, setPhoneNumber] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [pollCount, setPollCount] = useState(0);
 
@@ -43,25 +43,25 @@ export default function AdminLoginPage() {
         attempts++;
         setPollCount(attempts);
         try {
-          const res = await fetch("/api/admin/auth/verify", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
+          const res = await fetch('/api/admin/auth/verify', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ phoneNumber }),
           });
           const data = await res.json();
 
-          if (data.status === "authenticated") {
+          if (data.status === 'authenticated') {
             clearInterval(interval);
-            setStep("success");
-            setTimeout(() => router.push("/admin/dashboard"), 1500);
-          } else if (data.status === "failed" || data.status === "not_found") {
+            setStep('success');
+            setTimeout(() => router.push('/admin/dashboard'), 1500);
+          } else if (data.status === 'failed' || data.status === 'not_found') {
             clearInterval(interval);
-            toast.error("Authentication failed. Please try again.");
-            setStep("phone");
+            toast.error('Authentication failed. Please try again.');
+            setStep('phone');
           } else if (attempts >= maxAttempts) {
             clearInterval(interval);
-            toast.error("Authentication timed out. Please try again.");
-            setStep("phone");
+            toast.error('Authentication timed out. Please try again.');
+            setStep('phone');
           }
         } catch {
           // Keep polling on transient errors.
@@ -71,38 +71,38 @@ export default function AdminLoginPage() {
     [router],
   );
 
-  const fullNumber = `${selectedCountry.code}${phoneNumber.replace(/\D/g, "")}`;
+  const fullNumber = `${selectedCountry.code}${phoneNumber.replace(/\D/g, '')}`;
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!phoneNumber.trim()) {
-      toast.error("Please enter your mobile number");
+      toast.error('Please enter your mobile number');
       return;
     }
 
     setIsLoading(true);
 
     try {
-      const res = await fetch("/api/admin/auth", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const res = await fetch('/api/admin/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ phoneNumber: fullNumber }),
       });
 
       const data = await res.json();
 
       if (!res.ok) {
-        toast.error(data.error || "Authentication failed");
+        toast.error(data.error || 'Authentication failed');
         setIsLoading(false);
         return;
       }
 
       setIsLoading(false);
-      setStep("waiting");
+      setStep('waiting');
       startPolling(fullNumber);
     } catch {
-      toast.error("Network error");
+      toast.error('Network error');
       setIsLoading(false);
     }
   };
@@ -161,22 +161,22 @@ export default function AdminLoginPage() {
 
           <div className="mx-auto w-full max-w-sm">
             <h2 className="text-2xl font-semibold tracking-[-0.025em]">
-              {step === "waiting"
-                ? "Approve on your phone"
-                : step === "success"
-                  ? "Authenticated"
-                  : "Admin Login"}
+              {step === 'waiting'
+                ? 'Approve on your phone'
+                : step === 'success'
+                  ? 'Authenticated'
+                  : 'Admin Login'}
             </h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              {step === "waiting"
+              {step === 'waiting'
                 ? `Request sent to ${fullNumber}`
-                : step === "success"
-                  ? "Redirecting to admin dashboard"
-                  : "Enter your registered mobile number for biometric authentication"}
+                : step === 'success'
+                  ? 'Redirecting to admin dashboard'
+                  : 'Enter your registered mobile number for biometric authentication'}
             </p>
 
             <div className="mt-8">
-              {step === "phone" && (
+              {step === 'phone' && (
                 <form onSubmit={handleLogin} className="flex flex-col gap-5">
                   <div className="flex flex-col gap-2">
                     <Label htmlFor="phone">Mobile Number</Label>
@@ -191,7 +191,7 @@ export default function AdminLoginPage() {
 
                   <Button type="submit" disabled={isLoading} size="lg" className="w-full">
                     {isLoading ? <Loader2 className="animate-spin" /> : null}
-                    {isLoading ? "Sending request..." : "Continue"}
+                    {isLoading ? 'Sending request...' : 'Continue'}
                     {!isLoading && <ArrowRight className="ml-2 size-4" />}
                   </Button>
 
@@ -202,7 +202,7 @@ export default function AdminLoginPage() {
                 </form>
               )}
 
-              {step === "waiting" && (
+              {step === 'waiting' && (
                 <div className="flex flex-col gap-5 py-4 text-center">
                   <div className="mx-auto flex size-20 items-center justify-center rounded-[2rem] bg-primary/10 text-primary">
                     <Smartphone className="size-10" />
@@ -217,21 +217,19 @@ export default function AdminLoginPage() {
                   </div>
                   <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
                     <Loader2 className="size-4 animate-spin" />
-                    Waiting&hellip;{" "}
-                    {(() => {
+                    Waiting&hellip; {(() => {
                       const s = Math.ceil((150 - pollCount) * 2);
                       const m = Math.floor(s / 60);
                       return `${m}m ${s % 60}s`;
-                    })()}{" "}
-                    remaining
+                    })()} remaining
                   </div>
-                  <Button variant="ghost" size="sm" onClick={() => setStep("phone")}>
+                  <Button variant="ghost" size="sm" onClick={() => setStep('phone')}>
                     Use different number
                   </Button>
                 </div>
               )}
 
-              {step === "success" && (
+              {step === 'success' && (
                 <div className="flex flex-col items-center gap-5 py-8 text-center">
                   <div className="flex size-20 items-center justify-center rounded-[2rem] bg-emerald-500/10 text-emerald-700">
                     <CheckCircle2 className="size-10" />

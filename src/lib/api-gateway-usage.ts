@@ -3,10 +3,10 @@
 
 import {
   APIGatewayClient,
-  GetUsagePlanKeysCommand,
   GetUsageCommand,
-} from "@aws-sdk/client-api-gateway";
-import { NodeHttpHandler } from "@smithy/node-http-handler";
+  GetUsagePlanKeysCommand,
+} from '@aws-sdk/client-api-gateway';
+import { NodeHttpHandler } from '@smithy/node-http-handler';
 
 const requestHandler = new NodeHttpHandler({
   requestTimeout: 5000,
@@ -28,11 +28,11 @@ const requestHandler = new NodeHttpHandler({
 function makeClient(): APIGatewayClient {
   const accessKeyId = process.env.AWS_ACCESS_KEY_ID;
   const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
-  const region = process.env.AWS_REGION || "us-east-1";
+  const region = process.env.AWS_REGION || 'us-east-1';
 
   if (!accessKeyId || !secretAccessKey) {
     throw new Error(
-      "AWS credentials not configured. Set AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY in .env, or enable NEXT_PUBLIC_DEMO_MODE=true",
+      'AWS credentials not configured. Set AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY in .env, or enable NEXT_PUBLIC_DEMO_MODE=true',
     );
   }
 
@@ -56,7 +56,7 @@ export function getClient(): APIGatewayClient {
 }
 
 // DEMO MODE - Returns mock data
-const DEMO_MODE = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
+const DEMO_MODE = process.env.NEXT_PUBLIC_DEMO_MODE === 'true';
 
 export interface ApiKeyUsage {
   awsKeyId: string;
@@ -67,9 +67,9 @@ export async function fetchApiKeyUsage(): Promise<ApiKeyUsage[]> {
   // In demo mode, return mock usage data
   if (DEMO_MODE) {
     return [
-      { awsKeyId: "demo-key-001", usageCount: 15420 },
-      { awsKeyId: "demo-key-002", usageCount: 8750 },
-      { awsKeyId: "demo-key-003", usageCount: 0 },
+      { awsKeyId: 'demo-key-001', usageCount: 15420 },
+      { awsKeyId: 'demo-key-002', usageCount: 8750 },
+      { awsKeyId: 'demo-key-003', usageCount: 0 },
     ];
   }
 
@@ -126,7 +126,7 @@ export async function fetchApiKeyUsage(): Promise<ApiKeyUsage[]> {
       });
     }
   } catch (error) {
-    console.error("Error fetching API key usage:", error);
+    console.error('Error fetching API key usage:', error);
     // Return empty array on error - usage tracking is not critical
     return [];
   }

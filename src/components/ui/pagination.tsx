@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 interface PaginationProps {
   page: number;
@@ -18,7 +18,7 @@ export function Pagination({ page, perPage, total, totalPages, onPageChange }: P
   const end = Math.min(page * perPage, total);
 
   const getPageNumbers = () => {
-    const pages: (number | "ellipsis")[] = [];
+    const pages: (number | 'ellipsis')[] = [];
     const range = 2;
     const startPage = Math.max(2, page - range);
     const endPage = Math.min(totalPages - 1, page + range);
@@ -26,7 +26,7 @@ export function Pagination({ page, perPage, total, totalPages, onPageChange }: P
     pages.push(1);
 
     if (startPage > 2) {
-      pages.push("ellipsis");
+      pages.push('ellipsis');
     }
 
     for (let i = startPage; i <= endPage; i++) {
@@ -34,7 +34,7 @@ export function Pagination({ page, perPage, total, totalPages, onPageChange }: P
     }
 
     if (endPage < totalPages - 1) {
-      pages.push("ellipsis");
+      pages.push('ellipsis');
     }
 
     if (totalPages > 1) {
@@ -50,12 +50,7 @@ export function Pagination({ page, perPage, total, totalPages, onPageChange }: P
         Showing {start} to {end} of {total} results
       </p>
       <div className="flex items-center gap-1">
-        <Button
-          variant="ghost"
-          size="sm"
-          disabled={page <= 1}
-          onClick={() => onPageChange(1)}
-        >
+        <Button variant="ghost" size="sm" disabled={page <= 1} onClick={() => onPageChange(1)}>
           <ChevronsLeft className="size-4" />
         </Button>
         <Button
@@ -67,21 +62,22 @@ export function Pagination({ page, perPage, total, totalPages, onPageChange }: P
           <ChevronLeft className="size-4" />
         </Button>
         {getPageNumbers().map((p, i) =>
-          p === "ellipsis" ? (
+          p === 'ellipsis' ? (
+            // biome-ignore lint/suspicious/noArrayIndexKey: ellipsis has no unique value and key includes index
             <span key={`ellipsis-${i}`} className="px-2 text-sm text-muted-foreground">
               …
-        </span>
+            </span>
           ) : (
             <Button
               key={p}
-              variant={p === page ? "default" : "ghost"}
+              variant={p === page ? 'default' : 'ghost'}
               size="sm"
               className="min-w-9"
               onClick={() => onPageChange(p)}
             >
               {p}
             </Button>
-          )
+          ),
         )}
         <Button
           variant="ghost"

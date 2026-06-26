@@ -1,13 +1,11 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import Link from "next/link";
-import { ShieldCheck, Key, Users, Clock, Activity, BarChart3, TrendingUp } from "lucide-react";
-import AdminShell from "@/components/layout/AdminShell";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+import { Activity, Key, TrendingUp, Users } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import AdminShell from '@/components/layout/AdminShell';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
 
 interface UsageStats {
   summary?: {
@@ -35,11 +33,11 @@ export default function AdminDashboardPage() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const res = await fetch("/api/admin/usage");
+        const res = await fetch('/api/admin/usage');
         const data = await res.json();
         setStats(data);
       } catch (error) {
-        console.error("Failed to fetch stats:", error);
+        console.error('Failed to fetch stats:', error);
       } finally {
         setLoading(false);
       }
@@ -73,7 +71,9 @@ export default function AdminDashboardPage() {
           <Card>
             <CardHeader className="pb-2">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-sm font-medium text-muted-foreground">Total Users</CardTitle>
+                <CardTitle className="text-sm font-medium text-muted-foreground">
+                  Total Users
+                </CardTitle>
                 <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
                   <Users className="h-4 w-4 text-primary" />
                 </div>
@@ -90,7 +90,9 @@ export default function AdminDashboardPage() {
           <Card>
             <CardHeader className="pb-2">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-sm font-medium text-muted-foreground">Total API Keys</CardTitle>
+                <CardTitle className="text-sm font-medium text-muted-foreground">
+                  Total API Keys
+                </CardTitle>
                 <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-500/10">
                   <Key className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
                 </div>
@@ -107,7 +109,9 @@ export default function AdminDashboardPage() {
           <Card>
             <CardHeader className="pb-2">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-sm font-medium text-muted-foreground">Total Requests</CardTitle>
+                <CardTitle className="text-sm font-medium text-muted-foreground">
+                  Total Requests
+                </CardTitle>
                 <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-500/10">
                   <TrendingUp className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
                 </div>
@@ -124,7 +128,9 @@ export default function AdminDashboardPage() {
           <Card>
             <CardHeader className="pb-2">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-sm font-medium text-muted-foreground">Recently Used</CardTitle>
+                <CardTitle className="text-sm font-medium text-muted-foreground">
+                  Recently Used
+                </CardTitle>
                 <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-500/10">
                   <Activity className="h-4 w-4 text-amber-600 dark:text-amber-400" />
                 </div>
@@ -174,8 +180,8 @@ export default function AdminDashboardPage() {
                       </td>
                       <td className="px-2 py-3 text-right">{key.usageCount.toLocaleString()}</td>
                       <td className="px-2 py-3 text-right">
-                        <Badge variant={key.isActive ? "secondary" : "destructive"}>
-                          {key.isActive ? "Active" : "Inactive"}
+                        <Badge variant={key.isActive ? 'secondary' : 'destructive'}>
+                          {key.isActive ? 'Active' : 'Inactive'}
                         </Badge>
                       </td>
                     </tr>

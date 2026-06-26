@@ -1,20 +1,20 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
 import {
-  ShieldCheck,
   Activity,
   AlertCircle,
-  CheckCircle2,
-  XCircle,
-  RefreshCw,
-  Mail,
-  Loader2,
-  Send,
   Bell,
+  CheckCircle2,
+  Loader2,
+  Mail,
+  RefreshCw,
+  Send,
+  ShieldCheck,
   UserCheck,
   UserX,
-} from "lucide-react";
+  XCircle,
+} from 'lucide-react';
+import { useCallback, useEffect, useState } from 'react';
 
 interface HealthCheck {
   status: string;
@@ -40,41 +40,41 @@ const checkIcons: Record<string, React.ReactNode> = {
 };
 
 const checkLabels: Record<string, string> = {
-  env: "Environment Variables",
-  database: "PostgreSQL Database",
-  ivaltApi: "iVALT API",
-  smtp: "SMTP (Email)",
-  aws: "AWS API Gateway",
+  env: 'Environment Variables',
+  database: 'PostgreSQL Database',
+  ivaltApi: 'iVALT API',
+  smtp: 'SMTP (Email)',
+  aws: 'AWS API Gateway',
 };
 
 const emailTemplates = [
   {
-    id: "admin-notification",
-    label: "Admin Notification",
+    id: 'admin-notification',
+    label: 'Admin Notification',
     icon: Bell,
-    desc: "Alert admin about new access request",
-    fields: ["userName", "userPhone", "useCase"],
-    subject: "New Access Request - iVALT Portal (TEST)",
+    desc: 'Alert admin about new access request',
+    fields: ['userName', 'userPhone', 'useCase'],
+    subject: 'New Access Request - iVALT Portal (TEST)',
   },
   {
-    id: "user-approved",
-    label: "User Approved",
+    id: 'user-approved',
+    label: 'User Approved',
     icon: UserCheck,
-    desc: "Notify user their access was approved",
-    fields: ["userName"],
-    subject: "Access Approved - iVALT Portal (TEST)",
+    desc: 'Notify user their access was approved',
+    fields: ['userName'],
+    subject: 'Access Approved - iVALT Portal (TEST)',
   },
   {
-    id: "user-rejected",
-    label: "User Rejected",
+    id: 'user-rejected',
+    label: 'User Rejected',
     icon: UserX,
-    desc: "Notify user their access was rejected",
-    fields: ["userName"],
-    subject: "Access Update - iVALT Portal (TEST)",
+    desc: 'Notify user their access was rejected',
+    fields: ['userName'],
+    subject: 'Access Update - iVALT Portal (TEST)',
   },
 ] as const;
 
-type EmailTemplateId = (typeof emailTemplates)[number]["id"];
+type EmailTemplateId = (typeof emailTemplates)[number]['id'];
 
 export default function DebugPage() {
   const [health, setHealth] = useState<HealthResponse | null>(null);
@@ -82,19 +82,19 @@ export default function DebugPage() {
   const [error, setError] = useState<string | null>(null);
 
   // Test email state
-  const [emailTo, setEmailTo] = useState("");
-  const [selectedTemplate, setSelectedTemplate] = useState<EmailTemplateId>("admin-notification");
-  const [userName, setUserName] = useState("");
-  const [userPhone, setUserPhone] = useState("");
-  const [useCase, setUseCase] = useState("");
+  const [emailTo, setEmailTo] = useState('');
+  const [selectedTemplate, setSelectedTemplate] = useState<EmailTemplateId>('admin-notification');
+  const [userName, setUserName] = useState('');
+  const [userPhone, setUserPhone] = useState('');
+  const [useCase, setUseCase] = useState('');
   const [sending, setSending] = useState(false);
   const [emailResult, setEmailResult] = useState<{ ok: boolean; message: string } | null>(null);
 
-  const fetchHealth = async () => {
+  const fetchHealth = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("/api/health");
+      const res = await fetch('/api/health');
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       setHealth(await res.json());
     } catch (err) {
@@ -102,14 +102,14 @@ export default function DebugPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchHealth();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [fetchHealth]);
 
-  const template = emailTemplates.find((t) => t.id === selectedTemplate)!;
+  const template = emailTemplates.find((t) => t.id === selectedTemplate) || emailTemplates[0];
   const hasField = (field: string) => (template.fields as readonly string[]).includes(field);
 
   const handleSendTestEmail = async (e: React.FormEvent) => {
@@ -118,9 +118,9 @@ export default function DebugPage() {
     setSending(true);
     setEmailResult(null);
     try {
-      const res = await fetch("/api/health/send-test-email", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const res = await fetch('/api/health/send-test-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           to: emailTo.trim(),
           template: selectedTemplate,
@@ -133,7 +133,7 @@ export default function DebugPage() {
       if (res.ok) {
         setEmailResult({ ok: true, message: `Sent! ID: ${data.messageId} · ${data.subject}` });
       } else {
-        setEmailResult({ ok: false, message: data.error || "Failed to send" });
+        setEmailResult({ ok: false, message: data.error || 'Failed to send' });
       }
     } catch (err) {
       setEmailResult({ ok: false, message: String(err) });
@@ -161,7 +161,7 @@ export default function DebugPage() {
             disabled={loading}
             className="flex items-center gap-1.5 rounded-xl border border-border bg-background px-3 py-2 text-sm transition-colors hover:bg-muted disabled:opacity-50"
           >
-            <RefreshCw className={`size-4 ${loading ? "animate-spin" : ""}`} />
+            <RefreshCw className={`size-4 ${loading ? 'animate-spin' : ''}`} />
             Refresh
           </button>
         </div>
@@ -186,12 +186,12 @@ export default function DebugPage() {
               <span className="font-medium">Overall Status:</span>
               <span
                 className={
-                  health.status === "healthy"
-                    ? "font-medium text-emerald-600"
-                    : "font-medium text-amber-600"
+                  health.status === 'healthy'
+                    ? 'font-medium text-emerald-600'
+                    : 'font-medium text-amber-600'
                 }
               >
-                {health.status === "healthy" ? "Healthy" : "Degraded"}
+                {health.status === 'healthy' ? 'Healthy' : 'Degraded'}
               </span>
               <span className="ml-auto text-xs text-muted-foreground">
                 {new Date(health.timestamp).toLocaleString()}
@@ -240,8 +240,8 @@ export default function DebugPage() {
                   onClick={() => setSelectedTemplate(t.id)}
                   className={`flex flex-1 flex-col items-center gap-1.5 rounded-xl border px-3 py-2.5 text-xs transition-colors ${
                     isActive
-                      ? "border-primary bg-primary/5 font-medium text-primary"
-                      : "border-border/60 bg-background text-muted-foreground hover:bg-muted"
+                      ? 'border-primary bg-primary/5 font-medium text-primary'
+                      : 'border-border/60 bg-background text-muted-foreground hover:bg-muted'
                   }`}
                 >
                   <Icon className="size-4" />
@@ -266,7 +266,7 @@ export default function DebugPage() {
               />
             </div>
 
-            {template.fields.includes("userName") && (
+            {template.fields.includes('userName') && (
               <div>
                 <label htmlFor="userName" className="mb-1.5 block text-sm font-medium">
                   User Name
@@ -282,7 +282,7 @@ export default function DebugPage() {
               </div>
             )}
 
-            {hasField("userPhone") && (
+            {hasField('userPhone') && (
               <div>
                 <label htmlFor="userPhone" className="mb-1.5 block text-sm font-medium">
                   User Phone
@@ -298,7 +298,7 @@ export default function DebugPage() {
               </div>
             )}
 
-            {hasField("useCase") && (
+            {hasField('useCase') && (
               <div>
                 <label htmlFor="useCase" className="mb-1.5 block text-sm font-medium">
                   Use Case
@@ -320,7 +320,7 @@ export default function DebugPage() {
               className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-50"
             >
               {sending ? <Loader2 className="size-4 animate-spin" /> : <Send className="size-4" />}
-              {sending ? "Sending..." : `Send ${template.label}`}
+              {sending ? 'Sending...' : `Send ${template.label}`}
             </button>
           </form>
 
@@ -328,8 +328,8 @@ export default function DebugPage() {
             <div
               className={`mt-4 flex items-start gap-2 rounded-xl px-4 py-3 text-sm ${
                 emailResult.ok
-                  ? "border border-emerald-200 bg-emerald-50 text-emerald-700"
-                  : "border border-red-200 bg-red-50 text-red-700"
+                  ? 'border border-emerald-200 bg-emerald-50 text-emerald-700'
+                  : 'border border-red-200 bg-red-50 text-red-700'
               }`}
             >
               {emailResult.ok ? (

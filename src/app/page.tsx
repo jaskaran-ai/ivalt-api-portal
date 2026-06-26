@@ -1,14 +1,14 @@
-import { redirect } from "next/navigation";
-import { getSession } from "@/lib/session";
-import { DEMO_MODE } from "@/lib/demo";
+import { redirect } from 'next/navigation';
+import { DEMO_MODE } from '@/lib/demo';
+import { getSession } from '@/lib/session';
 
 export default async function Home() {
   if (DEMO_MODE) {
-    redirect("/login");
+    redirect('/login');
   }
   const session = await getSession();
   if (session.isLoggedIn) {
-    redirect("/dashboard");
+    redirect('/dashboard');
   }
-  redirect("/login");
+  redirect('/login');
 }

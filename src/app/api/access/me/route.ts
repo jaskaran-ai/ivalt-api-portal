@@ -1,23 +1,23 @@
-import { NextRequest, NextResponse } from "next/server";
-import { DEMO_MODE } from "@/lib/demo";
-import { getSession } from "@/lib/session";
-import { db } from "@/db";
-import { users, accessRequests } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { eq } from 'drizzle-orm';
+import { type NextRequest, NextResponse } from 'next/server';
+import { db } from '@/db';
+import { users } from '@/db/schema';
+import { DEMO_MODE } from '@/lib/demo';
+import { getSession } from '@/lib/session';
 
-export async function GET(req: NextRequest) {
+export async function GET(_req: NextRequest) {
   try {
     const session = await getSession();
     const userId = session.userId;
 
     if (!userId) {
-      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+      return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
     }
 
     // ── DEMO MODE ─────────────────────────────────────────────────────────────
     if (DEMO_MODE) {
       return NextResponse.json({
-        status: session.accessStatus || "pending",
+        status: session.accessStatus || 'pending',
         request: null,
       });
     }
@@ -33,11 +33,11 @@ export async function GET(req: NextRequest) {
 
     // Return the user's status - if no user record, they need to complete access request
     return NextResponse.json({
-      status: user?.status || "pending",
+      status: user?.status || 'pending',
       request: request || null,
     });
   } catch (error) {
-    console.error("Get access status error:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    console.error('Get access status error:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

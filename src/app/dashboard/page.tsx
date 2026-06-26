@@ -1,9 +1,4 @@
-import { getSession } from "@/lib/session";
-import { DEMO_MODE, getDemoKeys } from "@/lib/demo";
-import { db } from "@/db";
-import { apiKeys } from "@/db/schema";
-import { eq, count } from "drizzle-orm";
-import Link from "next/link";
+import { count, eq } from 'drizzle-orm';
 import {
   Activity,
   ArrowRight,
@@ -15,18 +10,23 @@ import {
   Key,
   LockKeyhole,
   ShieldCheck,
-} from "lucide-react";
+} from 'lucide-react';
+import Link from 'next/link';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
-  CardHeader,
-  CardTitle,
   CardDescription,
   CardFooter,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
+import { db } from '@/db';
+import { apiKeys } from '@/db/schema';
+import { DEMO_MODE, getDemoKeys } from '@/lib/demo';
+import { getSession } from '@/lib/session';
 
 const MAX_KEYS = 4;
 
@@ -66,10 +66,10 @@ export default async function DashboardPage() {
                 Demo Mode
               </Badge>
               <span className="text-muted-foreground">
-                You are viewing safe demo data. Set{" "}
+                You are viewing safe demo data. Set{' '}
                 <code className="rounded bg-card px-1.5 py-0.5 text-xs text-foreground">
                   NEXT_PUBLIC_DEMO_MODE=false
-                </code>{" "}
+                </code>{' '}
                 to connect live services.
               </span>
             </div>
@@ -162,10 +162,10 @@ export default async function DashboardPage() {
                   <p className="text-5xl font-semibold tracking-[-0.04em]">{usagePercent}%</p>
                   <p className="text-sm text-muted-foreground">of key allowance used</p>
                 </div>
-                <Badge variant={availableSlots > 0 ? "secondary" : "destructive"}>
+                <Badge variant={availableSlots > 0 ? 'secondary' : 'destructive'}>
                   {availableSlots > 0
-                    ? `${availableSlots} slot${availableSlots === 1 ? "" : "s"} open`
-                    : "Limit reached"}
+                    ? `${availableSlots} slot${availableSlots === 1 ? '' : 's'} open`
+                    : 'Limit reached'}
                 </Badge>
               </div>
               <div className="h-3 overflow-hidden rounded-full bg-muted">
@@ -196,7 +196,7 @@ export default async function DashboardPage() {
                 </div>
                 <div>
                   <p className="text-sm font-medium">
-                    {activeCount} active credential{activeCount === 1 ? "" : "s"}
+                    {activeCount} active credential{activeCount === 1 ? '' : 's'}
                   </p>
                   <p className="text-xs text-muted-foreground">
                     Disable unused keys without deleting history.
@@ -208,11 +208,11 @@ export default async function DashboardPage() {
           <CardFooter className="bg-muted/40 p-6">
             <Button
               asChild
-              variant={keyCount < MAX_KEYS ? "default" : "secondary"}
+              variant={keyCount < MAX_KEYS ? 'default' : 'secondary'}
               className="w-full"
             >
               <Link href="/dashboard/keys">
-                {keyCount < MAX_KEYS ? "Create or manage keys" : "Review keys"}
+                {keyCount < MAX_KEYS ? 'Create or manage keys' : 'Review keys'}
                 <ArrowRight data-icon="inline-end" />
               </Link>
             </Button>

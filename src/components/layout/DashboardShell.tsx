@@ -1,45 +1,42 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { toast } from "sonner";
 import {
-  ShieldCheck,
-  LayoutDashboard,
   BookOpen,
-  LogOut,
-  Key,
-  FlaskConical,
   ExternalLink,
-  HelpCircle,
-  Settings,
-  Minus,
-} from "lucide-react";
+  FlaskConical,
+  Key,
+  LayoutDashboard,
+  LogOut,
+  ShieldCheck,
+} from 'lucide-react';
+import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { toast } from 'sonner';
 
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
-  SidebarHeader,
   SidebarGroup,
-  SidebarGroupLabel,
   SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarInset,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarProvider,
-  SidebarInset,
+  SidebarRail,
   SidebarSeparator,
   SidebarTrigger,
-  SidebarRail,
-} from "@/components/ui/sidebar";
-import { ThemeToggle } from "@/components/ui/theme-toggle";
+} from '@/components/ui/sidebar';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
 
 const navItems = [
-  { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { label: "API Keys", href: "/dashboard/keys", icon: Key },
-  { label: "API Docs", href: "/dashboard/docs", icon: BookOpen },
+  { label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
+  { label: 'API Keys', href: '/dashboard/keys', icon: Key },
+  { label: 'API Docs', href: '/dashboard/docs', icon: BookOpen },
 ];
 
 interface DashboardShellProps {
@@ -55,7 +52,9 @@ export default function DashboardShell({
 }: DashboardShellProps) {
   return (
     <SidebarProvider defaultOpen={true}>
-      <SidebarContentLayout children={children} phoneNumber={phoneNumber} demoMode={demoMode} />
+      <SidebarContentLayout phoneNumber={phoneNumber} demoMode={demoMode}>
+        {children}
+      </SidebarContentLayout>
     </SidebarProvider>
   );
 }
@@ -67,17 +66,17 @@ function SidebarContentLayout({ children, phoneNumber, demoMode }: DashboardShel
 
   const handleLogout = async () => {
     setLoggingOut(true);
-    await fetch("/api/auth/logout", { method: "POST" });
-    toast.success(demoMode ? "Exited demo mode" : "Logged out successfully");
-    router.push("/login");
+    await fetch('/api/auth/logout', { method: 'POST' });
+    toast.success(demoMode ? 'Exited demo mode' : 'Logged out successfully');
+    router.push('/login');
   };
 
   const maskedPhone = phoneNumber
     ? `${phoneNumber.slice(0, Math.min(4, phoneNumber.length))}••••${phoneNumber.slice(-3)}`
-    : "Unknown";
+    : 'Unknown';
 
   const activeItem = navItems.find(
-    (n) => n.href === pathname || (n.href !== "/dashboard" && pathname.startsWith(n.href)),
+    (n) => n.href === pathname || (n.href !== '/dashboard' && pathname.startsWith(n.href)),
   );
 
   return (
@@ -116,7 +115,7 @@ function SidebarContentLayout({ children, phoneNumber, demoMode }: DashboardShel
                 {navItems.map((item) => {
                   const isActive =
                     pathname === item.href ||
-                    (item.href !== "/dashboard" && pathname.startsWith(item.href));
+                    (item.href !== '/dashboard' && pathname.startsWith(item.href));
                   const Icon = item.icon;
                   return (
                     <SidebarMenuItem key={item.href}>
@@ -167,14 +166,14 @@ function SidebarContentLayout({ children, phoneNumber, demoMode }: DashboardShel
           <div className="mb-2 px-2 group-data-[state=collapsed]:hidden">
             <div className="flex items-center gap-3 rounded-2xl border border-sidebar-border/80 bg-sidebar-accent/80 p-2.5">
               <div className="flex size-8 shrink-0 items-center justify-center rounded-2xl bg-primary text-xs font-bold text-primary-foreground">
-                {phoneNumber.slice(-2) || "DM"}
+                {phoneNumber.slice(-2) || 'DM'}
               </div>
               <div className="min-w-0 flex-1">
                 <p className="truncate text-xs font-medium">
-                  {demoMode ? "Demo User" : maskedPhone}
+                  {demoMode ? 'Demo User' : maskedPhone}
                 </p>
                 <p className="truncate text-xs text-sidebar-foreground/60">
-                  {demoMode ? "Demo account" : "Verified via iVALT"}
+                  {demoMode ? 'Demo account' : 'Verified via iVALT'}
                 </p>
               </div>
             </div>
@@ -186,12 +185,12 @@ function SidebarContentLayout({ children, phoneNumber, demoMode }: DashboardShel
               <SidebarMenuButton
                 onClick={handleLogout}
                 disabled={loggingOut}
-                tooltip={demoMode ? "Exit Demo" : "Log out"}
+                tooltip={demoMode ? 'Exit Demo' : 'Log out'}
                 className="text-sidebar-foreground/80 hover:text-destructive"
               >
                 <LogOut className="h-5 w-5" />
                 <span className="group-data-[state=collapsed]:hidden">
-                  {loggingOut ? "Logging out…" : demoMode ? "Exit Demo" : "Log out"}
+                  {loggingOut ? 'Logging out…' : demoMode ? 'Exit Demo' : 'Log out'}
                 </span>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -212,7 +211,7 @@ function SidebarContentLayout({ children, phoneNumber, demoMode }: DashboardShel
           </div>
           <div className="min-w-0 flex-1">
             <h1 className="truncate text-base font-semibold tracking-[-0.01em] text-foreground md:text-lg">
-              {activeItem?.label || "Dashboard"}
+              {activeItem?.label || 'Dashboard'}
             </h1>
           </div>
           {demoMode && (

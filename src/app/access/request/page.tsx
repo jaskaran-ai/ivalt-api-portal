@@ -1,18 +1,18 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { ArrowRight, Loader2, Lock, ShieldCheck, FileText, CheckCircle2 } from "lucide-react";
-import { toast } from "sonner";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { ArrowRight, CheckCircle2, FileText, Loader2, Lock, ShieldCheck } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { toast } from 'sonner';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 
 export default function AccessRequestPage() {
   const router = useRouter();
-  const [useCase, setUseCase] = useState("");
+  const [useCase, setUseCase] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
@@ -20,23 +20,23 @@ export default function AccessRequestPage() {
     e.preventDefault();
 
     if (!useCase.trim() || useCase.trim().length < 10) {
-      toast.error("Please describe your use case in at least 10 characters");
+      toast.error('Please describe your use case in at least 10 characters');
       return;
     }
 
     setIsLoading(true);
 
     try {
-      const res = await fetch("/api/access/request", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const res = await fetch('/api/access/request', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ useCase: useCase.trim() }),
       });
 
       if (!res.ok) {
         const data = await res.json();
         if (data.existing) {
-          router.push("/access/status");
+          router.push('/access/status');
           return;
         }
         throw new Error(data.error);
@@ -44,7 +44,7 @@ export default function AccessRequestPage() {
 
       setSubmitted(true);
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Failed to submit request");
+      toast.error(error instanceof Error ? error.message : 'Failed to submit request');
     } finally {
       setIsLoading(false);
     }
@@ -95,7 +95,7 @@ export default function AccessRequestPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="p-6">
-                <Button onClick={() => router.push("/access/status")} className="w-full" size="lg">
+                <Button onClick={() => router.push('/access/status')} className="w-full" size="lg">
                   View Status
                 </Button>
               </CardContent>
@@ -142,9 +142,9 @@ export default function AccessRequestPage() {
 
           <div className="grid max-w-2xl gap-3 sm:grid-cols-3">
             {[
-              { label: "Admin review", text: "Manual approval by admin team" },
-              { label: "Secure access", text: "Only approved users get API keys" },
-              { label: "Email notification", text: "You'll be notified when approved" },
+              { label: 'Admin review', text: 'Manual approval by admin team' },
+              { label: 'Secure access', text: 'Only approved users get API keys' },
+              { label: 'Email notification', text: "You'll be notified when approved" },
             ].map((item) => (
               <div
                 key={item.label}

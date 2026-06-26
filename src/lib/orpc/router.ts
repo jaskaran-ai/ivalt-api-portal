@@ -1,4 +1,4 @@
-import { listAdminUsers, listAdminKeys, listAccessRequests } from "./procedures/admin";
+import { listAccessRequests, listAdminKeys, listAdminUsers } from './procedures/admin';
 
 export const router = {
   admin: {

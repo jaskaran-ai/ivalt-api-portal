@@ -1,24 +1,24 @@
-import { getIronSession, SessionOptions } from "iron-session";
-import { cookies } from "next/headers";
-import { DEMO_MODE, DEMO_SESSION, getDemoUser } from "./demo";
+import { getIronSession, type SessionOptions } from 'iron-session';
+import { cookies } from 'next/headers';
+import { DEMO_MODE, DEMO_SESSION, getDemoUser } from './demo';
 
 export interface SessionData {
   userId?: string;
   phoneNumber?: string;
   isLoggedIn?: boolean;
-  accessStatus?: "pending" | "approved" | "rejected";
-  role?: "admin" | "user";
+  accessStatus?: 'pending' | 'approved' | 'rejected';
+  role?: 'admin' | 'user';
   save?: () => Promise<void>;
   destroy?: () => void;
 }
 
 export const sessionOptions: SessionOptions = {
-  password: process.env.SESSION_SECRET || "demo-secret-key-minimum-32-characters-here!!",
-  cookieName: "ivalt_portal_session",
+  password: process.env.SESSION_SECRET || 'demo-secret-key-minimum-32-characters-here!!',
+  cookieName: 'ivalt_portal_session',
   cookieOptions: {
-    secure: process.env.NODE_ENV === "production",
+    secure: process.env.NODE_ENV === 'production',
     httpOnly: true,
-    sameSite: "lax",
+    sameSite: 'lax',
     maxAge: 60 * 60 * 24 * 7,
   },
 };
@@ -26,7 +26,7 @@ export const sessionOptions: SessionOptions = {
 export async function getSession(): Promise<SessionData> {
   if (DEMO_MODE) {
     const cookieStore = await cookies();
-    const demoUserCookie = cookieStore.get("demo_user");
+    const demoUserCookie = cookieStore.get('demo_user');
     if (demoUserCookie?.value) {
       const user = getDemoUser(demoUserCookie.value);
       if (user) {
@@ -42,7 +42,7 @@ export async function getSession(): Promise<SessionData> {
     }
     return {
       ...DEMO_SESSION,
-      accessStatus: "approved" as const,
+      accessStatus: 'approved' as const,
       save: async () => {},
       destroy: () => {},
     };

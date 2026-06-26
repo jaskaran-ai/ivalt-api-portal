@@ -1,9 +1,9 @@
-import { z } from "zod";
-import { base, paginationSchema, paginatedResponse, type PaginatedResult } from "..";
-import { DEMO_MODE } from "@/lib/demo";
-import { db } from "@/db";
-import { users, apiKeys, accessRequests } from "@/db/schema";
-import { eq, and, isNull, isNotNull, count, like, or, sql } from "drizzle-orm";
+import { and, count, eq, isNotNull, isNull, like, or } from 'drizzle-orm';
+import { z } from 'zod';
+import { db } from '@/db';
+import { accessRequests, apiKeys, users } from '@/db/schema';
+import { DEMO_MODE } from '@/lib/demo';
+import { base, type PaginatedResult, paginatedResponse, paginationSchema } from '..';
 
 // ── Shared response schemas ──────────────────────────────────────────────────
 
@@ -57,14 +57,14 @@ const AccessRequestSchema = z.object({
 export const listAdminUsers = base
   .input(
     paginationSchema.extend({
-      status: z.enum(["all", "approved", "pending", "rejected"]).default("all"),
+      status: z.enum(['all', 'approved', 'pending', 'rejected']).default('all'),
     }),
   )
   .handler(async ({ input }): Promise<PaginatedResult<z.infer<typeof AdminUserSchema>>> => {
     if (DEMO_MODE) {
-      const { getDemoAdminUsers } = await import("@/lib/demo");
+      const { getDemoAdminUsers } = await import('@/lib/demo');
       const all = getDemoAdminUsers() as z.infer<typeof AdminUserSchema>[];
-      const filtered = input.status === "all" ? all : all.filter((u) => u.status === input.status);
+      const filtered = input.status === 'all' ? all : all.filter((u) => u.status === input.status);
       const start = (input.page - 1) * input.perPage;
       return paginatedResponse(
         filtered.slice(start, start + input.perPage),
@@ -76,8 +76,7 @@ export const listAdminUsers = base
 
     const offset = (input.page - 1) * input.perPage;
 
-    const whereClause =
-      input.status === "all" ? undefined : eq(users.status, input.status);
+    const whereClause = input.status === 'all' ? undefined : eq(users.status, input.status);
 
     const [{ count: total }] = await db
       .select({ count: count() })
@@ -85,7 +84,14 @@ export const listAdminUsers = base
       .where(whereClause ?? undefined);
 
     const rows = await db.query.users.findMany({
-      columns: { id: true, phoneNumber: true, name: true, status: true, createdAt: true, approvedAt: true },
+      columns: {
+        id: true,
+        phoneNumber: true,
+        name: true,
+        status: true,
+        createdAt: true,
+        approvedAt: true,
+      },
       where: whereClause,
       limit: input.perPage,
       offset,
@@ -113,17 +119,17 @@ export const listAdminUsers = base
 export const listAdminKeys = base
   .input(
     paginationSchema.extend({
-      status: z.enum(["all", "active", "inactive"]).default("all"),
+      status: z.enum(['all', 'active', 'inactive']).default('all'),
       search: z.string().optional(),
     }),
   )
   .handler(async ({ input }): Promise<PaginatedResult<z.infer<typeof AdminKeySchema>>> => {
     if (DEMO_MODE) {
-      const { getDemoAdminKeys } = await import("@/lib/demo");
+      const { getDemoAdminKeys } = await import('@/lib/demo');
       const all = getDemoAdminKeys() as z.infer<typeof AdminKeySchema>[];
       let filtered = all;
-      if (input.status === "active") filtered = filtered.filter((k) => k.isActive);
-      if (input.status === "inactive") filtered = filtered.filter((k) => !k.isActive);
+      if (input.status === 'active') filtered = filtered.filter((k) => k.isActive);
+      if (input.status === 'inactive') filtered = filtered.filter((k) => !k.isActive);
       if (input.search) {
         const q = input.search.toLowerCase();
         filtered = filtered.filter(
@@ -145,8 +151,8 @@ export const listAdminKeys = base
     const offset = (input.page - 1) * input.perPage;
 
     const conditions: ReturnType<typeof eq>[] = [];
-    if (input.status === "active") conditions.push(eq(apiKeys.isActive, true));
-    if (input.status === "inactive") conditions.push(eq(apiKeys.isActive, false));
+    if (input.status === 'active') conditions.push(eq(apiKeys.isActive, true));
+    if (input.status === 'inactive') conditions.push(eq(apiKeys.isActive, false));
     if (input.search) {
       const q = `%${input.search}%`;
       conditions.push(
@@ -199,17 +205,17 @@ export const listAdminKeys = base
 export const listAccessRequests = base
   .input(
     paginationSchema.extend({
-      status: z.enum(["all", "pending", "approved"]).default("pending"),
+      status: z.enum(['all', 'pending', 'approved']).default('pending'),
     }),
   )
   .handler(async ({ input }): Promise<PaginatedResult<z.infer<typeof AccessRequestSchema>>> => {
     if (DEMO_MODE) {
-      const { getDemoAccessRequests } = await import("@/lib/demo");
+      const { getDemoAccessRequests } = await import('@/lib/demo');
       const all = getDemoAccessRequests() as z.infer<typeof AccessRequestSchema>[];
       const filtered =
-        input.status === "all"
+        input.status === 'all'
           ? all
-          : input.status === "pending"
+          : input.status === 'pending'
             ? all.filter((r) => !r.approvedAt)
             : all.filter((r) => r.approvedAt);
       const start = (input.page - 1) * input.perPage;
@@ -224,9 +230,9 @@ export const listAccessRequests = base
     const offset = (input.page - 1) * input.perPage;
 
     const whereClause =
-      input.status === "all"
+      input.status === 'all'
         ? undefined
-        : input.status === "pending"
+        : input.status === 'pending'
           ? isNull(accessRequests.approvedAt)
           : isNotNull(accessRequests.approvedAt);
 

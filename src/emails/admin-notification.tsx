@@ -1,17 +1,17 @@
 import {
-  Html,
-  Head,
   Body,
   Container,
-  Section,
-  Text,
-  Heading,
-  Img,
   Font,
-  Tailwind,
-  Link,
+  Head,
+  Heading,
   Hr,
-} from "@react-email/components";
+  Html,
+  Img,
+  Link,
+  Section,
+  Tailwind,
+  Text,
+} from '@react-email/components';
 
 interface AdminNotificationProps {
   userName: string;
@@ -33,8 +33,8 @@ export function AdminNotification({
           fontFamily="Inter"
           fallbackFontFamily="sans-serif"
           webFont={{
-            url: "https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiJ-Ek-_EeA.woff2",
-            format: "woff2",
+            url: 'https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiJ-Ek-_EeA.woff2',
+            format: 'woff2',
           }}
         />
         <style>{`
@@ -56,15 +56,15 @@ export function AdminNotification({
         `}</style>
       </Head>
       <Tailwind>
-        <Body className="m-0 bg-[#f4f2f7]" style={{ padding: "32px 16px" }}>
-          <Container className="mx-auto" style={{ maxWidth: "520px", width: "100%" }}>
+        <Body className="m-0 bg-[#f4f2f7]" style={{ padding: '32px 16px' }}>
+          <Container className="mx-auto" style={{ maxWidth: '520px', width: '100%' }}>
             <Section className="mb-5">
               <Section
                 className="email-header overflow-hidden rounded-xl"
                 style={{
-                  background: "#ffffff",
-                  padding: "32px 28px",
-                  textAlign: "center" as const,
+                  background: '#ffffff',
+                  padding: '32px 28px',
+                  textAlign: 'center' as const,
                 }}
               >
                 <Img
@@ -72,7 +72,7 @@ export function AdminNotification({
                   alt="iVALT"
                   width="140"
                   height="50"
-                  style={{ display: "inline-block" }}
+                  style={{ display: 'inline-block' }}
                 />
               </Section>
             </Section>
@@ -80,22 +80,22 @@ export function AdminNotification({
             <Section
               className="overflow-hidden rounded-xl"
               style={{
-                background: "#ffffff",
-                border: "1px solid #e8e6ee",
+                background: '#ffffff',
+                border: '1px solid #e8e6ee',
               }}
             >
-              <div className="email-card-body" style={{ padding: "32px 28px" }}>
+              <div className="email-card-body" style={{ padding: '32px 28px' }}>
                 <Section className="mb-5">
                   <table cellPadding="0" cellSpacing="0">
                     <tr>
                       <td
                         style={{
-                          width: "48px",
-                          height: "48px",
-                          borderRadius: "12px",
-                          background: "linear-gradient(135deg, #f3e8ff, #ede9fe)",
-                          textAlign: "center" as const,
-                          verticalAlign: "middle" as const,
+                          width: '48px',
+                          height: '48px',
+                          borderRadius: '12px',
+                          background: 'linear-gradient(135deg, #f3e8ff, #ede9fe)',
+                          textAlign: 'center' as const,
+                          verticalAlign: 'middle' as const,
                         }}
                       >
                         <Img
@@ -103,7 +103,7 @@ export function AdminNotification({
                           alt=""
                           width="22"
                           height="22"
-                          style={{ display: "block", margin: "13px auto" }}
+                          style={{ display: 'block', margin: '13px auto' }}
                         />
                       </td>
                     </tr>
@@ -114,12 +114,12 @@ export function AdminNotification({
                   <Text
                     className="m-0"
                     style={{
-                      fontSize: "11px",
+                      fontSize: '11px',
                       fontWeight: 600,
-                      color: "#611f69",
-                      textTransform: "uppercase" as const,
-                      letterSpacing: "0.08em",
-                      marginBottom: "8px",
+                      color: '#611f69',
+                      textTransform: 'uppercase' as const,
+                      letterSpacing: '0.08em',
+                      marginBottom: '8px',
                     }}
                   >
                     Admin Notification
@@ -127,12 +127,12 @@ export function AdminNotification({
                   <Heading
                     className="email-heading m-0"
                     style={{
-                      fontSize: "20px",
+                      fontSize: '20px',
                       fontWeight: 700,
-                      color: "#1a1a2e",
-                      letterSpacing: "-0.02em",
-                      lineHeight: "1.3",
-                      marginBottom: "8px",
+                      color: '#1a1a2e',
+                      letterSpacing: '-0.02em',
+                      lineHeight: '1.3',
+                      marginBottom: '8px',
                     }}
                   >
                     New access request received
@@ -140,9 +140,9 @@ export function AdminNotification({
                   <Text
                     className="email-text m-0"
                     style={{
-                      fontSize: "14px",
-                      color: "#6b7280",
-                      lineHeight: "1.5",
+                      fontSize: '14px',
+                      color: '#6b7280',
+                      lineHeight: '1.5',
                     }}
                   >
                     {userName} is requesting access to the iVALT API Portal. Review the details
@@ -152,10 +152,10 @@ export function AdminNotification({
 
                 <Section
                   style={{
-                    borderRadius: "10px",
-                    border: "1px solid #eeeef2",
-                    overflow: "hidden",
-                    marginBottom: "24px",
+                    borderRadius: '10px',
+                    border: '1px solid #eeeef2',
+                    overflow: 'hidden',
+                    marginBottom: '24px',
                   }}
                 >
                   <table width="100%" cellPadding="0" cellSpacing="0">
@@ -163,20 +163,20 @@ export function AdminNotification({
                       <td
                         className="email-detail-label"
                         style={{
-                          padding: "10px 14px",
-                          background: "#faf9fd",
-                          borderBottom: "1px solid #eeeef2",
-                          width: "90px",
+                          padding: '10px 14px',
+                          background: '#faf9fd',
+                          borderBottom: '1px solid #eeeef2',
+                          width: '90px',
                         }}
                       >
                         <Text
                           className="email-detail-label-text m-0"
                           style={{
-                            fontSize: "11px",
+                            fontSize: '11px',
                             fontWeight: 600,
-                            color: "#9ca3af",
-                            textTransform: "uppercase" as const,
-                            letterSpacing: "0.06em",
+                            color: '#9ca3af',
+                            textTransform: 'uppercase' as const,
+                            letterSpacing: '0.06em',
                           }}
                         >
                           Name
@@ -184,16 +184,16 @@ export function AdminNotification({
                       </td>
                       <td
                         style={{
-                          padding: "10px 14px",
-                          borderBottom: "1px solid #eeeef2",
+                          padding: '10px 14px',
+                          borderBottom: '1px solid #eeeef2',
                         }}
                       >
                         <Text
                           className="email-detail-value m-0"
                           style={{
-                            fontSize: "14px",
+                            fontSize: '14px',
                             fontWeight: 600,
-                            color: "#1a1a2e",
+                            color: '#1a1a2e',
                           }}
                         >
                           {userName}
@@ -204,19 +204,19 @@ export function AdminNotification({
                       <td
                         className="email-detail-label"
                         style={{
-                          padding: "10px 14px",
-                          background: "#faf9fd",
-                          borderBottom: "1px solid #eeeef2",
+                          padding: '10px 14px',
+                          background: '#faf9fd',
+                          borderBottom: '1px solid #eeeef2',
                         }}
                       >
                         <Text
                           className="email-detail-label-text m-0"
                           style={{
-                            fontSize: "11px",
+                            fontSize: '11px',
                             fontWeight: 600,
-                            color: "#9ca3af",
-                            textTransform: "uppercase" as const,
-                            letterSpacing: "0.06em",
+                            color: '#9ca3af',
+                            textTransform: 'uppercase' as const,
+                            letterSpacing: '0.06em',
                           }}
                         >
                           Phone
@@ -224,16 +224,16 @@ export function AdminNotification({
                       </td>
                       <td
                         style={{
-                          padding: "10px 14px",
-                          borderBottom: "1px solid #eeeef2",
+                          padding: '10px 14px',
+                          borderBottom: '1px solid #eeeef2',
                         }}
                       >
                         <Text
                           className="email-detail-value m-0"
                           style={{
-                            fontSize: "14px",
+                            fontSize: '14px',
                             fontWeight: 600,
-                            color: "#1a1a2e",
+                            color: '#1a1a2e',
                           }}
                         >
                           {userPhone}
@@ -244,18 +244,18 @@ export function AdminNotification({
                       <td
                         className="email-detail-label"
                         style={{
-                          padding: "10px 14px",
-                          background: "#faf9fd",
+                          padding: '10px 14px',
+                          background: '#faf9fd',
                         }}
                       >
                         <Text
                           className="email-detail-label-text m-0"
                           style={{
-                            fontSize: "11px",
+                            fontSize: '11px',
                             fontWeight: 600,
-                            color: "#9ca3af",
-                            textTransform: "uppercase" as const,
-                            letterSpacing: "0.06em",
+                            color: '#9ca3af',
+                            textTransform: 'uppercase' as const,
+                            letterSpacing: '0.06em',
                           }}
                         >
                           Requested
@@ -263,15 +263,15 @@ export function AdminNotification({
                       </td>
                       <td
                         style={{
-                          padding: "10px 14px",
+                          padding: '10px 14px',
                         }}
                       >
                         <Text
                           className="email-detail-value m-0"
                           style={{
-                            fontSize: "14px",
+                            fontSize: '14px',
                             fontWeight: 600,
-                            color: "#1a1a2e",
+                            color: '#1a1a2e',
                           }}
                         >
                           {requestedAt}
@@ -285,30 +285,30 @@ export function AdminNotification({
                   <Text
                     className="m-0"
                     style={{
-                      fontSize: "11px",
+                      fontSize: '11px',
                       fontWeight: 600,
-                      color: "#9ca3af",
-                      textTransform: "uppercase" as const,
-                      letterSpacing: "0.06em",
-                      marginBottom: "8px",
+                      color: '#9ca3af',
+                      textTransform: 'uppercase' as const,
+                      letterSpacing: '0.06em',
+                      marginBottom: '8px',
                     }}
                   >
                     Use Case
                   </Text>
                   <div
                     style={{
-                      background: "#f8f7fb",
-                      borderRadius: "8px",
-                      padding: "14px 16px",
-                      borderLeft: "3px solid #611f69",
+                      background: '#f8f7fb',
+                      borderRadius: '8px',
+                      padding: '14px 16px',
+                      borderLeft: '3px solid #611f69',
                     }}
                   >
                     <Text
                       className="email-text m-0"
                       style={{
-                        fontSize: "14px",
-                        color: "#4b5563",
-                        lineHeight: "1.65",
+                        fontSize: '14px',
+                        color: '#4b5563',
+                        lineHeight: '1.65',
                       }}
                     >
                       {useCase}
@@ -318,9 +318,9 @@ export function AdminNotification({
 
                 <Hr
                   style={{
-                    border: "none",
-                    borderTop: "1px solid #eeeef2",
-                    margin: "0 0 24px 0",
+                    border: 'none',
+                    borderTop: '1px solid #eeeef2',
+                    margin: '0 0 24px 0',
                   }}
                 />
 
@@ -332,14 +332,14 @@ export function AdminNotification({
                           href="https://ivalt-api-portal.vercel.app/admin"
                           className="email-cta"
                           style={{
-                            display: "inline-block",
-                            background: "#611f69",
-                            color: "#ffffff",
-                            fontSize: "14px",
+                            display: 'inline-block',
+                            background: '#611f69',
+                            color: '#ffffff',
+                            fontSize: '14px',
                             fontWeight: 600,
-                            padding: "12px 28px",
-                            borderRadius: "8px",
-                            textDecoration: "none",
+                            padding: '12px 28px',
+                            borderRadius: '8px',
+                            textDecoration: 'none',
                           }}
                         >
                           Review in Admin Dashboard
@@ -351,13 +351,13 @@ export function AdminNotification({
               </div>
             </Section>
 
-            <Section className="mt-5" style={{ textAlign: "center" as const, padding: "0 12px" }}>
+            <Section className="mt-5" style={{ textAlign: 'center' as const, padding: '0 12px' }}>
               <Text
                 className="email-footer-text m-0"
                 style={{
-                  fontSize: "12px",
-                  color: "#9ca3af",
-                  lineHeight: "1.6",
+                  fontSize: '12px',
+                  color: '#9ca3af',
+                  lineHeight: '1.6',
                 }}
               >
                 iVALT API Portal — Biometric Authentication Platform
@@ -365,9 +365,9 @@ export function AdminNotification({
               <Text
                 className="email-footer-text m-0"
                 style={{
-                  fontSize: "11px",
-                  color: "#c4c4cc",
-                  marginTop: "2px",
+                  fontSize: '11px',
+                  color: '#c4c4cc',
+                  marginTop: '2px',
                 }}
               >
                 This is an automated notification. Do not reply to this email.

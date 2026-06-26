@@ -1,8 +1,8 @@
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
+import { Skeleton } from '@/components/ui/skeleton';
 
-function IconSkeleton({ className = "" }: { className?: string }) {
+function IconSkeleton({ className = '' }: { className?: string }) {
   return <Skeleton className={`size-11 rounded-2xl ${className}`} />;
 }
 

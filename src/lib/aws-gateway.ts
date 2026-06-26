@@ -4,12 +4,12 @@
 import {
   APIGatewayClient,
   CreateApiKeyCommand,
+  CreateUsagePlanKeyCommand,
   DeleteApiKeyCommand,
+  DeleteUsagePlanKeyCommand,
   GetApiKeyCommand,
   UpdateApiKeyCommand,
-  CreateUsagePlanKeyCommand,
-  DeleteUsagePlanKeyCommand,
-} from "@aws-sdk/client-api-gateway";
+} from '@aws-sdk/client-api-gateway';
 
 let _client: APIGatewayClient | null = null;
 
@@ -21,12 +21,12 @@ export function __resetClientForTest() {
 function getClient() {
   if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY) {
     throw new Error(
-      "AWS credentials not configured. Set AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY in .env.local, or enable NEXT_PUBLIC_DEMO_MODE=true",
+      'AWS credentials not configured. Set AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY in .env.local, or enable NEXT_PUBLIC_DEMO_MODE=true',
     );
   }
   if (!_client) {
     _client = new APIGatewayClient({
-      region: process.env.AWS_REGION || "us-east-1",
+      region: process.env.AWS_REGION || 'us-east-1',
       credentials: {
         accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
         secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
@@ -62,7 +62,7 @@ export async function createAwsApiKey(
   );
 
   if (!createResult.id || !createResult.value) {
-    throw new Error("AWS API Gateway did not return key ID or value");
+    throw new Error('AWS API Gateway did not return key ID or value');
   }
 
   if (USAGE_PLAN_ID) {
@@ -70,7 +70,7 @@ export async function createAwsApiKey(
       new CreateUsagePlanKeyCommand({
         usagePlanId: USAGE_PLAN_ID,
         keyId: createResult.id,
-        keyType: "API_KEY",
+        keyType: 'API_KEY',
       }),
     );
   }
@@ -101,7 +101,7 @@ export async function toggleAwsApiKey(keyId: string, enabled: boolean): Promise<
   await client.send(
     new UpdateApiKeyCommand({
       apiKey: keyId,
-      patchOperations: [{ op: "replace", path: "/enabled", value: enabled.toString() }],
+      patchOperations: [{ op: 'replace', path: '/enabled', value: enabled.toString() }],
     }),
   );
 }

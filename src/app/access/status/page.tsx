@@ -1,22 +1,22 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { Loader2, Lock, ShieldCheck, Clock, CheckCircle2, XCircle } from "lucide-react";
-import { toast } from "sonner";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { CheckCircle2, Clock, Loader2, Lock, ShieldCheck, XCircle } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default function AccessStatusPage() {
   const router = useRouter();
-  const [status, setStatus] = useState<"pending" | "approved" | "rejected" | "loading">("loading");
-  const [accessRequest, setAccessRequest] = useState<any>(null);
+  const [status, setStatus] = useState<'pending' | 'approved' | 'rejected' | 'loading'>('loading');
+  const [_accessRequest, setAccessRequest] = useState<any>(null);
 
   useEffect(() => {
     const fetchStatus = async () => {
       try {
-        const res = await fetch("/api/access/me");
+        const res = await fetch('/api/access/me');
         const data = await res.json();
 
         if (data.error) {
@@ -26,15 +26,15 @@ export default function AccessStatusPage() {
 
         setStatus(data.status);
         setAccessRequest(data.request);
-      } catch (error) {
-        toast.error("Failed to fetch status");
+      } catch (_error) {
+        toast.error('Failed to fetch status');
       }
     };
 
     fetchStatus();
   }, []);
 
-  if (status === "loading") {
+  if (status === 'loading') {
     return (
       <div className="relative min-h-screen overflow-hidden bg-background px-4 py-8">
         <div className="relative mx-auto grid min-h-[calc(100vh-4rem)] w-full max-w-6xl items-center gap-10 lg:grid-cols-[1.08fr_0.82fr]">
@@ -64,9 +64,9 @@ export default function AccessStatusPage() {
     );
   }
 
-  const isApproved = status === "approved";
-  const isRejected = status === "rejected";
-  const isPending = status === "pending";
+  const isApproved = status === 'approved';
+  const isRejected = status === 'rejected';
+  const isPending = status === 'pending';
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-background px-4 py-8">
@@ -95,16 +95,16 @@ export default function AccessStatusPage() {
             </Badge>
             <h1 className="text-3xl font-semibold tracking-[-0.04em] text-foreground xl:text-5xl">
               {isApproved
-                ? "Access granted!"
+                ? 'Access granted!'
                 : isRejected
-                  ? "Access denied"
-                  : "Waiting for approval"}
+                  ? 'Access denied'
+                  : 'Waiting for approval'}
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-8 text-muted-foreground">
               {isApproved
-                ? "You have been granted API access. You can now manage your API keys in the dashboard."
+                ? 'You have been granted API access. You can now manage your API keys in the dashboard.'
                 : isRejected
-                  ? "Your access request was not approved. Please contact support for more information."
+                  ? 'Your access request was not approved. Please contact support for more information.'
                   : "An admin will review your request. You'll receive an email notification when a decision is made."}
             </p>
           </div>
@@ -116,10 +116,10 @@ export default function AccessStatusPage() {
               <div
                 className={`mb-5 flex size-12 items-center justify-center rounded-3xl ${
                   isApproved
-                    ? "bg-emerald-500/10 text-emerald-700"
+                    ? 'bg-emerald-500/10 text-emerald-700'
                     : isRejected
-                      ? "bg-red-500/10 text-red-700"
-                      : "bg-amber-500/10 text-amber-700"
+                      ? 'bg-red-500/10 text-red-700'
+                      : 'bg-amber-500/10 text-amber-700'
                 }`}
               >
                 {isApproved ? (
@@ -131,19 +131,19 @@ export default function AccessStatusPage() {
                 )}
               </div>
               <CardTitle className="text-2xl tracking-[-0.025em]">
-                {isApproved ? "Approved" : isRejected ? "Rejected" : "Pending Review"}
+                {isApproved ? 'Approved' : isRejected ? 'Rejected' : 'Pending Review'}
               </CardTitle>
               <CardDescription>
                 {isApproved
-                  ? "Your access has been granted by the admin team"
+                  ? 'Your access has been granted by the admin team'
                   : isRejected
-                    ? "Your access request was denied"
-                    : "Your request is being reviewed by an admin"}
+                    ? 'Your access request was denied'
+                    : 'Your request is being reviewed by an admin'}
               </CardDescription>
             </CardHeader>
             <CardContent className="p-6">
               {isApproved && (
-                <Button onClick={() => router.push("/dashboard")} className="w-full" size="lg">
+                <Button onClick={() => router.push('/dashboard')} className="w-full" size="lg">
                   Go to Dashboard
                 </Button>
               )}
@@ -156,7 +156,7 @@ export default function AccessStatusPage() {
               {isRejected && (
                 <Button
                   variant="outline"
-                  onClick={() => router.push("/access/request")}
+                  onClick={() => router.push('/access/request')}
                   className="w-full"
                 >
                   Submit New Request

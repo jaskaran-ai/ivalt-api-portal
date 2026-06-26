@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { ArrowLeft, Home, Compass, HelpCircle } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Logo } from "@/components/ui/logo";
-import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { ArrowLeft, Compass, HelpCircle, Home } from 'lucide-react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import { Logo } from '@/components/ui/logo';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
 
 export default function NotFound() {
   const router = useRouter();
@@ -23,7 +23,7 @@ export default function NotFound() {
           className="absolute inset-0 opacity-[0.03] dark:opacity-[0.05]"
           style={{
             backgroundImage: `radial-gradient(var(--foreground) 1px, transparent 1px)`,
-            backgroundSize: "24px 24px",
+            backgroundSize: '24px 24px',
           }}
         />
       </div>
@@ -86,7 +86,7 @@ export default function NotFound() {
         {/* Support Link */}
         <p className="mt-8 flex items-center gap-1.5 text-xs text-muted-foreground">
           <HelpCircle className="h-3.5 w-3.5" />
-          Need assistance?{" "}
+          Need assistance?{' '}
           <a
             href="mailto:support@ivalt.com"
             className="font-medium text-primary transition-all hover:underline"

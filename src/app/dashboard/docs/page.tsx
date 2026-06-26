@@ -1,6 +1,5 @@
-"use client";
+'use client';
 
-import Link from "next/link";
 import {
   AlertCircle,
   ArrowRight,
@@ -12,20 +11,21 @@ import {
   ShieldCheck,
   Timer,
   Waypoints,
-} from "lucide-react";
-import { toast } from "sonner";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { cn } from "@/lib/utils";
+} from 'lucide-react';
+import Link from 'next/link';
+import { toast } from 'sonner';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
+import { cn } from '@/lib/utils';
 
 const copyToClipboard = (text: string) => {
   navigator.clipboard.writeText(text);
-  toast.success("Copied to clipboard");
+  toast.success('Copied to clipboard');
 };
 
-function CodeBlock({ code, language = "bash" }: { code: string; language?: string }) {
+function CodeBlock({ code, language = 'bash' }: { code: string; language?: string }) {
   return (
     <div className="overflow-hidden rounded-2xl border border-foreground/10 bg-[#17121a] text-[#f6f0f7] shadow-sm shadow-foreground/5">
       <div className="flex items-center justify-between border-b border-white/10 bg-white/[0.03] px-4 py-3">
@@ -40,6 +40,7 @@ function CodeBlock({ code, language = "bash" }: { code: string; language?: strin
           </span>
         </div>
         <button
+          type="button"
           onClick={() => copyToClipboard(code)}
           className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium text-white/60 transition-colors hover:bg-white/10 hover:text-white"
         >
@@ -61,17 +62,17 @@ function StatusBadge({
 }: {
   code: string;
   label: string;
-  type: "success" | "error" | "warning" | "info";
+  type: 'success' | 'error' | 'warning' | 'info';
 }) {
   const colors = {
-    success: "border-emerald-500/20 bg-emerald-500/10 text-emerald-700",
-    error: "border-destructive/20 bg-destructive/10 text-destructive",
-    warning: "border-amber-500/25 bg-amber-500/10 text-amber-700",
-    info: "border-primary/15 bg-primary/10 text-primary",
+    success: 'border-emerald-500/20 bg-emerald-500/10 text-emerald-700',
+    error: 'border-destructive/20 bg-destructive/10 text-destructive',
+    warning: 'border-amber-500/25 bg-amber-500/10 text-amber-700',
+    info: 'border-primary/15 bg-primary/10 text-primary',
   };
 
   return (
-    <div className={cn("flex items-center gap-2 rounded-full border px-3 py-1.5", colors[type])}>
+    <div className={cn('flex items-center gap-2 rounded-full border px-3 py-1.5', colors[type])}>
       <span className="font-mono text-xs font-semibold">{code}</span>
       <span className="text-xs font-medium">{label}</span>
     </div>
@@ -80,9 +81,9 @@ function StatusBadge({
 
 const endpoints = [
   {
-    method: "POST",
-    path: "/biometric-auth-request",
-    name: "Initiate authentication",
+    method: 'POST',
+    path: '/biometric-auth-request',
+    name: 'Initiate authentication',
     description:
       "Send a biometric approval request to the user's iVALT mobile app. This starts every sign-in flow.",
     code: `curl -X POST https://api.ivalt.com/biometric-auth-request \\
@@ -95,17 +96,17 @@ const endpoints = [
   "request_id": "auth_abc123xyz"
 }`,
     statusCodes: [
-      { code: "200", label: "Success", type: "success" as const },
-      { code: "404", label: "User not found", type: "error" as const },
-      { code: "403", label: "Invalid API key", type: "error" as const },
+      { code: '200', label: 'Success', type: 'success' as const },
+      { code: '404', label: 'User not found', type: 'error' as const },
+      { code: '403', label: 'Invalid API key', type: 'error' as const },
     ],
   },
   {
-    method: "POST",
-    path: "/biometric-auth-result",
-    name: "Poll authentication result",
+    method: 'POST',
+    path: '/biometric-auth-result',
+    name: 'Poll authentication result',
     description:
-      "Poll every 2 seconds until the user approves, rejects, times out, or cannot be found.",
+      'Poll every 2 seconds until the user approves, rejects, times out, or cannot be found.',
     code: `curl -X POST https://api.ivalt.com/biometric-auth-result \\
   -H "Content-Type: application/json" \\
   -H "x-api-key: YOUR_API_KEY" \\
@@ -118,18 +119,18 @@ const endpoints = [
   }
 }`,
     statusCodes: [
-      { code: "200", label: "Authenticated", type: "success" as const },
-      { code: "422", label: "Pending", type: "warning" as const },
-      { code: "403", label: "Failed / timeout", type: "error" as const },
-      { code: "404", label: "Not found", type: "error" as const },
+      { code: '200', label: 'Authenticated', type: 'success' as const },
+      { code: '422', label: 'Pending', type: 'warning' as const },
+      { code: '403', label: 'Failed / timeout', type: 'error' as const },
+      { code: '404', label: 'Not found', type: 'error' as const },
     ],
   },
   {
-    method: "POST",
-    path: "/biometric-auth-result",
-    name: "Geo-fence authentication",
+    method: 'POST',
+    path: '/biometric-auth-result',
+    name: 'Geo-fence authentication',
     description:
-      "Verify biometric approval together with a latitude, longitude, and allowed radius.",
+      'Verify biometric approval together with a latitude, longitude, and allowed radius.',
     code: `curl -X POST https://api.ivalt.com/biometric-auth-result \\
   -H "Content-Type: application/json" \\
   -H "x-api-key: YOUR_API_KEY" \\
@@ -148,42 +149,42 @@ const endpoints = [
   }
 }`,
     statusCodes: [
-      { code: "200", label: "Authenticated & inside fence", type: "success" as const },
-      { code: "422", label: "Pending", type: "warning" as const },
-      { code: "403", label: "Failed / outside fence", type: "error" as const },
-      { code: "404", label: "Not found", type: "error" as const },
+      { code: '200', label: 'Authenticated & inside fence', type: 'success' as const },
+      { code: '422', label: 'Pending', type: 'warning' as const },
+      { code: '403', label: 'Failed / outside fence', type: 'error' as const },
+      { code: '404', label: 'Not found', type: 'error' as const },
     ],
   },
 ];
 
 const responseStates = [
   {
-    code: "200",
-    title: "Authenticated",
-    text: "Stop polling. The biometric match succeeded and your app can create a session.",
+    code: '200',
+    title: 'Authenticated',
+    text: 'Stop polling. The biometric match succeeded and your app can create a session.',
     icon: Check,
-    tone: "bg-emerald-500/10 text-emerald-700",
+    tone: 'bg-emerald-500/10 text-emerald-700',
   },
   {
-    code: "422",
-    title: "Pending",
-    text: "Keep polling every 2 seconds while the user reviews the request in the iVALT app.",
+    code: '422',
+    title: 'Pending',
+    text: 'Keep polling every 2 seconds while the user reviews the request in the iVALT app.',
     icon: Timer,
-    tone: "bg-amber-500/10 text-amber-700",
+    tone: 'bg-amber-500/10 text-amber-700',
   },
   {
-    code: "403",
-    title: "Failed / timeout",
-    text: "Authentication failed. The API key is invalid or the approval window has expired.",
+    code: '403',
+    title: 'Failed / timeout',
+    text: 'Authentication failed. The API key is invalid or the approval window has expired.',
     icon: AlertCircle,
-    tone: "bg-destructive/10 text-destructive",
+    tone: 'bg-destructive/10 text-destructive',
   },
   {
-    code: "404",
-    title: "Not found",
-    text: "The mobile number is not registered in iVALT, so no biometric challenge can start.",
+    code: '404',
+    title: 'Not found',
+    text: 'The mobile number is not registered in iVALT, so no biometric challenge can start.',
     icon: AlertCircle,
-    tone: "bg-destructive/10 text-destructive",
+    tone: 'bg-destructive/10 text-destructive',
   },
 ];
 
@@ -257,14 +258,14 @@ export default function DocsPage() {
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={() => copyToClipboard("https://api.ivalt.com")}
+                  onClick={() => copyToClipboard('https://api.ivalt.com')}
                 >
                   <Copy />
                 </Button>
               </div>
             </div>
             <div className="grid gap-3 sm:grid-cols-3 xl:grid-cols-1">
-              {["REST API", "JSON responses"].map((item) => (
+              {['REST API', 'JSON responses'].map((item) => (
                 <div
                   key={item}
                   className="flex items-center gap-2 rounded-2xl border border-border/80 bg-background/70 px-3 py-2 text-sm font-medium"
@@ -293,8 +294,8 @@ export default function DocsPage() {
         </CardHeader>
         <CardContent className="grid gap-4 p-6 lg:grid-cols-3">
           {[
-            { step: "01", title: "API key", value: "x-api-key: YOUR_API_KEY" },
-            { step: "02", title: "Content type", value: "Content-Type: application/json" },
+            { step: '01', title: 'API key', value: 'x-api-key: YOUR_API_KEY' },
+            { step: '02', title: 'Content type', value: 'Content-Type: application/json' },
           ].map((item) => (
             <div
               key={item.step}
@@ -328,11 +329,11 @@ export default function DocsPage() {
           </Badge>
         </div>
 
-        {endpoints.map((endpoint, index) => (
+        {endpoints.map((endpoint) => (
           <Card
-            key={index}
+            key={`${endpoint.method}-${endpoint.path}`}
             className="overflow-hidden border-primary/10 bg-card shadow-sm shadow-foreground/5"
-            id={endpoint.path.replace("/", "") + "-" + index}
+            id={`${endpoint.path.replace('/', '')}`}
           >
             <div className="border-b border-border/80 bg-muted/35 p-6">
               <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
@@ -409,7 +410,7 @@ export default function DocsPage() {
                 <div className="flex items-start gap-4">
                   <div
                     className={cn(
-                      "flex size-10 shrink-0 items-center justify-center rounded-2xl",
+                      'flex size-10 shrink-0 items-center justify-center rounded-2xl',
                       state.tone,
                     )}
                   >

@@ -1,9 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
-import { db } from "@/db";
-import { apiKeys, users } from "@/db/schema";
-import { fetchApiKeyUsage } from "@/lib/api-gateway-usage";
-import { gte } from "drizzle-orm";
-import { DEMO_MODE, getDemoAdminUsage } from "@/lib/demo";
+import { gte } from 'drizzle-orm';
+import { type NextRequest, NextResponse } from 'next/server';
+import { db } from '@/db';
+import { users } from '@/db/schema';
+import { fetchApiKeyUsage } from '@/lib/api-gateway-usage';
+import { DEMO_MODE, getDemoAdminUsage } from '@/lib/demo';
 
 export async function GET(_req: NextRequest) {
   try {
@@ -15,7 +15,7 @@ export async function GET(_req: NextRequest) {
     try {
       usageData = await fetchApiKeyUsage();
     } catch (err) {
-      console.error("AWS usage fetch failed (non-fatal):", err);
+      console.error('AWS usage fetch failed (non-fatal):', err);
     }
 
     const allKeys = await db.query.apiKeys.findMany({
@@ -71,7 +71,7 @@ export async function GET(_req: NextRequest) {
       },
     });
   } catch (error) {
-    console.error("Usage API error:", error);
+    console.error('Usage API error:', error);
     return NextResponse.json(
       {
         usage: [],
@@ -84,7 +84,7 @@ export async function GET(_req: NextRequest) {
           recentlyUsed: 0,
           totalRequests: 0,
         },
-        error: "Internal server error",
+        error: 'Internal server error',
       },
       { status: 500 },
     );

@@ -1,30 +1,30 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { ShieldCheck, Users, Key, LayoutDashboard, LogOut } from "lucide-react";
+import { Key, LayoutDashboard, LogOut, ShieldCheck, Users } from 'lucide-react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
-  SidebarHeader,
   SidebarGroup,
-  SidebarGroupLabel,
   SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarInset,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarProvider,
-  SidebarInset,
   SidebarTrigger,
-} from "@/components/ui/sidebar";
-import { ThemeToggle } from "@/components/ui/theme-toggle";
+} from '@/components/ui/sidebar';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
 
 const adminNavItems = [
-  { label: "Overview", href: "/admin/dashboard", icon: LayoutDashboard },
-  { label: "Access Requests", href: "/admin/requests", icon: ShieldCheck },
-  { label: "Users", href: "/admin/users", icon: Users },
-  { label: "API Keys", href: "/admin/keys", icon: Key },
+  { label: 'Overview', href: '/admin/dashboard', icon: LayoutDashboard },
+  { label: 'Access Requests', href: '/admin/requests', icon: ShieldCheck },
+  { label: 'Users', href: '/admin/users', icon: Users },
+  { label: 'API Keys', href: '/admin/keys', icon: Key },
 ];
 
 interface AdminShellProps {
@@ -34,7 +34,7 @@ interface AdminShellProps {
 export default function AdminShell({ children }: AdminShellProps) {
   return (
     <SidebarProvider defaultOpen={true}>
-      <AdminSidebarLayout children={children} />
+      <AdminSidebarLayout>{children}</AdminSidebarLayout>
     </SidebarProvider>
   );
 }
@@ -43,7 +43,7 @@ function AdminSidebarLayout({ children }: AdminShellProps) {
   const pathname = usePathname();
 
   const activeItem = adminNavItems.find(
-    (n) => n.href === pathname || (n.href !== "/admin/dashboard" && pathname.startsWith(n.href)),
+    (n) => n.href === pathname || (n.href !== '/admin/dashboard' && pathname.startsWith(n.href)),
   );
 
   return (
@@ -71,7 +71,7 @@ function AdminSidebarLayout({ children }: AdminShellProps) {
                 {adminNavItems.map((item) => {
                   const isActive =
                     pathname === item.href ||
-                    (item.href !== "/admin/dashboard" && pathname.startsWith(item.href));
+                    (item.href !== '/admin/dashboard' && pathname.startsWith(item.href));
                   const Icon = item.icon;
                   return (
                     <SidebarMenuItem key={item.href}>
@@ -113,7 +113,7 @@ function AdminSidebarLayout({ children }: AdminShellProps) {
           </div>
           <div className="min-w-0 flex-1">
             <h1 className="truncate text-base font-semibold tracking-[-0.01em] text-foreground md:text-lg">
-              {activeItem?.label || "Admin"}
+              {activeItem?.label || 'Admin'}
             </h1>
           </div>
           <ThemeToggle />

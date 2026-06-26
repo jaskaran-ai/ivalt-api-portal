@@ -1,17 +1,17 @@
-import { NextRequest, NextResponse } from "next/server";
-import { DEMO_MODE, getDemoUser } from "@/lib/demo";
-import { getBiometricResult } from "@/lib/ivalt";
-import { getSession } from "@/lib/session";
-import { db } from "@/db";
-import { users, accessRequests } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { eq } from 'drizzle-orm';
+import { type NextRequest, NextResponse } from 'next/server';
+import { db } from '@/db';
+import { accessRequests, users } from '@/db/schema';
+import { DEMO_MODE, getDemoUser } from '@/lib/demo';
+import { getBiometricResult } from '@/lib/ivalt';
+import { getSession } from '@/lib/session';
 
 export async function POST(req: NextRequest) {
   try {
     const { phoneNumber } = await req.json();
 
     if (!phoneNumber) {
-      return NextResponse.json({ error: "Phone number is required" }, { status: 400 });
+      return NextResponse.json({ error: 'Phone number is required' }, { status: 400 });
     }
 
     // ── DEMO MODE ─────────────────────────────────────────────────────────────
@@ -19,26 +19,26 @@ export async function POST(req: NextRequest) {
       await new Promise((r) => setTimeout(r, 400));
       const demoUser = getDemoUser(phoneNumber);
       if (!demoUser) {
-        return NextResponse.json({ status: "not_found" }, { status: 404 });
+        return NextResponse.json({ status: 'not_found' }, { status: 404 });
       }
       const response = NextResponse.json({
-        status: "authenticated",
+        status: 'authenticated',
         accessStatus: demoUser.status,
       });
-      response.cookies.set("demo_user", demoUser.phoneNumber, {
-        path: "/",
+      response.cookies.set('demo_user', demoUser.phoneNumber, {
+        path: '/',
         maxAge: 60 * 60,
         httpOnly: true,
-        sameSite: "lax",
+        sameSite: 'lax',
       });
       return response;
     }
     // ──────────────────────────────────────────────────────────────────────────
 
-    const cleanPhone = phoneNumber.replace(/\s/g, "");
+    const cleanPhone = phoneNumber.replace(/\s/g, '');
     const result = await getBiometricResult(cleanPhone);
 
-    if (result.status === "authenticated") {
+    if (result.status === 'authenticated') {
       // Extract name returned by iVALT (data.data.details.name)
       const ivaltName = result.name ?? null;
 
@@ -49,7 +49,7 @@ export async function POST(req: NextRequest) {
       if (!user) {
         const [newUser] = await db
           .insert(users)
-          .values({ phoneNumber: cleanPhone, status: "pending", name: ivaltName })
+          .values({ phoneNumber: cleanPhone, status: 'pending', name: ivaltName })
           .returning();
         user = newUser;
       } else {
@@ -65,7 +65,7 @@ export async function POST(req: NextRequest) {
       }
 
       // If user is not yet approved, create an access request if one doesn't exist
-      if (user.status === "pending") {
+      if (user.status === 'pending') {
         const existingRequest = await db.query.accessRequests.findFirst({
           where: eq(accessRequests.userId, user.id),
         });
@@ -73,7 +73,7 @@ export async function POST(req: NextRequest) {
         if (!existingRequest) {
           await db.insert(accessRequests).values({
             userId: user.id,
-            useCase: "",
+            useCase: '',
             requestedAt: new Date(),
           });
         }
@@ -83,15 +83,15 @@ export async function POST(req: NextRequest) {
       session.userId = user.id;
       session.phoneNumber = cleanPhone;
       session.isLoggedIn = true;
-      session.accessStatus = user.status as "pending" | "approved" | "rejected";
-      await session.save!();
+      session.accessStatus = user.status as 'pending' | 'approved' | 'rejected';
+      await session.save?.();
 
-      return NextResponse.json({ status: "authenticated", accessStatus: user.status });
+      return NextResponse.json({ status: 'authenticated', accessStatus: user.status });
     }
 
     return NextResponse.json({ status: result.status, statusCode: result.statusCode });
   } catch (error) {
-    console.error("Auth verify error:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    console.error('Auth verify error:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

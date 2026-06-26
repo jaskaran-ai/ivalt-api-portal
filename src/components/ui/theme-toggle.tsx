@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { Moon, Sun, Monitor } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useTheme } from "@/components/ui/theme-provider";
+import { Monitor, Moon, Sun } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useTheme } from '@/components/ui/theme-provider';
 
-const nextTheme = { light: "dark" as const, dark: "system" as const, system: "light" as const };
+const nextTheme = { light: 'dark' as const, dark: 'system' as const, system: 'light' as const };
 const icons = { light: Sun, dark: Moon, system: Monitor };
-const labels = { light: "Light", dark: "Dark", system: "System" };
+const labels = { light: 'Light', dark: 'Dark', system: 'System' };
 
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme();

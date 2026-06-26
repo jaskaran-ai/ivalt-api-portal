@@ -1,6 +1,6 @@
-import { RPCLink } from "@orpc/client/fetch";
-import { createORPCClient } from "@orpc/client";
-import type { PaginatedResult } from ".";
+import { createORPCClient } from '@orpc/client';
+import { RPCLink } from '@orpc/client/fetch';
+import type { PaginatedResult } from '.';
 
 interface AdminUser {
   id: string;
@@ -49,14 +49,14 @@ interface AdminClient {
       list: (input: {
         page: number;
         perPage: number;
-        status: "all" | "approved" | "pending" | "rejected";
+        status: 'all' | 'approved' | 'pending' | 'rejected';
       }) => Promise<PaginatedResult<AdminUser>>;
     };
     keys: {
       list: (input: {
         page: number;
         perPage: number;
-        status: "all" | "active" | "inactive";
+        status: 'all' | 'active' | 'inactive';
         search?: string;
       }) => Promise<PaginatedResult<AdminKey>>;
     };
@@ -64,14 +64,14 @@ interface AdminClient {
       list: (input: {
         page: number;
         perPage: number;
-        status: "all" | "pending" | "approved";
+        status: 'all' | 'pending' | 'approved';
       }) => Promise<PaginatedResult<AccessRequest>>;
     };
   };
 }
 
 const link = new RPCLink({
-  url: "/api/orpc",
+  url: '/api/orpc',
 });
 
 const raw = createORPCClient(link);

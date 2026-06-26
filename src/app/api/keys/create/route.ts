@@ -1,25 +1,25 @@
-import { NextRequest, NextResponse } from "next/server";
-import { DEMO_MODE, DEMO_USERS, getDemoKeys, addDemoKey } from "@/lib/demo";
-import { getSession } from "@/lib/session";
-import { db } from "@/db";
-import { users, apiKeys } from "@/db/schema";
-import { eq, count } from "drizzle-orm";
-import { createAwsApiKey } from "@/lib/aws-gateway";
+import { and, count, eq } from 'drizzle-orm';
+import { type NextRequest, NextResponse } from 'next/server';
+import { db } from '@/db';
+import { apiKeys, users } from '@/db/schema';
+import { createAwsApiKey } from '@/lib/aws-gateway';
+import { addDemoKey, DEMO_MODE, DEMO_USERS, getDemoKeys } from '@/lib/demo';
+import { getSession } from '@/lib/session';
 
 const MAX_KEYS_PER_USER = 4;
 
 export async function POST(req: NextRequest) {
   const session = await getSession();
   if (!session.isLoggedIn || !session.userId) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
   try {
     const { keyName } = await req.json();
 
-    if (!keyName || typeof keyName !== "string" || keyName.trim().length < 3) {
+    if (!keyName || typeof keyName !== 'string' || keyName.trim().length < 3) {
       return NextResponse.json(
-        { error: "Key name must be at least 3 characters" },
+        { error: 'Key name must be at least 3 characters' },
         { status: 400 },
       );
     }
@@ -35,13 +35,17 @@ export async function POST(req: NextRequest) {
       }
 
       const demoUser = DEMO_USERS.find((u) => u.id === session.userId) ?? DEMO_USERS[0];
-      const demoDescription = JSON.stringify({
+      const _demoDescription = JSON.stringify({
         userId: demoUser.id,
         name: demoUser.name,
         phoneNumber: demoUser.phoneNumber,
-        role: "user",
+        role: 'user',
         status: demoUser.status,
-        createdAt: demoUser.createdAt.toISOString(),
+        createdAt: demoUser.createdAt
+          ? demoUser.createdAt instanceof Date
+            ? demoUser.createdAt.toISOString()
+            : new Date(demoUser.createdAt).toISOString()
+          : new Date().toISOString(),
       });
 
       await new Promise((r) => setTimeout(r, 600));
@@ -54,7 +58,7 @@ export async function POST(req: NextRequest) {
         keyName: keyName.trim(),
         keyValue: fakeKeyValue,
         isActive: true,
-        usagePlanId: "demo-plan-001",
+        usagePlanId: 'demo-plan-001',
         createdAt: new Date(),
         lastUsedAt: null,
       };
@@ -68,6 +72,15 @@ export async function POST(req: NextRequest) {
       });
     }
     // ──────────────────────────────────────────────────────────────────────────
+
+    // Check if key name already exists for this user
+    const existingKey = await db.query.apiKeys.findFirst({
+      where: and(eq(apiKeys.userId, session.userId), eq(apiKeys.keyName, keyName.trim())),
+    });
+
+    if (existingKey) {
+      return NextResponse.json({ error: 'You already have a key with this name' }, { status: 409 });
+    }
 
     const [{ value: keyCount }] = await db
       .select({ value: count() })
@@ -86,14 +99,14 @@ export async function POST(req: NextRequest) {
     });
 
     if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
     const userName = user.name || user.phoneNumber || `user-${session.userId.slice(0, 8)}`;
-    const phone = user.phoneNumber || session.phoneNumber || "unknown";
+    const phone = user.phoneNumber || session.phoneNumber || 'unknown';
 
-    const sanitizedUserName = userName.replace(/[^a-zA-Z0-9]/g, "_");
-    const sanitizedKeyName = keyName.trim().replace(/[^a-zA-Z0-9-_]/g, "-");
+    const sanitizedUserName = userName.replace(/[^a-zA-Z0-9]/g, '_');
+    const sanitizedKeyName = keyName.trim().replace(/[^a-zA-Z0-9-_]/g, '-');
     const awsKeyName = `ivalt-${sanitizedUserName}-${sanitizedKeyName}`;
 
     const keyDescription = JSON.stringify({
@@ -123,7 +136,7 @@ export async function POST(req: NextRequest) {
       message: "API key created. Save it now — you won't be able to see the full key again.",
     });
   } catch (error) {
-    console.error("Create key error:", error);
-    return NextResponse.json({ error: "Failed to create API key" }, { status: 500 });
+    console.error('Create key error:', error);
+    return NextResponse.json({ error: 'Failed to create API key' }, { status: 500 });
   }
 }

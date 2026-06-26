@@ -1,5 +1,5 @@
-import { os } from "@orpc/server";
-import { z } from "zod";
+import { os } from '@orpc/server';
+import { z } from 'zod';
 
 export const base = os;
 
@@ -16,7 +16,12 @@ export type PaginatedResult<T> = {
   totalPages: number;
 };
 
-export function paginatedResponse<T>(items: T[], total: number, page: number, perPage: number): PaginatedResult<T> {
+export function paginatedResponse<T>(
+  items: T[],
+  total: number,
+  page: number,
+  perPage: number,
+): PaginatedResult<T> {
   return {
     items,
     total,

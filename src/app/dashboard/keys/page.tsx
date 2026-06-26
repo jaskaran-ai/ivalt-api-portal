@@ -1,6 +1,5 @@
-"use client";
+'use client';
 
-import { useCallback, useEffect, useState } from "react";
 import {
   AlertTriangle,
   ArrowRight,
@@ -14,10 +13,11 @@ import {
   ShieldCheck,
   Trash2,
   X,
-} from "lucide-react";
-import { toast } from "sonner";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+} from 'lucide-react';
+import { useCallback, useEffect, useState } from 'react';
+import { toast } from 'sonner';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -25,12 +25,12 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
-import { Switch } from "@/components/ui/switch";
-import { cn } from "@/lib/utils";
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Separator } from '@/components/ui/separator';
+import { Switch } from '@/components/ui/switch';
+import { cn } from '@/lib/utils';
 
 interface ApiKey {
   id: string;
@@ -48,7 +48,7 @@ export default function KeysPage() {
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
   const [showCreate, setShowCreate] = useState(false);
-  const [newKeyName, setNewKeyName] = useState("");
+  const [newKeyName, setNewKeyName] = useState('');
   const [newlyCreatedKey, setNewlyCreatedKey] = useState<{ id: string; value: string } | null>(
     null,
   );
@@ -61,7 +61,7 @@ export default function KeysPage() {
   const [revealingId, setRevealingId] = useState<string | null>(null);
 
   const fetchKeys = useCallback(async () => {
-    const res = await fetch("/api/keys");
+    const res = await fetch('/api/keys');
     const data = await res.json();
     setKeys(data.keys || []);
     setLoading(false);
@@ -73,29 +73,29 @@ export default function KeysPage() {
 
   const handleCreate = async () => {
     if (!newKeyName.trim() || newKeyName.trim().length < 3) {
-      toast.error("Key name must be at least 3 characters");
+      toast.error('Key name must be at least 3 characters');
       return;
     }
 
     setCreating(true);
     try {
-      const res = await fetch("/api/keys/create", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const res = await fetch('/api/keys/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ keyName: newKeyName.trim() }),
       });
       const data = await res.json();
       if (!res.ok) {
-        toast.error(data.error || "Failed to create key");
+        toast.error(data.error || 'Failed to create key');
         return;
       }
       setNewlyCreatedKey({ id: data.key.id, value: data.key.keyValue });
-      setNewKeyName("");
+      setNewKeyName('');
       setShowCreate(false);
       await fetchKeys();
-      toast.success("API key created successfully");
+      toast.success('API key created successfully');
     } catch {
-      toast.error("Network error");
+      toast.error('Network error');
     } finally {
       setCreating(false);
     }
@@ -104,16 +104,16 @@ export default function KeysPage() {
   const handleDelete = async (id: string) => {
     setDeletingId(id);
     try {
-      const res = await fetch(`/api/keys/${id}`, { method: "DELETE" });
+      const res = await fetch(`/api/keys/${id}`, { method: 'DELETE' });
       if (!res.ok) {
-        toast.error("Failed to delete key");
+        toast.error('Failed to delete key');
         return;
       }
       setKeys((k) => k.filter((key) => key.id !== id));
       if (newlyCreatedKey?.id === id) setNewlyCreatedKey(null);
-      toast.success("API key deleted");
+      toast.success('API key deleted');
     } catch {
-      toast.error("Network error");
+      toast.error('Network error');
     } finally {
       setDeletingId(null);
       setDeleteConfirm(null);
@@ -125,19 +125,19 @@ export default function KeysPage() {
     setToggleConfirm(null);
     try {
       const res = await fetch(`/api/keys/${id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ isActive: !currentState }),
       });
       if (!res.ok) {
         const data = await res.json();
-        toast.error(data.error || "Failed to update key");
+        toast.error(data.error || 'Failed to update key');
         return;
       }
       setKeys((ks) => ks.map((k) => (k.id === id ? { ...k, isActive: !currentState } : k)));
-      toast.success(`Key ${!currentState ? "enabled" : "disabled"}`);
+      toast.success(`Key ${!currentState ? 'enabled' : 'disabled'}`);
     } catch {
-      toast.error("Network error");
+      toast.error('Network error');
     } finally {
       setTogglingId(null);
     }
@@ -153,27 +153,27 @@ export default function KeysPage() {
     setRevealingId(id);
     try {
       const res = await fetch(`/api/keys/${id}`);
-      if (!res.ok) throw new Error("Failed to fetch key");
+      if (!res.ok) throw new Error('Failed to fetch key');
       const data = await res.json();
       setRevealedKeyId(id);
       setRevealedKeyValue(data.keyValue);
     } catch {
-      toast.error("Failed to reveal key value");
+      toast.error('Failed to reveal key value');
     } finally {
       setRevealingId(null);
     }
   };
 
-  const copyToClipboard = (text: string, label = "Copied!") => {
+  const copyToClipboard = (text: string, label = 'Copied!') => {
     navigator.clipboard.writeText(text);
     toast.success(label);
   };
 
   const formatDate = (dateStr: string) =>
-    new Date(dateStr).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
+    new Date(dateStr).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
     });
 
   const activeCount = keys.filter((key) => key.isActive).length;
@@ -255,8 +255,8 @@ export default function KeysPage() {
                   </p>
                   <p className="text-sm text-muted-foreground">key slots used</p>
                 </div>
-                <Badge variant={availableSlots > 0 ? "secondary" : "destructive"}>
-                  {availableSlots > 0 ? `${availableSlots} open` : "Limit reached"}
+                <Badge variant={availableSlots > 0 ? 'secondary' : 'destructive'}>
+                  {availableSlots > 0 ? `${availableSlots} open` : 'Limit reached'}
                 </Badge>
               </div>
               <div className="h-3 overflow-hidden rounded-full bg-muted">
@@ -315,7 +315,7 @@ export default function KeysPage() {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => copyToClipboard(newlyCreatedKey.value, "API key copied!")}
+                onClick={() => copyToClipboard(newlyCreatedKey.value, 'API key copied!')}
               >
                 <Copy data-icon="inline-start" />
                 Copy
@@ -342,7 +342,7 @@ export default function KeysPage() {
                   value={newKeyName}
                   onChange={(e) => setNewKeyName(e.target.value)}
                   placeholder="Production App, Staging SDK, Partner Sandbox"
-                  onKeyDown={(e) => e.key === "Enter" && handleCreate()}
+                  onKeyDown={(e) => e.key === 'Enter' && handleCreate()}
                 />
               </div>
               <div className="flex gap-2">
@@ -354,7 +354,7 @@ export default function KeysPage() {
                   variant="outline"
                   onClick={() => {
                     setShowCreate(false);
-                    setNewKeyName("");
+                    setNewKeyName('');
                   }}
                 >
                   Cancel
@@ -387,8 +387,8 @@ export default function KeysPage() {
                 <CardTitle className="text-2xl tracking-[-0.025em]">API keys</CardTitle>
                 <CardDescription>
                   {keys.length === 0
-                    ? "Create your first credential to start integrating."
-                    : "Rotate, disable, or delete environment credentials."}
+                    ? 'Create your first credential to start integrating.'
+                    : 'Rotate, disable, or delete environment credentials.'}
                 </CardDescription>
               </div>
               {keys.length < MAX_KEYS && !showCreate && (
@@ -426,8 +426,8 @@ export default function KeysPage() {
                     key={key.id}
                     size="sm"
                     className={cn(
-                      "border-border/80 bg-background/70 shadow-none",
-                      !key.isActive && "opacity-70",
+                      'border-border/80 bg-background/70 shadow-none',
+                      !key.isActive && 'opacity-70',
                     )}
                   >
                     <CardContent className="p-4">
@@ -435,10 +435,10 @@ export default function KeysPage() {
                         <div className="flex min-w-0 flex-1 gap-4">
                           <div
                             className={cn(
-                              "flex size-11 shrink-0 items-center justify-center rounded-2xl",
+                              'flex size-11 shrink-0 items-center justify-center rounded-2xl',
                               key.isActive
-                                ? "bg-primary/10 text-primary"
-                                : "bg-muted text-muted-foreground",
+                                ? 'bg-primary/10 text-primary'
+                                : 'bg-muted text-muted-foreground',
                             )}
                           >
                             <Key className="size-5" />
@@ -446,24 +446,22 @@ export default function KeysPage() {
                           <div className="min-w-0 flex-1">
                             <div className="flex flex-wrap items-center gap-2">
                               <p className="font-semibold tracking-[-0.01em]">{key.keyName}</p>
-                              <Badge variant={key.isActive ? "default" : "secondary"}>
-                                {key.isActive ? "Active" : "Disabled"}
+                              <Badge variant={key.isActive ? 'default' : 'secondary'}>
+                                {key.isActive ? 'Active' : 'Disabled'}
                               </Badge>
                             </div>
                             <div className="mt-2 flex items-center gap-2">
                               <code className="truncate text-xs text-muted-foreground">
                                 {revealedKeyId === key.id && revealedKeyValue
                                   ? revealedKeyValue
-                                  : key.keyValue || "••••••••••••••••••••••••"}
+                                  : key.keyValue || '••••••••••••••••••••••••'}
                               </code>
                               {revealedKeyId === key.id && revealedKeyValue && (
                                 <Button
                                   variant="ghost"
                                   size="icon"
                                   className="size-7"
-                                  onClick={() =>
-                                    copyToClipboard(revealedKeyValue, "Key copied!")
-                                  }
+                                  onClick={() => copyToClipboard(revealedKeyValue, 'Key copied!')}
                                 >
                                   <Copy />
                                 </Button>
@@ -487,7 +485,7 @@ export default function KeysPage() {
                               )}
                             </div>
                             <p className="mt-2 text-xs text-muted-foreground">
-                              Created {formatDate(key.createdAt)} · AWS ID:{" "}
+                              Created {formatDate(key.createdAt)} · AWS ID:{' '}
                               {key.awsKeyId.slice(0, 12)}…
                             </p>
                           </div>
@@ -497,11 +495,11 @@ export default function KeysPage() {
                             {toggleConfirm === key.id ? (
                               <>
                                 <span className="text-xs font-medium text-muted-foreground">
-                                  {key.isActive ? "Disable?" : "Enable?"}
+                                  {key.isActive ? 'Disable?' : 'Enable?'}
                                 </span>
                                 <Button
                                   size="sm"
-                                  variant={key.isActive ? "destructive" : "default"}
+                                  variant={key.isActive ? 'destructive' : 'default'}
                                   className="h-7 px-2 text-xs"
                                   onClick={() => handleToggle(key.id, key.isActive)}
                                   disabled={togglingId === key.id}
@@ -509,9 +507,9 @@ export default function KeysPage() {
                                   {togglingId === key.id ? (
                                     <Loader2 className="size-3 animate-spin" />
                                   ) : key.isActive ? (
-                                    "Disable"
+                                    'Disable'
                                   ) : (
-                                    "Enable"
+                                    'Enable'
                                   )}
                                 </Button>
                                 <Button
@@ -527,10 +525,10 @@ export default function KeysPage() {
                               <>
                                 <span className="text-xs font-medium text-muted-foreground">
                                   {togglingId === key.id
-                                    ? "Updating"
+                                    ? 'Updating'
                                     : key.isActive
-                                      ? "Enabled"
-                                      : "Disabled"}
+                                      ? 'Enabled'
+                                      : 'Disabled'}
                                 </span>
                                 <Switch
                                   checked={key.isActive}
@@ -596,7 +594,7 @@ export default function KeysPage() {
           </CardHeader>
           <CardContent className="flex flex-col gap-4 p-6">
             <div className="rounded-2xl border border-border/80 bg-background/70 p-4 font-mono text-xs leading-6">
-              <p className="mb-2 text-muted-foreground">// Include in request headers</p>
+              <p className="mb-2 text-muted-foreground">{"// Include in request headers"}</p>
               <p>x-api-key: YOUR_API_KEY</p>
             </div>
             <p className="text-sm leading-6 text-muted-foreground">

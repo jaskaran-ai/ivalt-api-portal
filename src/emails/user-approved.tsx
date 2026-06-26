@@ -1,17 +1,17 @@
 import {
-  Html,
-  Head,
   Body,
   Container,
-  Section,
-  Text,
-  Heading,
-  Img,
   Font,
-  Tailwind,
-  Link,
+  Head,
+  Heading,
   Hr,
-} from "@react-email/components";
+  Html,
+  Img,
+  Link,
+  Section,
+  Tailwind,
+  Text,
+} from '@react-email/components';
 
 interface UserApprovedProps {
   userName: string;
@@ -25,8 +25,8 @@ export function UserApproved({ userName }: UserApprovedProps) {
           fontFamily="Inter"
           fallbackFontFamily="sans-serif"
           webFont={{
-            url: "https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiJ-Ek-_EeA.woff2",
-            format: "woff2",
+            url: 'https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiJ-Ek-_EeA.woff2',
+            format: 'woff2',
           }}
         />
         <style>{`
@@ -47,15 +47,15 @@ export function UserApproved({ userName }: UserApprovedProps) {
         `}</style>
       </Head>
       <Tailwind>
-        <Body className="m-0 bg-[#f4f2f7]" style={{ padding: "32px 16px" }}>
-          <Container className="mx-auto" style={{ maxWidth: "520px", width: "100%" }}>
+        <Body className="m-0 bg-[#f4f2f7]" style={{ padding: '32px 16px' }}>
+          <Container className="mx-auto" style={{ maxWidth: '520px', width: '100%' }}>
             <Section className="mb-5">
               <Section
                 className="email-header overflow-hidden rounded-xl"
                 style={{
-                  background: "#ffffff",
-                  padding: "32px 28px",
-                  textAlign: "center" as const,
+                  background: '#ffffff',
+                  padding: '32px 28px',
+                  textAlign: 'center' as const,
                 }}
               >
                 <Img
@@ -63,7 +63,7 @@ export function UserApproved({ userName }: UserApprovedProps) {
                   alt="iVALT"
                   width="140"
                   height="50"
-                  style={{ display: "inline-block" }}
+                  style={{ display: 'inline-block' }}
                 />
               </Section>
             </Section>
@@ -71,22 +71,22 @@ export function UserApproved({ userName }: UserApprovedProps) {
             <Section
               className="overflow-hidden rounded-xl"
               style={{
-                background: "#ffffff",
-                border: "1px solid #e8e6ee",
+                background: '#ffffff',
+                border: '1px solid #e8e6ee',
               }}
             >
-              <div className="email-card-body" style={{ padding: "32px 28px" }}>
+              <div className="email-card-body" style={{ padding: '32px 28px' }}>
                 <Section className="mb-5">
                   <table cellPadding="0" cellSpacing="0">
                     <tr>
                       <td
                         style={{
-                          width: "48px",
-                          height: "48px",
-                          borderRadius: "12px",
-                          background: "linear-gradient(135deg, #f0fdf4, #dcfce7)",
-                          textAlign: "center" as const,
-                          verticalAlign: "middle" as const,
+                          width: '48px',
+                          height: '48px',
+                          borderRadius: '12px',
+                          background: 'linear-gradient(135deg, #f0fdf4, #dcfce7)',
+                          textAlign: 'center' as const,
+                          verticalAlign: 'middle' as const,
                         }}
                       >
                         <Img
@@ -94,7 +94,7 @@ export function UserApproved({ userName }: UserApprovedProps) {
                           alt=""
                           width="22"
                           height="22"
-                          style={{ display: "block", margin: "13px auto" }}
+                          style={{ display: 'block', margin: '13px auto' }}
                         />
                       </td>
                     </tr>
@@ -105,12 +105,12 @@ export function UserApproved({ userName }: UserApprovedProps) {
                   <Text
                     className="m-0"
                     style={{
-                      fontSize: "11px",
+                      fontSize: '11px',
                       fontWeight: 600,
-                      color: "#16a34a",
-                      textTransform: "uppercase" as const,
-                      letterSpacing: "0.08em",
-                      marginBottom: "8px",
+                      color: '#16a34a',
+                      textTransform: 'uppercase' as const,
+                      letterSpacing: '0.08em',
+                      marginBottom: '8px',
                     }}
                   >
                     Access Approved
@@ -118,12 +118,12 @@ export function UserApproved({ userName }: UserApprovedProps) {
                   <Heading
                     className="email-heading m-0"
                     style={{
-                      fontSize: "20px",
+                      fontSize: '20px',
                       fontWeight: 700,
-                      color: "#1a1a2e",
-                      letterSpacing: "-0.02em",
-                      lineHeight: "1.3",
-                      marginBottom: "8px",
+                      color: '#1a1a2e',
+                      letterSpacing: '-0.02em',
+                      lineHeight: '1.3',
+                      marginBottom: '8px',
                     }}
                   >
                     Welcome to iVALT, {userName}
@@ -131,9 +131,9 @@ export function UserApproved({ userName }: UserApprovedProps) {
                   <Text
                     className="email-text m-0"
                     style={{
-                      fontSize: "14px",
-                      color: "#6b7280",
-                      lineHeight: "1.5",
+                      fontSize: '14px',
+                      color: '#6b7280',
+                      lineHeight: '1.5',
                     }}
                   >
                     Your access request has been approved. You can now sign in to manage API keys,
@@ -144,19 +144,19 @@ export function UserApproved({ userName }: UserApprovedProps) {
 
                 <Section
                   style={{
-                    background: "#f0fdf4",
-                    borderRadius: "8px",
-                    border: "1px solid #dcfce7",
-                    padding: "16px 18px",
-                    marginBottom: "24px",
+                    background: '#f0fdf4',
+                    borderRadius: '8px',
+                    border: '1px solid #dcfce7',
+                    padding: '16px 18px',
+                    marginBottom: '24px',
                   }}
                 >
                   <Text
                     className="email-text m-0"
                     style={{
-                      fontSize: "13px",
-                      color: "#166534",
-                      lineHeight: "1.6",
+                      fontSize: '13px',
+                      color: '#166534',
+                      lineHeight: '1.6',
                       fontWeight: 500,
                     }}
                   >
@@ -170,12 +170,12 @@ export function UserApproved({ userName }: UserApprovedProps) {
                   <Text
                     className="m-0"
                     style={{
-                      fontSize: "11px",
+                      fontSize: '11px',
                       fontWeight: 600,
-                      color: "#9ca3af",
-                      textTransform: "uppercase" as const,
-                      letterSpacing: "0.06em",
-                      marginBottom: "12px",
+                      color: '#9ca3af',
+                      textTransform: 'uppercase' as const,
+                      letterSpacing: '0.06em',
+                      marginBottom: '12px',
                     }}
                   >
                     Quick Start Guide
@@ -185,25 +185,25 @@ export function UserApproved({ userName }: UserApprovedProps) {
                     <tr>
                       <td
                         style={{
-                          padding: "10px 0",
-                          borderBottom: "1px solid #f0f0f5",
-                          verticalAlign: "top" as const,
-                          width: "28px",
+                          padding: '10px 0',
+                          borderBottom: '1px solid #f0f0f5',
+                          verticalAlign: 'top' as const,
+                          width: '28px',
                         }}
                       >
                         <span
                           className="email-step-num"
                           style={{
-                            display: "inline-block",
-                            width: "24px",
-                            height: "24px",
-                            lineHeight: "24px",
-                            borderRadius: "6px",
-                            background: "linear-gradient(135deg, #611f69, #7a2d82)",
-                            color: "#ffffff",
-                            fontSize: "11px",
+                            display: 'inline-block',
+                            width: '24px',
+                            height: '24px',
+                            lineHeight: '24px',
+                            borderRadius: '6px',
+                            background: 'linear-gradient(135deg, #611f69, #7a2d82)',
+                            color: '#ffffff',
+                            fontSize: '11px',
                             fontWeight: 700,
-                            textAlign: "center" as const,
+                            textAlign: 'center' as const,
                           }}
                         >
                           1
@@ -211,15 +211,15 @@ export function UserApproved({ userName }: UserApprovedProps) {
                       </td>
                       <td
                         style={{
-                          padding: "10px 0 10px 10px",
-                          borderBottom: "1px solid #f0f0f5",
+                          padding: '10px 0 10px 10px',
+                          borderBottom: '1px solid #f0f0f5',
                         }}
                       >
                         <Text
                           className="email-step-title m-0"
                           style={{
-                            fontSize: "14px",
-                            color: "#1a1a2e",
+                            fontSize: '14px',
+                            color: '#1a1a2e',
                             fontWeight: 600,
                           }}
                         >
@@ -228,9 +228,9 @@ export function UserApproved({ userName }: UserApprovedProps) {
                         <Text
                           className="email-step-desc m-0"
                           style={{
-                            fontSize: "12px",
-                            color: "#9ca3af",
-                            marginTop: "2px",
+                            fontSize: '12px',
+                            color: '#9ca3af',
+                            marginTop: '2px',
                           }}
                         >
                           Create a key from the API Keys dashboard to get started
@@ -240,24 +240,24 @@ export function UserApproved({ userName }: UserApprovedProps) {
                     <tr>
                       <td
                         style={{
-                          padding: "10px 0",
-                          borderBottom: "1px solid #f0f0f5",
-                          verticalAlign: "top" as const,
+                          padding: '10px 0',
+                          borderBottom: '1px solid #f0f0f5',
+                          verticalAlign: 'top' as const,
                         }}
                       >
                         <span
                           className="email-step-num"
                           style={{
-                            display: "inline-block",
-                            width: "24px",
-                            height: "24px",
-                            lineHeight: "24px",
-                            borderRadius: "6px",
-                            background: "linear-gradient(135deg, #611f69, #7a2d82)",
-                            color: "#ffffff",
-                            fontSize: "11px",
+                            display: 'inline-block',
+                            width: '24px',
+                            height: '24px',
+                            lineHeight: '24px',
+                            borderRadius: '6px',
+                            background: 'linear-gradient(135deg, #611f69, #7a2d82)',
+                            color: '#ffffff',
+                            fontSize: '11px',
                             fontWeight: 700,
-                            textAlign: "center" as const,
+                            textAlign: 'center' as const,
                           }}
                         >
                           2
@@ -265,15 +265,15 @@ export function UserApproved({ userName }: UserApprovedProps) {
                       </td>
                       <td
                         style={{
-                          padding: "10px 0 10px 10px",
-                          borderBottom: "1px solid #f0f0f5",
+                          padding: '10px 0 10px 10px',
+                          borderBottom: '1px solid #f0f0f5',
                         }}
                       >
                         <Text
                           className="email-step-title m-0"
                           style={{
-                            fontSize: "14px",
-                            color: "#1a1a2e",
+                            fontSize: '14px',
+                            color: '#1a1a2e',
                             fontWeight: 600,
                           }}
                         >
@@ -282,9 +282,9 @@ export function UserApproved({ userName }: UserApprovedProps) {
                         <Text
                           className="email-step-desc m-0"
                           style={{
-                            fontSize: "12px",
-                            color: "#9ca3af",
-                            marginTop: "2px",
+                            fontSize: '12px',
+                            color: '#9ca3af',
+                            marginTop: '2px',
                           }}
                         >
                           Explore the biometric auth request and polling contract
@@ -294,23 +294,23 @@ export function UserApproved({ userName }: UserApprovedProps) {
                     <tr>
                       <td
                         style={{
-                          padding: "10px 0",
-                          verticalAlign: "top" as const,
+                          padding: '10px 0',
+                          verticalAlign: 'top' as const,
                         }}
                       >
                         <span
                           className="email-step-num"
                           style={{
-                            display: "inline-block",
-                            width: "24px",
-                            height: "24px",
-                            lineHeight: "24px",
-                            borderRadius: "6px",
-                            background: "linear-gradient(135deg, #611f69, #7a2d82)",
-                            color: "#ffffff",
-                            fontSize: "11px",
+                            display: 'inline-block',
+                            width: '24px',
+                            height: '24px',
+                            lineHeight: '24px',
+                            borderRadius: '6px',
+                            background: 'linear-gradient(135deg, #611f69, #7a2d82)',
+                            color: '#ffffff',
+                            fontSize: '11px',
                             fontWeight: 700,
-                            textAlign: "center" as const,
+                            textAlign: 'center' as const,
                           }}
                         >
                           3
@@ -318,14 +318,14 @@ export function UserApproved({ userName }: UserApprovedProps) {
                       </td>
                       <td
                         style={{
-                          padding: "10px 0 10px 10px",
+                          padding: '10px 0 10px 10px',
                         }}
                       >
                         <Text
                           className="email-step-title m-0"
                           style={{
-                            fontSize: "14px",
-                            color: "#1a1a2e",
+                            fontSize: '14px',
+                            color: '#1a1a2e',
                             fontWeight: 600,
                           }}
                         >
@@ -334,9 +334,9 @@ export function UserApproved({ userName }: UserApprovedProps) {
                         <Text
                           className="email-step-desc m-0"
                           style={{
-                            fontSize: "12px",
-                            color: "#9ca3af",
-                            marginTop: "2px",
+                            fontSize: '12px',
+                            color: '#9ca3af',
+                            marginTop: '2px',
                           }}
                         >
                           Start authenticating users with biometrics in production
@@ -348,9 +348,9 @@ export function UserApproved({ userName }: UserApprovedProps) {
 
                 <Hr
                   style={{
-                    border: "none",
-                    borderTop: "1px solid #eeeef2",
-                    margin: "0 0 24px 0",
+                    border: 'none',
+                    borderTop: '1px solid #eeeef2',
+                    margin: '0 0 24px 0',
                   }}
                 />
 
@@ -362,14 +362,14 @@ export function UserApproved({ userName }: UserApprovedProps) {
                           href="https://ivalt-api-portal.vercel.app/dashboard"
                           className="email-cta"
                           style={{
-                            display: "inline-block",
-                            background: "#611f69",
-                            color: "#ffffff",
-                            fontSize: "14px",
+                            display: 'inline-block',
+                            background: '#611f69',
+                            color: '#ffffff',
+                            fontSize: '14px',
                             fontWeight: 600,
-                            padding: "12px 28px",
-                            borderRadius: "8px",
-                            textDecoration: "none",
+                            padding: '12px 28px',
+                            borderRadius: '8px',
+                            textDecoration: 'none',
                           }}
                         >
                           Open Developer Portal
@@ -381,23 +381,23 @@ export function UserApproved({ userName }: UserApprovedProps) {
               </div>
             </Section>
 
-            <Section className="mt-5" style={{ textAlign: "center" as const, padding: "0 12px" }}>
+            <Section className="mt-5" style={{ textAlign: 'center' as const, padding: '0 12px' }}>
               <Text
                 className="email-footer-text m-0"
                 style={{
-                  fontSize: "12px",
-                  color: "#9ca3af",
-                  lineHeight: "1.6",
+                  fontSize: '12px',
+                  color: '#9ca3af',
+                  lineHeight: '1.6',
                 }}
               >
-                Questions? Contact{" "}
+                Questions? Contact{' '}
                 <Link
                   href="mailto:support@ivalt.com"
                   style={{
-                    fontSize: "12px",
-                    color: "#611f69",
+                    fontSize: '12px',
+                    color: '#611f69',
                     fontWeight: 600,
-                    textDecoration: "none",
+                    textDecoration: 'none',
                   }}
                 >
                   support@ivalt.com
@@ -406,9 +406,9 @@ export function UserApproved({ userName }: UserApprovedProps) {
               <Text
                 className="email-footer-text m-0"
                 style={{
-                  fontSize: "11px",
-                  color: "#c4c4cc",
-                  marginTop: "2px",
+                  fontSize: '11px',
+                  color: '#c4c4cc',
+                  marginTop: '2px',
                 }}
               >
                 iVALT API Portal — Biometric Authentication Platform
