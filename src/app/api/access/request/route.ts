@@ -27,12 +27,12 @@ export async function POST(req: NextRequest) {
     }
     // ──────────────────────────────────────────────────────────────────────────
 
-    // Check if user already has a pending request
+    // Check if user already has a pending request with a filled use case
     const existingRequest = await db.query.accessRequests.findFirst({
       where: (ar) => eq(ar.userId, userId),
     });
 
-    if (existingRequest) {
+    if (existingRequest && existingRequest.useCase !== '') {
       return NextResponse.json(
         {
           error: 'Access request already submitted. Please wait for admin approval.',
@@ -42,12 +42,23 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Create access request
-    await db.insert(accessRequests).values({
-      userId,
-      useCase,
-      requestedAt: new Date(),
-    });
+    if (existingRequest) {
+      // Update existing request
+      await db
+        .update(accessRequests)
+        .set({
+          useCase,
+          requestedAt: new Date(),
+        })
+        .where(eq(accessRequests.id, existingRequest.id));
+    } else {
+      // Create new access request
+      await db.insert(accessRequests).values({
+        userId,
+        useCase,
+        requestedAt: new Date(),
+      });
+    }
 
     // Update user status to pending
     await db.update(users).set({ status: 'pending' }).where(eq(users.id, userId));

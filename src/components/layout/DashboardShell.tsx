@@ -67,6 +67,8 @@ function SidebarContentLayout({ children, phoneNumber, demoMode }: DashboardShel
   const handleLogout = async () => {
     setLoggingOut(true);
     await fetch('/api/auth/logout', { method: 'POST' });
+    localStorage.removeItem('ivalt_access_status');
+    localStorage.removeItem('ivalt_has_usecase');
     toast.success(demoMode ? 'Exited demo mode' : 'Logged out successfully');
     router.push('/login');
   };
