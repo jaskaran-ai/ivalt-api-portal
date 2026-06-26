@@ -21,6 +21,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Pagination } from '@/components/ui/pagination';
+import { AdminTableSkeleton } from '@/components/ui/skeletons';
 import {
   Table,
   TableBody,
@@ -246,11 +247,7 @@ function DetailsModal({ request, processingId, onClose, onApprove, onDelete }: D
         <div className="flex items-center justify-between border-t border-border px-6 py-4">
           <Button
             variant="ghost"
-            onClick={() => {
-              if (confirm('Are you sure you want to permanently delete this access request?')) {
-                onDelete(request.id);
-              }
-            }}
+            onClick={() => onDelete(request.id)}
             disabled={isProcessing}
             className="text-destructive hover:bg-destructive/10 hover:text-destructive gap-1.5"
           >
@@ -302,42 +299,45 @@ export default function AdminRequestsPage() {
   const [selectedRequest, setSelectedRequest] = useState<AccessRequest | null>(null);
   const perPage = 10;
 
-  const fetchRequests = useCallback(async () => {
-    setLoading(true);
-    try {
-      const res = await fetch(`/api/access/approve?status=${statusFilter}`);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = await res.json();
-      const all: AccessRequest[] = (data.requests ?? []).map(
-        (
-          r: Omit<AccessRequest, 'requestedAt' | 'approvedAt'> & {
-            requestedAt: string | number | Date;
-            approvedAt: string | number | Date | null;
-          },
-        ) => ({
-          ...r,
-          requestedAt:
-            typeof r.requestedAt === 'string'
-              ? r.requestedAt
-              : new Date(r.requestedAt).toISOString(),
-          approvedAt: r.approvedAt
-            ? typeof r.approvedAt === 'string'
-              ? r.approvedAt
-              : new Date(r.approvedAt).toISOString()
-            : null,
-        }),
-      );
-      const start = (page - 1) * perPage;
-      setRequests(all.slice(start, start + perPage));
-      setTotal(all.length);
-      setTotalPages(Math.ceil(all.length / perPage));
-    } catch (err) {
-      console.error('Failed to fetch requests:', err);
-      setRequests([]);
-    } finally {
-      setLoading(false);
-    }
-  }, [statusFilter, page]);
+  const fetchRequests = useCallback(
+    async (showLoading = true) => {
+      if (showLoading) setLoading(true);
+      try {
+        const res = await fetch(`/api/access/approve?status=${statusFilter}`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        const all: AccessRequest[] = (data.requests ?? []).map(
+          (
+            r: Omit<AccessRequest, 'requestedAt' | 'approvedAt'> & {
+              requestedAt: string | number | Date;
+              approvedAt: string | number | Date | null;
+            },
+          ) => ({
+            ...r,
+            requestedAt:
+              typeof r.requestedAt === 'string'
+                ? r.requestedAt
+                : new Date(r.requestedAt).toISOString(),
+            approvedAt: r.approvedAt
+              ? typeof r.approvedAt === 'string'
+                ? r.approvedAt
+                : new Date(r.approvedAt).toISOString()
+              : null,
+          }),
+        );
+        const start = (page - 1) * perPage;
+        setRequests(all.slice(start, start + perPage));
+        setTotal(all.length);
+        setTotalPages(Math.ceil(all.length / perPage));
+      } catch (err) {
+        console.error('Failed to fetch requests:', err);
+        setRequests([]);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [statusFilter, page],
+  );
 
   useEffect(() => {
     fetchRequests();
@@ -359,7 +359,7 @@ export default function AdminRequestsPage() {
       if (!res.ok) throw new Error('Failed to process request');
       toast.success(`Request ${approved ? 'approved' : 'rejected'} successfully`);
       setSelectedRequest(null);
-      fetchRequests();
+      fetchRequests(false);
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Something went wrong');
     } finally {
@@ -368,6 +368,9 @@ export default function AdminRequestsPage() {
   };
 
   const handleDeleteRequest = async (requestId: string) => {
+    if (!confirm('Are you sure you want to permanently delete this access request?')) {
+      return;
+    }
     try {
       const res = await fetch('/api/access/approve', {
         method: 'DELETE',
@@ -377,11 +380,23 @@ export default function AdminRequestsPage() {
       if (!res.ok) throw new Error('Failed to delete request');
       toast.success('Request deleted successfully');
       setSelectedRequest(null);
-      fetchRequests();
+      fetchRequests(false);
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Something went wrong');
     }
   };
+
+  if (loading) {
+    return (
+      <AdminShell>
+        <AdminTableSkeleton
+          title="Access Requests"
+          description="Manage developer access requests"
+          headers={['User', 'Phone', 'Use Case', 'Requested At', 'Status', 'Actions']}
+        />
+      </AdminShell>
+    );
+  }
 
   return (
     <AdminShell>

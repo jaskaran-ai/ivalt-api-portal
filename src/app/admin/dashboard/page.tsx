@@ -6,6 +6,7 @@ import AdminShell from '@/components/layout/AdminShell';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { AdminDashboardSkeleton } from '@/components/ui/skeletons';
 
 interface UsageStats {
   summary?: {
@@ -49,9 +50,7 @@ export default function AdminDashboardPage() {
   if (loading) {
     return (
       <AdminShell>
-        <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center">
-          <div className="size-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-        </div>
+        <AdminDashboardSkeleton />
       </AdminShell>
     );
   }

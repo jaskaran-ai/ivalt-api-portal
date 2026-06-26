@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Pagination } from '@/components/ui/pagination';
+import { AdminTableSkeleton } from '@/components/ui/skeletons';
 import {
   Table,
   TableBody,
@@ -38,43 +39,47 @@ export default function AdminUsersPage() {
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
   const perPage = 10;
 
-  const fetchUsers = useCallback(async () => {
-    setLoading(true);
-    try {
-      const res = await fetch('/api/admin/users');
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = await res.json();
-      // REST endpoint returns { users: [...] } — filter + paginate client-side
-      const all: AdminUser[] = (data.users ?? []).map(
-        (
-          u: Omit<AdminUser, 'createdAt' | 'approvedAt'> & {
-            createdAt: string | number | Date;
-            approvedAt: string | number | Date | null;
-          },
-        ) => ({
-          ...u,
-          createdAt:
-            typeof u.createdAt === 'string' ? u.createdAt : new Date(u.createdAt).toISOString(),
-          approvedAt: u.approvedAt
-            ? typeof u.approvedAt === 'string'
-              ? u.approvedAt
-              : new Date(u.approvedAt).toISOString()
-            : null,
-        }),
-      );
-      const filtered = statusFilter === 'all' ? all : all.filter((u) => u.status === statusFilter);
-      const start = (page - 1) * perPage;
-      const pageItems = filtered.slice(start, start + perPage);
-      setUsers(pageItems);
-      setTotal(filtered.length);
-      setTotalPages(Math.ceil(filtered.length / perPage));
-    } catch (err) {
-      console.error('Failed to fetch users:', err);
-      setUsers([]);
-    } finally {
-      setLoading(false);
-    }
-  }, [statusFilter, page]);
+  const fetchUsers = useCallback(
+    async (showLoading = true) => {
+      if (showLoading) setLoading(true);
+      try {
+        const res = await fetch('/api/admin/users');
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        // REST endpoint returns { users: [...] } — filter + paginate client-side
+        const all: AdminUser[] = (data.users ?? []).map(
+          (
+            u: Omit<AdminUser, 'createdAt' | 'approvedAt'> & {
+              createdAt: string | number | Date;
+              approvedAt: string | number | Date | null;
+            },
+          ) => ({
+            ...u,
+            createdAt:
+              typeof u.createdAt === 'string' ? u.createdAt : new Date(u.createdAt).toISOString(),
+            approvedAt: u.approvedAt
+              ? typeof u.approvedAt === 'string'
+                ? u.approvedAt
+                : new Date(u.approvedAt).toISOString()
+              : null,
+          }),
+        );
+        const filtered =
+          statusFilter === 'all' ? all : all.filter((u) => u.status === statusFilter);
+        const start = (page - 1) * perPage;
+        const pageItems = filtered.slice(start, start + perPage);
+        setUsers(pageItems);
+        setTotal(filtered.length);
+        setTotalPages(Math.ceil(filtered.length / perPage));
+      } catch (err) {
+        console.error('Failed to fetch users:', err);
+        setUsers([]);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [statusFilter, page],
+  );
 
   useEffect(() => {
     fetchUsers();
@@ -101,7 +106,7 @@ export default function AdminUsersPage() {
       });
       if (!res.ok) throw new Error('Failed to delete user');
       toast.success('User deleted successfully');
-      fetchUsers();
+      fetchUsers(false);
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Failed to delete user');
     }
@@ -125,6 +130,18 @@ export default function AdminUsersPage() {
         return <Badge variant="outline">Pending</Badge>;
     }
   };
+
+  if (loading) {
+    return (
+      <AdminShell>
+        <AdminTableSkeleton
+          title="Users"
+          description="Manage registered users and their access status"
+          headers={['Name', 'Phone', 'Status', 'Joined At', 'Actions']}
+        />
+      </AdminShell>
+    );
+  }
 
   return (
     <AdminShell>

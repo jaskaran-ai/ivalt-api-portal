@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Pagination } from '@/components/ui/pagination';
+import { AdminTableSkeleton } from '@/components/ui/skeletons';
 import { Switch } from '@/components/ui/switch';
 import {
   Table,
@@ -45,52 +46,55 @@ export default function AdminKeysPage() {
   const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'inactive'>('all');
   const perPage = 10;
 
-  const fetchKeys = useCallback(async () => {
-    setLoading(true);
-    try {
-      const res = await fetch('/api/admin/keys');
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = await res.json();
-      // REST endpoint returns { keys: [...] } — filter + paginate client-side
-      let all: ApiKey[] = (data.keys ?? []).map(
-        (
-          k: Omit<ApiKey, 'createdAt' | 'lastUsedAt'> & {
-            createdAt: string | number | Date;
-            lastUsedAt: string | number | Date | null;
-          },
-        ) => ({
-          ...k,
-          createdAt:
-            typeof k.createdAt === 'string' ? k.createdAt : new Date(k.createdAt).toISOString(),
-          lastUsedAt: k.lastUsedAt
-            ? typeof k.lastUsedAt === 'string'
-              ? k.lastUsedAt
-              : new Date(k.lastUsedAt).toISOString()
-            : null,
-        }),
-      );
-      if (statusFilter === 'active') all = all.filter((k) => k.isActive);
-      if (statusFilter === 'inactive') all = all.filter((k) => !k.isActive);
-      if (search) {
-        const q = search.toLowerCase();
-        all = all.filter(
-          (k) =>
-            k.keyName.toLowerCase().includes(q) ||
-            k.awsKeyId.toLowerCase().includes(q) ||
-            k.user?.name?.toLowerCase().includes(q),
+  const fetchKeys = useCallback(
+    async (showLoading = true) => {
+      if (showLoading) setLoading(true);
+      try {
+        const res = await fetch('/api/admin/keys');
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        // REST endpoint returns { keys: [...] } — filter + paginate client-side
+        let all: ApiKey[] = (data.keys ?? []).map(
+          (
+            k: Omit<ApiKey, 'createdAt' | 'lastUsedAt'> & {
+              createdAt: string | number | Date;
+              lastUsedAt: string | number | Date | null;
+            },
+          ) => ({
+            ...k,
+            createdAt:
+              typeof k.createdAt === 'string' ? k.createdAt : new Date(k.createdAt).toISOString(),
+            lastUsedAt: k.lastUsedAt
+              ? typeof k.lastUsedAt === 'string'
+                ? k.lastUsedAt
+                : new Date(k.lastUsedAt).toISOString()
+              : null,
+          }),
         );
+        if (statusFilter === 'active') all = all.filter((k) => k.isActive);
+        if (statusFilter === 'inactive') all = all.filter((k) => !k.isActive);
+        if (search) {
+          const q = search.toLowerCase();
+          all = all.filter(
+            (k) =>
+              k.keyName.toLowerCase().includes(q) ||
+              k.awsKeyId.toLowerCase().includes(q) ||
+              k.user?.name?.toLowerCase().includes(q),
+          );
+        }
+        const start = (page - 1) * perPage;
+        setKeys(all.slice(start, start + perPage));
+        setTotal(all.length);
+        setTotalPages(Math.ceil(all.length / perPage));
+      } catch (err) {
+        console.error('Failed to fetch keys:', err);
+        setKeys([]);
+      } finally {
+        setLoading(false);
       }
-      const start = (page - 1) * perPage;
-      setKeys(all.slice(start, start + perPage));
-      setTotal(all.length);
-      setTotalPages(Math.ceil(all.length / perPage));
-    } catch (err) {
-      console.error('Failed to fetch keys:', err);
-      setKeys([]);
-    } finally {
-      setLoading(false);
-    }
-  }, [statusFilter, search, page]);
+    },
+    [statusFilter, search, page],
+  );
 
   useEffect(() => {
     fetchKeys();
@@ -119,7 +123,7 @@ export default function AdminKeysPage() {
       });
       if (!res.ok) throw new Error('Failed to toggle key status');
       toast.success(`Key ${!currentState ? 'enabled' : 'disabled'} successfully`);
-      fetchKeys();
+      fetchKeys(false);
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Failed to toggle key');
     } finally {
@@ -142,13 +146,25 @@ export default function AdminKeysPage() {
       });
       if (!res.ok) throw new Error('Failed to delete API key');
       toast.success('API key deleted successfully');
-      fetchKeys();
+      fetchKeys(false);
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Failed to delete key');
     } finally {
       setDeletingId(null);
     }
   };
+
+  if (loading) {
+    return (
+      <AdminShell>
+        <AdminTableSkeleton
+          title="API Keys"
+          description="Manage developer API keys"
+          headers={['Name', 'AWS Key ID', 'User', 'Status', 'Created At', 'Actions']}
+        />
+      </AdminShell>
+    );
+  }
 
   const activeCount = keys.filter((k) => k.isActive).length;
   const inactiveCount = keys.filter((k) => !k.isActive).length;

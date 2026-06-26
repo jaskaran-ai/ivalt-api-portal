@@ -1,12 +1,13 @@
 'use client';
 
-import { CheckCircle2, Clock, Loader2, Lock, ShieldCheck, XCircle } from 'lucide-react';
+import { CheckCircle2, Clock, Lock, ShieldCheck, XCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { AccessStatusSkeleton } from '@/components/ui/skeletons';
 
 export default function AccessStatusPage() {
   const router = useRouter();
@@ -35,33 +36,7 @@ export default function AccessStatusPage() {
   }, []);
 
   if (status === 'loading') {
-    return (
-      <div className="relative min-h-screen overflow-hidden bg-background px-4 py-8">
-        <div className="relative mx-auto grid min-h-[calc(100vh-4rem)] w-full max-w-6xl items-center gap-10 lg:grid-cols-[1.08fr_0.82fr]">
-          <section className="hidden flex-col gap-8 lg:flex">
-            <div className="flex items-center gap-3">
-              <div className="flex size-12 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-sm shadow-primary/20">
-                <ShieldCheck className="size-6" />
-              </div>
-              <div>
-                <p className="text-2xl font-semibold tracking-[-0.03em]">iVALT</p>
-                <p className="text-sm text-muted-foreground">Developer Portal</p>
-              </div>
-            </div>
-          </section>
-
-          <section className="mx-auto flex w-full max-w-md flex-col gap-6">
-            <Card className="border-primary/10 bg-card/95 shadow-xl shadow-foreground/10 backdrop-blur">
-              <CardContent className="p-6 pt-8">
-                <div className="flex items-center justify-center">
-                  <Loader2 className="size-6 animate-spin text-primary" />
-                </div>
-              </CardContent>
-            </Card>
-          </section>
-        </div>
-      </div>
-    );
+    return <AccessStatusSkeleton />;
   }
 
   const isApproved = status === 'approved';
