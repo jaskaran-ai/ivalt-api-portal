@@ -27,6 +27,11 @@ export async function GET(_req: NextRequest) {
       where: eq(users.id, userId),
     });
 
+    if (user && user.status !== session.accessStatus) {
+      session.accessStatus = user.status as 'pending' | 'approved' | 'rejected';
+      await session.save?.();
+    }
+
     const request = await db.query.accessRequests.findFirst({
       where: (ar) => eq(ar.userId, userId),
     });

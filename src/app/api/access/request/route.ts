@@ -63,6 +63,11 @@ export async function POST(req: NextRequest) {
     // Update user status to pending
     await db.update(users).set({ status: 'pending' }).where(eq(users.id, userId));
 
+    if (session.accessStatus !== 'pending') {
+      session.accessStatus = 'pending';
+      await session.save?.();
+    }
+
     const user = await db.query.users.findFirst({
       where: eq(users.id, userId),
     });
