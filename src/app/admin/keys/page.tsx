@@ -1,13 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Key, ShieldCheck } from "lucide-react";
+import { Key, ShieldCheck, CheckCircle2, XCircle, LayoutList } from "lucide-react";
 import AdminShell from "@/components/layout/AdminShell";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Pagination } from "@/components/ui/pagination";
-import { orpc } from "@/lib/orpc/client";
 
 interface ApiKey {
   id: string;
@@ -39,16 +38,34 @@ export default function AdminKeysPage() {
   const fetchKeys = async () => {
     setLoading(true);
     try {
-      const result = await orpc.admin.keys.list({
-        page,
-        perPage,
-        status: statusFilter,
-        search: search || undefined,
-      }) as any;
-      setKeys(result.items ?? []);
-      setTotal(result.total ?? 0);
-      setTotalPages(result.totalPages ?? 0);
-    } catch {
+      const res = await fetch("/api/admin/keys");
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      // REST endpoint returns { keys: [...] } — filter + paginate client-side
+      let all: ApiKey[] = (data.keys ?? []).map((k: any) => ({
+        ...k,
+        createdAt: typeof k.createdAt === "string" ? k.createdAt : new Date(k.createdAt).toISOString(),
+        lastUsedAt: k.lastUsedAt
+          ? typeof k.lastUsedAt === "string" ? k.lastUsedAt : new Date(k.lastUsedAt).toISOString()
+          : null,
+      }));
+      if (statusFilter === "active") all = all.filter((k) => k.isActive);
+      if (statusFilter === "inactive") all = all.filter((k) => !k.isActive);
+      if (search) {
+        const q = search.toLowerCase();
+        all = all.filter(
+          (k) =>
+            k.keyName.toLowerCase().includes(q) ||
+            k.awsKeyId.toLowerCase().includes(q) ||
+            k.user?.name?.toLowerCase().includes(q),
+        );
+      }
+      const start = (page - 1) * perPage;
+      setKeys(all.slice(start, start + perPage));
+      setTotal(all.length);
+      setTotalPages(Math.ceil(all.length / perPage));
+    } catch (err) {
+      console.error("Failed to fetch keys:", err);
       setKeys([]);
     } finally {
       setLoading(false);
@@ -80,37 +97,61 @@ export default function AdminKeysPage() {
           <p className="text-sm text-muted-foreground">Monitor all API keys across the system</p>
         </div>
 
-        <div className="mb-6 grid gap-4 md:grid-cols-4">
+        <div className="mb-6 grid grid-cols-2 gap-4 md:grid-cols-4">
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Total Keys</CardTitle>
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Total Keys</CardTitle>
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
+                  <Key className="h-4 w-4 text-primary" />
+                </div>
+              </div>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{total}</div>
+              <p className="mt-1 text-xs text-muted-foreground">All API keys</p>
             </CardContent>
           </Card>
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">On This Page</CardTitle>
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-sm font-medium text-muted-foreground">On This Page</CardTitle>
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-500/10">
+                  <LayoutList className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
+                </div>
+              </div>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{keys.length}</div>
+              <p className="mt-1 text-xs text-muted-foreground">Current page</p>
             </CardContent>
           </Card>
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Active</CardTitle>
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Active</CardTitle>
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-500/10">
+                  <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+                </div>
+              </div>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-emerald-600">{activeCount}</div>
+              <p className="mt-1 text-xs text-muted-foreground">Enabled keys</p>
             </CardContent>
           </Card>
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Inactive</CardTitle>
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Inactive</CardTitle>
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-rose-500/10">
+                  <XCircle className="h-4 w-4 text-rose-500 dark:text-rose-400" />
+                </div>
+              </div>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-muted-foreground">{inactiveCount}</div>
+              <p className="mt-1 text-xs text-muted-foreground">Disabled keys</p>
             </CardContent>
           </Card>
         </div>
@@ -123,7 +164,7 @@ export default function AdminKeysPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="mb-4 flex items-center gap-2">
+            <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center">
               <input
                 type="text"
                 placeholder="Search keys..."
@@ -131,10 +172,10 @@ export default function AdminKeysPage() {
                 onChange={(e) => handleSearchChange(e.target.value)}
                 className="flex-1 px-3 py-2 border rounded-md text-sm"
               />
-              <div className="flex gap-2">
+              <div className="flex gap-2 shrink-0">
                 <button
                   onClick={() => handleStatusChange("all")}
-                  className={`px-3 py-1 text-sm rounded-md ${
+                  className={`px-3 py-1.5 text-sm rounded-md ${
                     statusFilter === "all" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
                   }`}
                 >
@@ -142,7 +183,7 @@ export default function AdminKeysPage() {
                 </button>
                 <button
                   onClick={() => handleStatusChange("active")}
-                  className={`px-3 py-1 text-sm rounded-md ${
+                  className={`px-3 py-1.5 text-sm rounded-md ${
                     statusFilter === "active" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
                   }`}
                 >
@@ -150,7 +191,7 @@ export default function AdminKeysPage() {
                 </button>
                 <button
                   onClick={() => handleStatusChange("inactive")}
-                  className={`px-3 py-1 text-sm rounded-md ${
+                  className={`px-3 py-1.5 text-sm rounded-md ${
                     statusFilter === "inactive" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
                   }`}
                 >
@@ -173,14 +214,15 @@ export default function AdminKeysPage() {
               </div>
             ) : (
               <>
+                <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
                     <TableRow>
                       <TableHead>Key Name</TableHead>
                       <TableHead>User</TableHead>
                       <TableHead>Status</TableHead>
-                      <TableHead>Created</TableHead>
-                      <TableHead>Last Used</TableHead>
+                      <TableHead className="hidden md:table-cell">Created</TableHead>
+                      <TableHead className="hidden lg:table-cell">Last Used</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -196,14 +238,14 @@ export default function AdminKeysPage() {
                         </TableCell>
                         <TableCell>
                           <div className="flex items-center gap-3">
-                            <div className="size-8 rounded-full bg-primary/10 flex items-center justify-center">
+                            <div className="size-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0 hidden sm:flex">
                               <ShieldCheck className="size-4 text-primary" />
                             </div>
-                            <div>
-                              <p className="font-medium">
+                            <div className="min-w-0">
+                              <p className="font-medium truncate max-w-[100px] sm:max-w-none">
                                 {key.user?.name || "Unknown"}
                               </p>
-                              <p className="text-xs text-muted-foreground">
+                              <p className="text-xs text-muted-foreground truncate max-w-[100px] sm:max-w-none">
                                 {key.user?.phoneNumber}
                               </p>
                               <Badge
@@ -226,12 +268,12 @@ export default function AdminKeysPage() {
                             {key.isActive ? "Active" : "Inactive"}
                           </Badge>
                         </TableCell>
-                        <TableCell>
+                        <TableCell className="hidden md:table-cell">
                           <span className="text-sm">
                             {new Date(key.createdAt).toLocaleDateString()}
                           </span>
                         </TableCell>
-                        <TableCell>
+                        <TableCell className="hidden lg:table-cell">
                           {key.lastUsedAt ? (
                             <span className="text-sm">
                               {new Date(key.lastUsedAt).toLocaleDateString()}
@@ -244,6 +286,7 @@ export default function AdminKeysPage() {
                     ))}
                   </TableBody>
                 </Table>
+                </div>
                 <Pagination
                   page={page}
                   perPage={perPage}

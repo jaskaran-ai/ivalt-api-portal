@@ -39,6 +39,9 @@ export async function POST(req: NextRequest) {
     const result = await getBiometricResult(cleanPhone);
 
     if (result.status === "authenticated") {
+      // Extract name returned by iVALT (data.data.details.name)
+      const ivaltName = result.name ?? null;
+
       let user = await db.query.users.findFirst({
         where: eq(users.phoneNumber, cleanPhone),
       });
@@ -46,13 +49,18 @@ export async function POST(req: NextRequest) {
       if (!user) {
         const [newUser] = await db
           .insert(users)
-          .values({ phoneNumber: cleanPhone, status: "pending" })
+          .values({ phoneNumber: cleanPhone, status: "pending", name: ivaltName })
           .returning();
         user = newUser;
       } else {
         await db
           .update(users)
-          .set({ lastLoginAt: new Date(), updatedAt: new Date() })
+          .set({
+            lastLoginAt: new Date(),
+            updatedAt: new Date(),
+            // Always keep the name up-to-date from iVALT (only overwrite if iVALT returned one)
+            ...(ivaltName ? { name: ivaltName } : {}),
+          })
           .where(eq(users.id, user.id));
       }
 

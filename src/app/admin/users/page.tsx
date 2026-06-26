@@ -1,13 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { User, Key } from "lucide-react";
+import { User, Key, CheckCircle2, Clock, LayoutList } from "lucide-react";
 import AdminShell from "@/components/layout/AdminShell";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Pagination } from "@/components/ui/pagination";
-import { orpc } from "@/lib/orpc/client";
 
 interface AdminUser {
   id: string;
@@ -33,11 +32,25 @@ export default function AdminUsersPage() {
   const fetchUsers = async () => {
     setLoading(true);
     try {
-      const result = await orpc.admin.users.list({ page, perPage, status: statusFilter }) as any;
-      setUsers(result.items ?? []);
-      setTotal(result.total ?? 0);
-      setTotalPages(result.totalPages ?? 0);
-    } catch {
+      const res = await fetch("/api/admin/users");
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      // REST endpoint returns { users: [...] } — filter + paginate client-side
+      const all: AdminUser[] = (data.users ?? []).map((u: any) => ({
+        ...u,
+        createdAt: typeof u.createdAt === "string" ? u.createdAt : new Date(u.createdAt).toISOString(),
+        approvedAt: u.approvedAt
+          ? typeof u.approvedAt === "string" ? u.approvedAt : new Date(u.approvedAt).toISOString()
+          : null,
+      }));
+      const filtered = statusFilter === "all" ? all : all.filter((u) => u.status === statusFilter);
+      const start = (page - 1) * perPage;
+      const pageItems = filtered.slice(start, start + perPage);
+      setUsers(pageItems);
+      setTotal(filtered.length);
+      setTotalPages(Math.ceil(filtered.length / perPage));
+    } catch (err) {
+      console.error("Failed to fetch users:", err);
       setUsers([]);
     } finally {
       setLoading(false);
@@ -75,19 +88,19 @@ export default function AdminUsersPage() {
   return (
     <AdminShell>
       <div className="mx-auto max-w-7xl">
-        <div className="mb-6 flex items-center justify-between">
+        <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h1 className="text-2xl font-semibold tracking-[-0.03em]">Users</h1>
             <p className="text-sm text-muted-foreground">
               Manage registered users and their access status
             </p>
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             {(["all", "approved", "pending", "rejected"] as const).map((s) => (
               <button
                 key={s}
                 onClick={() => handleStatusChange(s)}
-                className={`px-3 py-1 text-sm rounded-md capitalize ${
+                className={`px-3 py-1.5 text-sm rounded-md capitalize ${
                   statusFilter === s ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
                 }`}
               >
@@ -97,41 +110,65 @@ export default function AdminUsersPage() {
           </div>
         </div>
 
-        <div className="mb-6 grid gap-4 md:grid-cols-4">
+        <div className="mb-6 grid grid-cols-2 gap-4 md:grid-cols-4">
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Total Users</CardTitle>
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Total Users</CardTitle>
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
+                  <User className="h-4 w-4 text-primary" />
+                </div>
+              </div>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{total}</div>
+              <p className="mt-1 text-xs text-muted-foreground">All registered</p>
             </CardContent>
           </Card>
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">On This Page</CardTitle>
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-sm font-medium text-muted-foreground">On This Page</CardTitle>
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-500/10">
+                  <LayoutList className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
+                </div>
+              </div>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{users.length}</div>
+              <p className="mt-1 text-xs text-muted-foreground">Current page</p>
             </CardContent>
           </Card>
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Approved</CardTitle>
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Approved</CardTitle>
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-500/10">
+                  <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+                </div>
+              </div>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-emerald-600">
                 {users.filter((u) => u.status === "approved").length}
               </div>
+              <p className="mt-1 text-xs text-muted-foreground">Active access</p>
             </CardContent>
           </Card>
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Pending</CardTitle>
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Pending</CardTitle>
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-500/10">
+                  <Clock className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+                </div>
+              </div>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-amber-600">
                 {users.filter((u) => u.status === "pending").length}
               </div>
+              <p className="mt-1 text-xs text-muted-foreground">Awaiting review</p>
             </CardContent>
           </Card>
         </div>
@@ -151,14 +188,14 @@ export default function AdminUsersPage() {
                 </p>
               </div>
             ) : (
-              <div className="p-6">
+              <div className="overflow-x-auto p-6">
                 <Table>
                   <TableHeader>
                     <TableRow>
                       <TableHead>User</TableHead>
                       <TableHead>Status</TableHead>
-                      <TableHead>API Keys</TableHead>
-                      <TableHead>Joined</TableHead>
+                      <TableHead className="hidden sm:table-cell">API Keys</TableHead>
+                      <TableHead className="hidden md:table-cell">Joined</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -166,14 +203,14 @@ export default function AdminUsersPage() {
                       <TableRow key={user.id}>
                         <TableCell>
                           <div className="flex items-center gap-3">
-                            <div className="size-8 rounded-full bg-primary/10 flex items-center justify-center">
+                            <div className="size-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
                               <User className="size-4 text-primary" />
                             </div>
-                            <div>
-                              <p className="font-medium">
+                            <div className="min-w-0">
+                              <p className="font-medium truncate max-w-[120px] sm:max-w-none">
                                 {user.name || "Unknown"}
                               </p>
-                              <p className="text-xs text-muted-foreground">
+                              <p className="text-xs text-muted-foreground truncate max-w-[120px] sm:max-w-none">
                                 {user.phoneNumber}
                               </p>
                             </div>
@@ -182,13 +219,13 @@ export default function AdminUsersPage() {
                         <TableCell>
                           {getStatusBadge(user.status)}
                         </TableCell>
-                        <TableCell>
+                        <TableCell className="hidden sm:table-cell">
                           <div className="flex items-center gap-2">
                             <Key className="size-4 text-muted-foreground" />
                             <span>{user.apiKeyCount}</span>
                           </div>
                         </TableCell>
-                        <TableCell>
+                        <TableCell className="hidden md:table-cell">
                           <span className="text-sm">
                             {new Date(user.createdAt).toLocaleDateString()}
                           </span>

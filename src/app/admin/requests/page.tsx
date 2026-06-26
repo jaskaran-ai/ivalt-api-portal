@@ -10,7 +10,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Pagination } from "@/components/ui/pagination";
 import { toast } from "sonner";
-import { orpc } from "@/lib/orpc/client";
 
 interface AccessRequest {
   id: string;
@@ -42,15 +41,23 @@ export default function AdminRequestsPage() {
   const fetchRequests = async () => {
     setLoading(true);
     try {
-      const result = await orpc.admin.accessRequests.list({
-        page,
-        perPage,
-        status: statusFilter,
-      }) as any;
-      setRequests(result.items ?? []);
-      setTotal(result.total ?? 0);
-      setTotalPages(result.totalPages ?? 0);
-    } catch {
+      const res = await fetch(`/api/access/approve?status=${statusFilter}`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      // REST endpoint returns { requests: [...] } — paginate client-side
+      const all: AccessRequest[] = (data.requests ?? []).map((r: any) => ({
+        ...r,
+        requestedAt: typeof r.requestedAt === "string" ? r.requestedAt : new Date(r.requestedAt).toISOString(),
+        approvedAt: r.approvedAt
+          ? typeof r.approvedAt === "string" ? r.approvedAt : new Date(r.approvedAt).toISOString()
+          : null,
+      }));
+      const start = (page - 1) * perPage;
+      setRequests(all.slice(start, start + perPage));
+      setTotal(all.length);
+      setTotalPages(Math.ceil(all.length / perPage));
+    } catch (err) {
+      console.error("Failed to fetch requests:", err);
       setRequests([]);
     } finally {
       setLoading(false);

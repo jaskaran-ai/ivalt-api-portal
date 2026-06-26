@@ -14,6 +14,8 @@ export interface BiometricAuthRequestResponse {
 export interface BiometricResultResponse {
   status: BiometricAuthStatus;
   statusCode: number;
+  name?: string;       // from data.data.details.name
+  email?: string;      // from data.data.details.email
   data?: Record<string, unknown>;
 }
 
@@ -52,12 +54,17 @@ export async function getBiometricResult(mobileNumber: string): Promise<Biometri
     });
 
     switch (response.status) {
-      case 200:
+      case 200: {
+        const body = await response.json().catch(() => ({}));
+        const details = (body as any)?.data?.details ?? {};
         return {
           status: "authenticated",
           statusCode: 200,
-          data: await response.json().catch(() => ({})),
+          name: details.name ?? undefined,
+          email: details.email ?? undefined,
+          data: body,
         };
+      }
       case 422:
         return { status: "pending", statusCode: 422 };
       case 403:

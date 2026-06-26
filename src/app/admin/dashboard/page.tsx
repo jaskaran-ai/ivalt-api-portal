@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ShieldCheck, Key, Users, Clock, Activity, BarChart3 } from "lucide-react";
+import { ShieldCheck, Key, Users, Clock, Activity, BarChart3, TrendingUp } from "lucide-react";
 import AdminShell from "@/components/layout/AdminShell";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -72,11 +72,16 @@ export default function AdminDashboardPage() {
         <div className="mb-8 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Total Users</CardTitle>
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Total Users</CardTitle>
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
+                  <Users className="h-4 w-4 text-primary" />
+                </div>
+              </div>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stats?.summary?.totalUsers ?? 0}</div>
-              <p className="text-xs text-muted-foreground">
+              <p className="mt-1 text-xs text-muted-foreground">
                 +{stats?.summary?.usersThisWeek ?? 0} this week
               </p>
             </CardContent>
@@ -84,11 +89,16 @@ export default function AdminDashboardPage() {
 
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Total API Keys</CardTitle>
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Total API Keys</CardTitle>
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-500/10">
+                  <Key className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
+                </div>
+              </div>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stats?.summary?.totalKeys ?? 0}</div>
-              <p className="text-xs text-muted-foreground">
+              <p className="mt-1 text-xs text-muted-foreground">
                 {stats?.summary?.activeKeys ?? 0} active
               </p>
             </CardContent>
@@ -96,23 +106,33 @@ export default function AdminDashboardPage() {
 
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Total Requests</CardTitle>
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Total Requests</CardTitle>
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-500/10">
+                  <TrendingUp className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+                </div>
+              </div>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
                 {(stats?.summary?.totalRequests ?? 0).toLocaleString()}
               </div>
-              <p className="text-xs text-muted-foreground">All time</p>
+              <p className="mt-1 text-xs text-muted-foreground">All time</p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Recently Used</CardTitle>
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Recently Used</CardTitle>
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-500/10">
+                  <Activity className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+                </div>
+              </div>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stats?.summary?.recentlyUsed ?? 0}</div>
-              <p className="text-xs text-muted-foreground">Used in last 24h</p>
+              <p className="mt-1 text-xs text-muted-foreground">Used in last 24h</p>
             </CardContent>
           </Card>
         </div>

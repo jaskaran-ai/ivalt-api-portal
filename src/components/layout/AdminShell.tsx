@@ -48,7 +48,7 @@ function AdminSidebarLayout({ children }: AdminShellProps) {
 
   return (
     <>
-      <Sidebar className="border-r border-sidebar-border/80 bg-sidebar" collapsible="icon">
+      <Sidebar className="border-r border-sidebar-border/80 bg-sidebar" collapsible="offcanvas">
         <SidebarHeader className="border-b border-sidebar-border/80">
           <div className="flex items-center gap-3 px-3 py-3">
             <div className="flex size-9 shrink-0 items-center justify-center rounded-2xl bg-primary shadow-sm shadow-primary/20">
@@ -107,19 +107,19 @@ function AdminSidebarLayout({ children }: AdminShellProps) {
       </Sidebar>
 
       <SidebarInset>
-        <header className="flex shrink-0 items-center gap-4 border-b border-border/80 bg-card/90 px-6 py-4 shadow-sm shadow-foreground/5 backdrop-blur">
+        <header className="flex shrink-0 items-center gap-3 border-b border-border/80 bg-card/90 px-4 py-3 shadow-sm shadow-foreground/5 backdrop-blur md:gap-4 md:px-6 md:py-4">
           <div className="flex items-center gap-2">
             <SidebarTrigger />
           </div>
           <div className="min-w-0 flex-1">
-            <h1 className="truncate text-lg font-semibold tracking-[-0.01em] text-foreground">
+            <h1 className="truncate text-base font-semibold tracking-[-0.01em] text-foreground md:text-lg">
               {activeItem?.label || "Admin"}
             </h1>
           </div>
           <ThemeToggle />
         </header>
 
-        <main className="flex-1 overflow-y-auto bg-background p-6 lg:p-8">{children}</main>
+        <main className="flex-1 overflow-y-auto bg-background p-4 md:p-6 lg:p-8">{children}</main>
       </SidebarInset>
     </>
   );
