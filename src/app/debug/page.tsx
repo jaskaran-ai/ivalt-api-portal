@@ -15,6 +15,7 @@ import {
   XCircle,
 } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
+import DebugLoading from './loading';
 
 interface HealthCheck {
   status: string;
@@ -142,6 +143,10 @@ export default function DebugPage() {
     }
   };
 
+  if (loading && !health) {
+    return <DebugLoading />;
+  }
+
   return (
     <div className="min-h-screen bg-background p-8">
       <div className="mx-auto max-w-3xl">
@@ -170,12 +175,6 @@ export default function DebugPage() {
           <div className="mb-6 flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
             <XCircle className="size-4 shrink-0" />
             {error}
-          </div>
-        )}
-
-        {loading && !health && (
-          <div className="flex items-center justify-center py-20">
-            <div className="size-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
           </div>
         )}
 

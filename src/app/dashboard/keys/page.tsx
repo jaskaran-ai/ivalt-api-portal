@@ -28,6 +28,7 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import KeysLoading from './loading';
 import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
 import { cn } from '@/lib/utils';
@@ -181,18 +182,7 @@ export default function KeysPage() {
   const usagePercent = Math.min(100, Math.round((keys.length / MAX_KEYS) * 100));
 
   if (loading) {
-    return (
-      <div className="mx-auto flex max-w-6xl flex-col gap-6">
-        <Card className="border-primary/10 bg-card shadow-sm shadow-foreground/5">
-          <CardContent className="flex h-64 items-center justify-center p-6">
-            <div className="flex items-center gap-3 text-sm text-muted-foreground">
-              <Loader2 className="size-5 animate-spin" />
-              Loading key vault…
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    );
+    return <KeysLoading />;
   }
 
   return (
