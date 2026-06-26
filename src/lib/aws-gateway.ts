@@ -19,7 +19,9 @@ export function __resetClientForTest() {
 }
 
 function getClient() {
-  if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY) {
+  const accessKeyId = process.env.AWS_ACCESS_KEY_ID;
+  const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
+  if (!accessKeyId || !secretAccessKey) {
     throw new Error(
       'AWS credentials not configured. Set AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY in .env.local, or enable NEXT_PUBLIC_DEMO_MODE=true',
     );
@@ -28,8 +30,8 @@ function getClient() {
     _client = new APIGatewayClient({
       region: process.env.AWS_REGION || 'us-east-1',
       credentials: {
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
+        accessKeyId,
+        secretAccessKey,
       },
     });
   }

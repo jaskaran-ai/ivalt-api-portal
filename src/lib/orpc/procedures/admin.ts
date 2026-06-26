@@ -1,4 +1,4 @@
-import { and, count, eq, isNotNull, isNull, like, or } from 'drizzle-orm';
+import { type SQL, and, count, eq, isNotNull, isNull, like, or } from 'drizzle-orm';
 import { z } from 'zod';
 import { db } from '@/db';
 import { accessRequests, apiKeys, users } from '@/db/schema';
@@ -150,14 +150,14 @@ export const listAdminKeys = base
 
     const offset = (input.page - 1) * input.perPage;
 
-    const conditions: ReturnType<typeof eq>[] = [];
+    const conditions: (SQL | undefined)[] = [];
     if (input.status === 'active') conditions.push(eq(apiKeys.isActive, true));
     if (input.status === 'inactive') conditions.push(eq(apiKeys.isActive, false));
     if (input.search) {
       const q = `%${input.search}%`;
       conditions.push(
         // Search on keyName, awsKeyId — user name search via join is handled in query
-        or(like(apiKeys.keyName, q), like(apiKeys.awsKeyId, q)) as any,
+        or(like(apiKeys.keyName, q), like(apiKeys.awsKeyId, q)),
       );
     }
 

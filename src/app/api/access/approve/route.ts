@@ -109,7 +109,7 @@ export async function GET(req: NextRequest) {
     const status = searchParams.get('status') || 'pending';
 
     // Get all access requests with user info
-    let requests: any[] = [];
+    let requests: (typeof accessRequests.$inferSelect)[] = [];
 
     if (status === 'all') {
       requests = await db.query.accessRequests.findMany({});

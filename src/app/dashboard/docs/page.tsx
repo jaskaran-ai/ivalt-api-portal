@@ -329,11 +329,11 @@ export default function DocsPage() {
           </Badge>
         </div>
 
-        {endpoints.map((endpoint) => (
+        {endpoints.map((endpoint, index) => (
           <Card
             key={`${endpoint.method}-${endpoint.path}`}
             className="overflow-hidden border-primary/10 bg-card shadow-sm shadow-foreground/5"
-            id={`${endpoint.path.replace('/', '')}`}
+            id={`${endpoint.path.replace('/', '')}-${index}`}
           >
             <div className="border-b border-border/80 bg-muted/35 p-6">
               <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">

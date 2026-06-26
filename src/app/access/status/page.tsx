@@ -11,7 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 export default function AccessStatusPage() {
   const router = useRouter();
   const [status, setStatus] = useState<'pending' | 'approved' | 'rejected' | 'loading'>('loading');
-  const [_accessRequest, setAccessRequest] = useState<any>(null);
+  const [_accessRequest, setAccessRequest] = useState<unknown>(null);
 
   useEffect(() => {
     const fetchStatus = async () => {

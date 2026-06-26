@@ -52,16 +52,23 @@ export default function AdminKeysPage() {
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
       // REST endpoint returns { keys: [...] } — filter + paginate client-side
-      let all: ApiKey[] = (data.keys ?? []).map((k: any) => ({
-        ...k,
-        createdAt:
-          typeof k.createdAt === 'string' ? k.createdAt : new Date(k.createdAt).toISOString(),
-        lastUsedAt: k.lastUsedAt
-          ? typeof k.lastUsedAt === 'string'
-            ? k.lastUsedAt
-            : new Date(k.lastUsedAt).toISOString()
-          : null,
-      }));
+      let all: ApiKey[] = (data.keys ?? []).map(
+        (
+          k: Omit<ApiKey, 'createdAt' | 'lastUsedAt'> & {
+            createdAt: string | number | Date;
+            lastUsedAt: string | number | Date | null;
+          },
+        ) => ({
+          ...k,
+          createdAt:
+            typeof k.createdAt === 'string' ? k.createdAt : new Date(k.createdAt).toISOString(),
+          lastUsedAt: k.lastUsedAt
+            ? typeof k.lastUsedAt === 'string'
+              ? k.lastUsedAt
+              : new Date(k.lastUsedAt).toISOString()
+            : null,
+        }),
+      );
       if (statusFilter === 'active') all = all.filter((k) => k.isActive);
       if (statusFilter === 'inactive') all = all.filter((k) => !k.isActive);
       if (search) {

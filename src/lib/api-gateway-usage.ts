@@ -75,12 +75,16 @@ export async function fetchApiKeyUsage(): Promise<ApiKeyUsage[]> {
 
   const apiKeyClient = getClient();
   const usagePlanId = process.env.AWS_API_GATEWAY_USAGE_PLAN_ID;
+  if (!usagePlanId) {
+    console.error('AWS_API_GATEWAY_USAGE_PLAN_ID env var is not set');
+    return [];
+  }
   const usageData: ApiKeyUsage[] = [];
 
   try {
     // Get all keys in the usage plan
     const keysParams = {
-      usagePlanId: usagePlanId!,
+      usagePlanId,
       limit: 100,
     };
 
@@ -99,7 +103,7 @@ export async function fetchApiKeyUsage(): Promise<ApiKeyUsage[]> {
 
       // Get usage for this specific key
       const usageParams = {
-        usagePlanId: usagePlanId!,
+        usagePlanId,
         apiKey: key.value,
         startDate: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(), // Last 30 days
         endDate: new Date().toISOString(),

@@ -1,4 +1,5 @@
 import { count, eq } from 'drizzle-orm';
+import { redirect } from 'next/navigation';
 import {
   Activity,
   ArrowRight,
@@ -32,6 +33,9 @@ const MAX_KEYS = 4;
 
 export default async function DashboardPage() {
   const session = await getSession();
+  if (!session.userId) {
+    redirect('/login');
+  }
 
   let keyCount = 0;
   let activeCount = 0;
@@ -44,11 +48,11 @@ export default async function DashboardPage() {
     const [{ value }] = await db
       .select({ value: count() })
       .from(apiKeys)
-      .where(eq(apiKeys.userId, session.userId!));
+      .where(eq(apiKeys.userId, session.userId));
     keyCount = Number(value);
 
     const allKeys = await db.query.apiKeys.findMany({
-      where: eq(apiKeys.userId, session.userId!),
+      where: eq(apiKeys.userId, session.userId),
     });
     activeCount = allKeys.filter((k) => k.isActive).length;
   }

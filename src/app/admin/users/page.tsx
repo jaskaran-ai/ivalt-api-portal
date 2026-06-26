@@ -45,16 +45,23 @@ export default function AdminUsersPage() {
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
       // REST endpoint returns { users: [...] } — filter + paginate client-side
-      const all: AdminUser[] = (data.users ?? []).map((u: any) => ({
-        ...u,
-        createdAt:
-          typeof u.createdAt === 'string' ? u.createdAt : new Date(u.createdAt).toISOString(),
-        approvedAt: u.approvedAt
-          ? typeof u.approvedAt === 'string'
-            ? u.approvedAt
-            : new Date(u.approvedAt).toISOString()
-          : null,
-      }));
+      const all: AdminUser[] = (data.users ?? []).map(
+        (
+          u: Omit<AdminUser, 'createdAt' | 'approvedAt'> & {
+            createdAt: string | number | Date;
+            approvedAt: string | number | Date | null;
+          },
+        ) => ({
+          ...u,
+          createdAt:
+            typeof u.createdAt === 'string' ? u.createdAt : new Date(u.createdAt).toISOString(),
+          approvedAt: u.approvedAt
+            ? typeof u.approvedAt === 'string'
+              ? u.approvedAt
+              : new Date(u.approvedAt).toISOString()
+            : null,
+        }),
+      );
       const filtered = statusFilter === 'all' ? all : all.filter((u) => u.status === statusFilter);
       const start = (page - 1) * perPage;
       const pageItems = filtered.slice(start, start + perPage);

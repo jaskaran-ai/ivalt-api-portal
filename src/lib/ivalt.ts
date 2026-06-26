@@ -56,6 +56,7 @@ export async function getBiometricResult(mobileNumber: string): Promise<Biometri
     switch (response.status) {
       case 200: {
         const body = await response.json().catch(() => ({}));
+        // biome-ignore lint/suspicious/noExplicitAny: API response is dynamic
         const details = (body as any)?.data?.details ?? {};
         return {
           status: 'authenticated',

@@ -308,16 +308,25 @@ export default function AdminRequestsPage() {
       const res = await fetch(`/api/access/approve?status=${statusFilter}`);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
-      const all: AccessRequest[] = (data.requests ?? []).map((r: any) => ({
-        ...r,
-        requestedAt:
-          typeof r.requestedAt === 'string' ? r.requestedAt : new Date(r.requestedAt).toISOString(),
-        approvedAt: r.approvedAt
-          ? typeof r.approvedAt === 'string'
-            ? r.approvedAt
-            : new Date(r.approvedAt).toISOString()
-          : null,
-      }));
+      const all: AccessRequest[] = (data.requests ?? []).map(
+        (
+          r: Omit<AccessRequest, 'requestedAt' | 'approvedAt'> & {
+            requestedAt: string | number | Date;
+            approvedAt: string | number | Date | null;
+          },
+        ) => ({
+          ...r,
+          requestedAt:
+            typeof r.requestedAt === 'string'
+              ? r.requestedAt
+              : new Date(r.requestedAt).toISOString(),
+          approvedAt: r.approvedAt
+            ? typeof r.approvedAt === 'string'
+              ? r.approvedAt
+              : new Date(r.approvedAt).toISOString()
+            : null,
+        }),
+      );
       const start = (page - 1) * perPage;
       setRequests(all.slice(start, start + perPage));
       setTotal(all.length);
